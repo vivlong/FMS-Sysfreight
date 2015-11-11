@@ -248,6 +248,12 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
                 templateUrl: 'view/tracking/AWB.html',
                 controller: 'AwbCtl'
             })
+            .state('soa', {
+                url: '/soa',
+                cache: 'false',
+                templateUrl: 'view/tracking/SOA.html',
+                controller: 'SOACtl'
+            })
             .state('memo', {
                 url: '/Memo',
                 cache: 'false',

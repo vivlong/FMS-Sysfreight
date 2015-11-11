@@ -281,6 +281,9 @@ appControllers.controller('MainCtl',
             $scope.GoToAWB = function () {
                 $state.go('awb', {}, { reload: true });
             };
+            $scope.GoToSOA = function () {
+                $state.go('soa', {}, { reload: true });
+            };
             $scope.GoToMemo = function () {
                 $state.go('memo', {}, { reload: true });
             };
@@ -769,16 +772,16 @@ appControllers.controller('BlCtl',
                 $ionicLoading.show({
                     template: "Download  0%"
                 });
-                var url = strWebServiceURL + "/mobileapp/INVOICE.pdf";
+                var url = strWebServiceURL + "/mobileapp/HOUSE-BL.pdf";
                 var blnError = false;
                 if (window.cordova) {
-                    $cordovaFile.checkFile(cordova.file.externalRootDirectory, "INVOICE.pdf")
+                    $cordovaFile.checkFile(cordova.file.externalRootDirectory, "HOUSE-BL.pdf")
                     .then(function (success) {
                         //
                     }, function (error) {
                         blnError = true;
                     });
-                    var targetPath = cordova.file.externalRootDirectory + "INVOICE.pdf";
+                    var targetPath = cordova.file.externalRootDirectory + "HOUSE-BL.pdf";
                     var trustHosts = true;
                     var options = {};
                     if (!blnError) {
@@ -833,16 +836,80 @@ appControllers.controller('AwbCtl',
                 $ionicLoading.show({
                     template: "Download  0%"
                 });
-                var url = strWebServiceURL + "/mobileapp/INVOICE.pdf";
+                var url = strWebServiceURL + "/mobileapp/AWB.pdf";
                 var blnError = false;
                 if (window.cordova) {
-                    $cordovaFile.checkFile(cordova.file.externalRootDirectory, "INVOICE.pdf")
+                    $cordovaFile.checkFile(cordova.file.externalRootDirectory, "AWB.pdf")
                     .then(function (success) {
                         //
                     }, function (error) {
                         blnError = true;
                     });
-                    var targetPath = cordova.file.externalRootDirectory + "INVOICE.pdf";
+                    var targetPath = cordova.file.externalRootDirectory + "AWB.pdf";
+                    var trustHosts = true;
+                    var options = {};
+                    if (!blnError) {
+                        $cordovaFileTransfer.download(url, targetPath, options, trustHosts).then(function (result) {
+                            $ionicLoading.hide();
+                            $cordovaFileOpener2.open(targetPath, 'application/pdf'
+                            ).then(function () {
+                                // success
+                            }, function (err) {
+                                // error
+                            });
+                        }, function (err) {
+                            $cordovaToast.showShortCenter('Download faild.');
+                            $ionicLoading.hide();
+                        }, function (progress) {
+                            $timeout(function () {
+                                var downloadProgress = (progress.loaded / progress.total) * 100;
+                                $ionicLoading.show({
+                                    template: "Download  " + Math.floor(downloadProgress) + "%"
+                                });
+                                if (downloadProgress > 99) {
+                                    $ionicLoading.hide();
+                                }
+                            })
+                        });
+                    } else {
+                        $ionicLoading.hide();
+                        $cordovaToast.showShortCenter('Download PDF file faild.');
+                    }
+                } else {
+                    $ionicLoading.hide();
+                    window.open(url);
+                }
+            };
+            $timeout(function () {
+                ionicMaterialInk.displayEffect();
+                ionicMaterialMotion.ripple();
+            }, 0);
+        }]);
+
+appControllers.controller('SOACtl',
+        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$ionicLoading', '$timeout', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
+        function ($scope, $http, $state, $stateParams, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+            $scope.returnMain = function () {
+                $state.go('main', {}, {});
+            };
+            $scope.items = [
+                { InvoiceNo: 'SESIN0905182-00', InvoiceDate: '04/11/2015', CustomerName: 'S A ORANJE 123', Amt: '100' },
+                { InvoiceNo: 'SESIN1511137-02', InvoiceDate: '04/11/2015', CustomerName: 'KADIMA', Amt: '500' }
+            ];
+            $scope.download = function () {
+                $ionicLoading.show({
+                    template: "Download  0%"
+                });
+                var url = strWebServiceURL + "/mobileapp/CUSTOMER-STATEMENT.pdf";
+                var blnError = false;
+                if (window.cordova) {
+                    $cordovaFile.checkFile(cordova.file.externalRootDirectory, "CUSTOMER-STATEMENT.pdf")
+                    .then(function (success) {
+                        //
+                    }, function (error) {
+                        blnError = true;
+                    });
+                    var targetPath = cordova.file.externalRootDirectory + "CUSTOMER-STATEMENT.pdf";
                     var trustHosts = true;
                     var options = {};
                     if (!blnError) {
