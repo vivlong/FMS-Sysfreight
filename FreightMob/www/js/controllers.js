@@ -121,7 +121,7 @@ appControllers.controller('LoginCtl',
                 */
                 $ionicLoading.show();
                 var jsonData = { "UserId": $scope.logininfo.strUserName, "Password": hex_md5($scope.logininfo.strPassword) };
-                var strUri = "/api/wms/action/list/login";
+                var strUri = "/api/freight/login";
                 var onSuccess = function (response) {
                     $ionicLoading.hide();
                     sessionStorage.clear();
@@ -396,7 +396,7 @@ appControllers.controller('ContactsCtl',
             });
             var getRcbp1 = function (BusinessPartyName) {
                 $ionicLoading.show();
-                var strUri = "/api/wms/action/list/rcbp1";
+                var strUri = "/api/freight/rcbp1";
                 if (BusinessPartyName != null && BusinessPartyName.length > 0) {
                     strUri = strUri + "/" + $scope.Rcbp.BusinessPartyName;
                 }
@@ -437,7 +437,7 @@ appControllers.controller('ContactsDetailCtl',
             };
             var GetRcbp3s = function (BusinessPartyCode) {
                 $ionicLoading.show();
-                var strUri = "/api/wms/action/list/rcbp3/" + BusinessPartyCode;
+                var strUri = "/api/freight/rcbp3/" + BusinessPartyCode;
                 var onSuccess = function (response) {
                     $scope.rcbp3s = response.data.results;
                     $ionicLoading.hide();
@@ -449,7 +449,7 @@ appControllers.controller('ContactsDetailCtl',
             };
             var GetRcbp1Detail = function (TrxNo) {
                 $ionicLoading.show();
-                var strUri = "/api/wms/action/list/rcbp1/trxNo/" + TrxNo;
+                var strUri = "/api/freight/rcbp1/trxNo/" + TrxNo;
                 var onSuccess = function (response) {
                     $scope.rcbpDetail = response.data.results[0];
                     $ionicLoading.hide();
