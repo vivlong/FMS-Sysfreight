@@ -426,7 +426,7 @@ appControllers.controller('ContactsDetailCtl',
                 $state.go('contacts', {}, {});
             };
             $scope.GoToDetailEdit = function () {
-                $state.go('contactsDetailEdit', {}, { reload: true });
+                $state.go('contactsDetailEdit', { 'TrxNo': $scope.rcbpDetail.TrxNo }, { reload: true });
             };
             $scope.blnContainNameCard = function (rcbp3) {
                 if (typeof (rcbp3) == "undefined") return false;
@@ -482,8 +482,50 @@ appControllers.controller('ContactsDetailCtl',
 appControllers.controller('ContactsDetailEditCtl',
         ['$scope', '$stateParams', '$state', '$http', '$timeout', '$ionicLoading', '$ionicPopup', 'JsonServiceClient',
         function ($scope, $stateParams, $state, $http, $timeout, $ionicLoading, $ionicPopup, JsonServiceClient) {
+            $scope.rcbpDetail = {};
+            $scope.rcbp3Detail = {};
+            $scope.rcbpDetail.TrxNo = $stateParams.TrxNo;
             $scope.returnDetail = function () {
-                $state.go('contactsDetail', {}, { reload: true });
+                $state.go('contactsDetail', { 'TrxNo': $scope.rcbpDetail.TrxNo }, { reload: true });
+            };
+            var GetRcbp3s = function (BusinessPartyCode) {
+                $ionicLoading.show();
+                var strUri = "/api/freight/rcbp3/" + BusinessPartyCode;
+                var onSuccess = function (response) {
+                    $scope.rcbp3s = response.data.results;
+                    $ionicLoading.hide();
+                };
+                var onError = function (response) {
+                    $ionicLoading.hide();
+                };
+                JsonServiceClient.getFromService(strUri, onSuccess, onError);
+            };
+            var GetRcbp1Detail = function (TrxNo) {
+                $ionicLoading.show();
+                var strUri = "/api/freight/rcbp1/trxNo/" + TrxNo;
+                var onSuccess = function (response) {
+                    $scope.rcbpDetail = response.data.results[0];
+                    $ionicLoading.hide();
+                    GetRcbp3s($scope.rcbpDetail.BusinessPartyCode);
+                };
+                var onError = function (response) {
+                    $ionicLoading.hide();
+                };
+                JsonServiceClient.getFromService(strUri, onSuccess, onError);
+            };
+            GetRcbp1Detail($scope.rcbpDetail.TrxNo);
+            $scope.returnUpdateRcbp1 = function () {
+                $ionicLoading.show();
+                var jsonData = { "rcbp1": $scope.rcbpDetail };
+                var strUri = "/api/freight/rcbp1";
+                var onSuccess = function (response) {
+                    $ionicLoading.hide();
+                    $scope.returnDetail();
+                };
+                var onError = function () {
+                    $ionicLoading.hide();
+                };
+                JsonServiceClient.postToService(strUri, jsonData, onSuccess, onError);
             };
         }]);
 

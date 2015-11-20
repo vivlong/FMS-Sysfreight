@@ -30,7 +30,8 @@ angular.module('MobileAPP.services', ['ionic', 'ionic-material'])
         $http({
             method: "POST",
             url: strWebServiceURL + strBaseUrl + requestUrl,
-            data: requestData
+            data: requestData,
+            withCredentials: false
             //headers: {
             //    "Signature": strSignature
             //}

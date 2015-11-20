@@ -18,7 +18,6 @@ var app = angular.module('MobileAPP', [
 
 app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$ionicPopup', '$ionicHistory', '$ionicLoading', '$cordovaToast', '$cordovaFile',
     function ($ionicPlatform, $rootScope, $state, $location, $timeout, $ionicPopup, $ionicHistory, $ionicLoading, $cordovaToast, $cordovaFile) {
-
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
@@ -113,7 +112,6 @@ app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$io
                 StatusBar.styleDefault();
             }
         });
-
         $ionicPlatform.registerBackButtonAction(function (e) {
             e.preventDefault();
             // Is there a page to go back to?  $state.include ??
