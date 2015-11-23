@@ -530,8 +530,9 @@ appControllers.controller('ContactsDetailEditCtl',
         }]);
 
 appControllers.controller('PaymentApprovalCtl',
-        ['$scope', '$http', '$timeout', '$state', '$ionicHistory', '$ionicPopup', 'ionicMaterialInk', 'ionicMaterialMotion',
-        function ($scope, $http, $timeout, $state, $ionicHistory, $ionicPopup, ionicMaterialInk, ionicMaterialMotion) {
+        ['$scope', '$http', '$timeout', '$state', '$ionicHistory', '$ionicLoading', '$ionicPopup', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
+        function ($scope, $http, $timeout, $state, $ionicHistory, $ionicLoading, $ionicPopup, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+            $scope.plcp1 = {};
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -547,36 +548,58 @@ appControllers.controller('PaymentApprovalCtl',
                     alertPopup.close();
                 }, 2500);
             };
-            $scope.StatusCode = { text: "USE", checked: false };
-            $scope.statusChange = function () {
-                if ($scope.StatusCode.checked) {
-                    $scope.StatusCode.text = "APP";
+            $scope.plcpStatus = { text: "USE", checked: false };
+            $scope.plcpStatusChange = function () {
+                if ($scope.plcpStatus.checked) {
+                    $scope.plcpStatus.text = "APP";
                 } else {
-                    $scope.StatusCode.text = "USE";
+                    $scope.plcpStatus.text = "USE";
+                }
+                //
+                $scope.getPlcp1(null, null, $scope.plcpStatus.text);
+            };
+            $scope.refreshRcbp1 = function (BusinessPartyName) {
+                var strUri = "/api/freight/rcbp1/" + BusinessPartyName;
+                var onSuccess = function (response) {
+                    $scope.Rcbp1s = response.data.results;
+                };
+                JsonServiceClient.getFromService(strUri, onSuccess);
+            };
+            $scope.funcShowDatetime = function (utc) {
+                if (typeof (utc) === 'undefined') return ''
+                var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
+                var newDate = new Date(utcDate);
+                if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
+                    return newDate.Format('yyyy-MM-dd hh:mm');
+                } else {
+                    return '';
                 }
             };
-            $scope.items = [
-                { id: 0, VoucherNo: 'PV15031101', Amt: '760', VendorName: 'SysMagic', Date: 'Mar 16,2015' },
-                { id: 1, VoucherNo: 'PV15031533', Amt: '785', VendorName: 'SysMagic', Date: 'Mar 16,2015' },
-                { id: 2, VoucherNo: 'PV15031684', Amt: '349', VendorName: 'SysMagic', Date: 'Mar 16,2015' },
-                { id: 3, VoucherNo: 'PV15031244', Amt: '965', VendorName: 'SysMagic', Date: 'Mar 16,2015' },
-                { id: 4, VoucherNo: 'PV15031963', Amt: '407', VendorName: 'SysMagic', Date: 'Mar 16,2015' },
-                { id: 5, VoucherNo: 'PV15031148', Amt: '663', VendorName: 'SysMagic', Date: 'Mar 16,2015' },
-                { id: 6, VoucherNo: 'PV15031823', Amt: '472', VendorName: 'SysMagic', Date: 'Mar 16,2015' },
-                { id: 7, VoucherNo: 'PV15031473', Amt: '524', VendorName: 'SysMagic', Date: 'Mar 16,2015' },
-                { id: 8, VoucherNo: 'PV15031726', Amt: '810', VendorName: 'COSCO', Date: 'Mar 15,2015' },
-                { id: 9, VoucherNo: 'PV1503152', Amt: '591', VendorName: 'COSCO', Date: 'Mar 15,2015' },
-                { id: 10, VoucherNo: 'PV1503129', Amt: '232', VendorName: 'COSCO', Date: 'Mar 15,2015' },
-                { id: 11, VoucherNo: 'PV15031490', Amt: '574', VendorName: 'COSCO', Date: 'Mar 15,2015' },
-                { id: 12, VoucherNo: 'PV15031106', Amt: '465', VendorName: 'SysFreight', Date: 'Mar 16,2015' },
-                { id: 13, VoucherNo: 'PV15031374', Amt: '124', VendorName: 'SysFreight', Date: 'Mar 16,2015' },
-                { id: 14, VoucherNo: 'PV15031841', Amt: '539', VendorName: 'SysFreight', Date: 'Mar 16,2015' },
-                { id: 15, VoucherNo: 'PV1503115', Amt: '6', VendorName: 'SysFreight', Date: 'Mar 16,2015' }
-            ];
-            $timeout(function () {
-                ionicMaterialInk.displayEffect();
-                ionicMaterialMotion.blinds();
-            }, 0);
+            $scope.getPlcp1 = function (VoucherNo, VendorName, StatusCode) {
+                $ionicLoading.show();
+                var strUri = "/api/freight/plcp1";
+                if (VoucherNo != null && VoucherNo.length > 0) {
+                    strUri = strUri + "/VoucherNo/" + VoucherNo;
+                }else if (VendorName != null && VendorName.length > 0) {
+                    strUri = strUri + "/VendorName/" + VendorName;
+                }
+                if (StatusCode != null && StatusCode.length > 0) {
+                    strUri = strUri + "/" + StatusCode;
+                }
+                var onSuccess = function (response) {
+                    $ionicLoading.hide();
+                    $scope.Plcp1s = response.data.results;
+                    $timeout(function () {
+                        ionicMaterialMotion.blinds();
+                        ionicMaterialInk.displayEffect();
+                    }, 0);
+                };
+                var onError = function (response) {
+                    $ionicLoading.hide();
+                };
+                JsonServiceClient.getFromService(strUri, onSuccess);
+            };
+            $scope.getPlcp1(null, null, $scope.plcpStatus.text);
         }]);
 
 appControllers.controller('VesselScheduleCtl',

@@ -7,46 +7,66 @@
         </div>
         <div class="title">Payment Approval</div>
     </div>
-    <!--ion-pane style="margin-top:44px; height:50px; overflow:visible;">
+    <ion-pane style="margin-top:44px; height:50px; overflow:visible;">
         <div class="list item">
             <div class="row row-center" id="div-list-rcbp">
                     <div class="col col-33" style="text-align:center;">
-                        <select>
+                        <select ng-model="plcp1.SearchField">
                             <option selected>Voucher No</option>
                             <option>Vendor Name</option>
                         </select>
                     </div>
                     <div class="col col-50">
-                        <ui-select ng-model="Rcbp1.selected"
+                        <ui-select ng-show="false"
+                                   ng-model="Rcbp1.selected"
                                    theme="bootstrap"
                                    reset-search-input="true"
-                                   on-select="ShowImgr1(Rcbp1.selected.BusinessPartyCode)"
-                                   autofocus="true">
-                            <ui-select-match allow-clear="true" placeholder="Enter to search..." style="overflow:hidden;">{{$select.selected.BusinessPartyCode}}</ui-select-match>
+                                   on-select="getPlcp1(null, Rcbp1.selected.BusinessPartyName, plcpStatus.text)">
+                            <ui-select-match allow-clear="true" placeholder="Enter to search..." style="overflow:hidden;">{{$select.selected.BusinessPartyName}}</ui-select-match>
                             <ui-select-choices repeat="Rcbp1 in Rcbp1s track by $index"
                                                refresh="refreshRcbp1($select.search)"
                                                refresh-delay="0">
                                 <div ng-bind-html="Rcbp1.BusinessPartyName | highlight: $select.search"></div>
                             </ui-select-choices>
                         </ui-select>
+                        <ui-select ng-show="true"
+                                   ng-model="Rcbp1.selected"
+                                   theme="bootstrap"
+                                   reset-search-input="true"
+                                   on-select="getPlcp1(null, Rcbp1.selected.BusinessPartyName, plcpStatus.text)">
+                            <ui-select-match allow-clear="true" placeholder="Enter to search..." style="overflow:hidden;">{{$select.selected.BusinessPartyName}}</ui-select-match>
+                            <ui-select-choices repeat="Rcbp1 in Rcbp1s track by $index"
+                                               refresh="refreshRcbp1($select.search)"
+                                               refresh-delay="0">
+                                <div ng-bind="Rcbp1.BusinessPartyName"></div>
+                            </ui-select-choices>
+                        </ui-select>
                     </div>
-                <ion-toggle ng-model="StatusCode.checked" ng-change="statusChange()">
+                <ion-toggle ng-model="plcpStatus.checked" ng-change="plcpStatusChange()">
+                    <span ng-bind="plcpStatus.text"></span>
                 </ion-toggle>
             </div>
         </div>
-    </!--ion-pane-->
-    <ion-content class="has-header">
+    </ion-pane>
+    <ion-content class="has-header" style="margin-top:64px;">
         <ion-list class="animate-blinds">
-            <ion-item nav-clear menu-close class="item ink" ng-repeat="item in items">
-                <ion-checkbox ng-model="item.isSelected" class="ink">
-                    <h2><span ng-bind="item.VoucherNo"></span></h2>
-                    <p><i class="iconfont icon-title"></i>&nbsp;&nbsp;<span ng-bind="item.VendorName"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="iconfont icon-amount"></i>&nbsp;&nbsp;<span ng-bind="item.Amt"></span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="iconfont icon-date"></i>&nbsp;&nbsp;<span ng-bind="item.Date"></span></p>
+            <ion-item nav-clear menu-close class="item ink" ng-repeat="plcp1 in Plcp1s">
+                <ion-checkbox ng-model="plcp1.isSelected" class="ink">
+                    <h2><span ng-bind="plcp1.VoucherNo"></span></h2>
+                    <p>
+                        <i class="iconfont icon-title"></i>&nbsp;&nbsp;
+                        <span ng-bind="plcp1.VendorName"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <i class="iconfont icon-amount"></i>&nbsp;&nbsp;
+                        <span ng-bind="plcp1.InvoiceAmt"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <i class="iconfont icon-date"></i>&nbsp;&nbsp;
+                        <span ng-bind="funcShowDatetime(plcp1.InvoiceDate)"></span>
+                    </p>
                 </ion-checkbox>
             </ion-item>
         </ion-list>
     </ion-content>
     <ion-footer-bar class="button-bar" style="height:7%;">
-        <lable class="checkbox ink" style="right:-5px;"><span>Select All</span>&nbsp;<ui-select-all items="items" prop="isSelected" class="pull-right"></ui-select-all></lable>
+        <lable class="checkbox ink" style="right:-5px;"><span>Select All</span>&nbsp;<ui-select-all items="Plcp1s" prop="isSelected" class="pull-right"></ui-select-all></lable>
         <button class="button button-flat button-positive ink" style="max-width:33%;right:-10px;" ng-click="showApproval()">Approval</button>
         <button class="button button-flat button-positive ink" style="position:relative;max-width:33%;top:0;bottom:0;right:-15px;" ng-click="returnMain()">Cancel</button>
     </ion-footer-bar>
