@@ -10,38 +10,38 @@
     <ion-pane style="margin-top:44px; height:50px; overflow:visible;">
         <div class="list item">
             <div class="row row-center" id="div-list-rcbp">
-                    <div class="col col-33" style="text-align:center;">
-                        <select ng-model="plcp1.SearchField">
-                            <option selected>Voucher No</option>
-                            <option>Vendor Name</option>
-                        </select>
-                    </div>
-                    <div class="col col-50">
-                        <ui-select ng-show="false"
-                                   ng-model="Rcbp1.selected"
-                                   theme="bootstrap"
-                                   reset-search-input="true"
-                                   on-select="getPlcp1(null, Rcbp1.selected.BusinessPartyName, plcpStatus.text)">
-                            <ui-select-match allow-clear="true" placeholder="Enter to search..." style="overflow:hidden;">{{$select.selected.BusinessPartyName}}</ui-select-match>
-                            <ui-select-choices repeat="Rcbp1 in Rcbp1s track by $index"
-                                               refresh="refreshRcbp1($select.search)"
-                                               refresh-delay="0">
-                                <div ng-bind-html="Rcbp1.BusinessPartyName | highlight: $select.search"></div>
-                            </ui-select-choices>
-                        </ui-select>
-                        <ui-select ng-show="true"
-                                   ng-model="Rcbp1.selected"
-                                   theme="bootstrap"
-                                   reset-search-input="true"
-                                   on-select="getPlcp1(null, Rcbp1.selected.BusinessPartyName, plcpStatus.text)">
-                            <ui-select-match allow-clear="true" placeholder="Enter to search..." style="overflow:hidden;">{{$select.selected.BusinessPartyName}}</ui-select-match>
-                            <ui-select-choices repeat="Rcbp1 in Rcbp1s track by $index"
-                                               refresh="refreshRcbp1($select.search)"
-                                               refresh-delay="0">
-                                <div ng-bind="Rcbp1.BusinessPartyName"></div>
-                            </ui-select-choices>
-                        </ui-select>
-                    </div>
+                <div class="col col-33" style="text-align:center;">
+                    <select ng-model="plcp1.SearchField">
+                        <option selected>Voucher No</option>
+                        <option>Vendor Name</option>
+                    </select>
+                </div>
+                <div class="col col-50">
+                    <ui-select ng-show="false"
+                                ng-model="Rcbp1.selected"
+                                theme="bootstrap"
+                                reset-search-input="true"
+                                on-select="getPlcp1(null, Rcbp1.selected.BusinessPartyName, plcpStatus.text)">
+                        <ui-select-match allow-clear="true" placeholder="Enter to search..." style="overflow:hidden;">{{$select.selected.BusinessPartyName}}</ui-select-match>
+                        <ui-select-choices repeat="Rcbp1 in Rcbp1s track by $index"
+                                            refresh="refreshRcbp1($select.search)"
+                                            refresh-delay="0">
+                            <div ng-bind-html="Rcbp1.BusinessPartyName | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <ui-select ng-show="true"
+                                ng-model="Rcbp1.selected"
+                                theme="bootstrap"
+                                reset-search-input="true"
+                                on-select="getPlcp1(null, Rcbp1.selected.BusinessPartyName, plcpStatus.text)">
+                        <ui-select-match allow-clear="true" placeholder="Enter to search..." style="overflow:hidden;">{{$select.selected.BusinessPartyName}}</ui-select-match>
+                        <ui-select-choices repeat="Rcbp1 in Rcbp1s track by $index"
+                                            refresh="refreshRcbp1($select.search)"
+                                            refresh-delay="0">
+                            <div ng-bind="Rcbp1.BusinessPartyName"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
                 <ion-toggle ng-model="plcpStatus.checked" ng-change="plcpStatusChange()">
                     <span ng-bind="plcpStatus.text"></span>
                 </ion-toggle>

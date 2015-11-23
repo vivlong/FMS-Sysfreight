@@ -208,19 +208,19 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
             })
             .state('vesselSchedule', {
                 url: '/vesselSchedule',
-                cache: 'false',
+                //cache: 'false',
                 templateUrl: 'view/tracking/VesselSchedule.html',
                 controller: 'VesselScheduleCtl'
             })
             .state('vesselScheduleDetail', {
-                url: '/vesselSchedule/detail/:PortCode',
+                url: '/vesselSchedule/detail/:PortOfDischargeName',
                 cache: 'false',
                 templateUrl: 'view/tracking/VesselSchedule-detail.html',
                 controller: 'VesselScheduleDetailCtl'
             })
             .state('shipmentStatus', {
                 url: '/shipmentStatus',
-                cache: 'false',
+                //cache: 'false',
                 templateUrl: 'view/tracking/ShipmentStatus.html',
                 controller: 'ShipmentStatusCtl'
             })

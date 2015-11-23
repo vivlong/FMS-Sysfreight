@@ -381,8 +381,9 @@ appControllers.controller('SalesmanActivityCtl',
 appControllers.controller('ContactsCtl',
         ['$scope', '$state', '$stateParams', '$http', '$ionicPopup', '$timeout', '$ionicLoading', '$cordovaDialogs', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
         function ($scope, $state, $stateParams, $http, $ionicPopup, $timeout, $ionicLoading, $cordovaDialogs, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
-            $scope.Rcbp = {};
-            $scope.Rcbp.BusinessPartyName = "";
+            $scope.Rcbp = {
+                BusinessPartyName: ''
+            };
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -556,7 +557,7 @@ appControllers.controller('PaymentApprovalCtl',
                     $scope.plcpStatus.text = "USE";
                 }
                 //
-                $scope.getPlcp1(null, null, $scope.plcpStatus.text);
+                getPlcp1(null, null, $scope.plcpStatus.text);
             };
             $scope.refreshRcbp1 = function (BusinessPartyName) {
                 var strUri = "/api/freight/rcbp1/" + BusinessPartyName;
@@ -575,7 +576,7 @@ appControllers.controller('PaymentApprovalCtl',
                     return '';
                 }
             };
-            $scope.getPlcp1 = function (VoucherNo, VendorName, StatusCode) {
+            var getPlcp1 = function (VoucherNo, VendorName, StatusCode) {
                 $ionicLoading.show();
                 var strUri = "/api/freight/plcp1";
                 if (VoucherNo != null && VoucherNo.length > 0) {
@@ -599,95 +600,56 @@ appControllers.controller('PaymentApprovalCtl',
                 };
                 JsonServiceClient.getFromService(strUri, onSuccess);
             };
-            $scope.getPlcp1(null, null, $scope.plcpStatus.text);
+            getPlcp1(null, null, $scope.plcpStatus.text);
         }]);
 
 appControllers.controller('VesselScheduleCtl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
-        function ($scope, $http, $state, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+        ['$scope', '$http', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
+        function ($scope, $http, $state, $stateParams, $ionicLoading, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+            $scope.rcvy = {
+                PortOfDischargeName: ''
+            };
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
-            $scope.GoToDetail = function (Rcvs1) {
-                $state.go('vesselScheduleDetail', { 'PortCode' : Rcvs1.PortCode }, { reload: true });
-            };            
-            $scope.Rcsv1s = [
-                { PortCode: 'All', PortName: 'ALL' },
-                { PortCode: 'DEAAH', PortName: 'AACHEN' },
-                { PortCode: 'DKAAL', PortName: 'AALBORG' },
-                { PortCode: 'JPABA', PortName: 'ABASHIRI, HOKKAIDO' },
-                { PortCode: 'PGABW', PortName: 'ABAU' },
-                { PortCode: 'DEABH', PortName: 'ABBEHAUSEN' },
-                { PortCode: 'DEABF', PortName: 'ABBENFLETH' },
-                { PortCode: 'FRABB', PortName: 'ABBEVILLE' },
-                { PortCode: 'YEEAB', PortName: 'ABBSE' },
-                { PortCode: 'SAAAK', PortName: 'ABU AL KHOOSH' },
-                { PortCode: 'AEAUH', PortName: 'ABU DHABI' },
-                { PortCode: 'FIAHV', PortName: 'AHVENANMAA MUUT' },
-                { PortCode: 'AEAJM', PortName: 'AJMAN' },
-                { PortCode: 'GAAKE', PortName: 'AKIENI' },
-                { PortCode: 'SAAHA', PortName: 'AL HADA' },
-                { PortCode: 'JMALP', PortName: 'ALLIGATOR POND' },
-                { PortCode: 'DEAMR', PortName: 'AMRUN I.' },
-                { PortCode: 'PFAAA', PortName: 'ANAAB' },
-                { PortCode: 'DZAAE', PortName: 'ANNABA (FORMERLY BONE)' },
-                { PortCode: 'USAAF', PortName: 'APALACHICOLA, FL' },
-                { PortCode: 'DEAPE', PortName: 'APEN' },
-                { PortCode: 'BRAAI', PortName: 'ARRAIAS' },
-                { PortCode: 'AAAAA', PortName: 'ASASASAS' },
-                { PortCode: 'DEASS', PortName: 'ASSEL' },
-                { PortCode: 'SABDN', PortName: 'BADANA' },
-                { PortCode: 'THBKK', PortName: 'BANGKOK' },
-                { PortCode: 'GABGB', PortName: 'BOOUE' },
-                { PortCode: 'AOCAB', PortName: 'CABINDA' },
-                { PortCode: 'ECCUE', PortName: 'CUENCA' },
-                { PortCode: 'AUDAA', PortName: 'DARRA, QL' },
-                { PortCode: 'AEDAS', PortName: 'DAS ISLAND' },
-                { PortCode: 'BDDAC', PortName: 'DHAKA' },
-                { PortCode: 'AEDXB', PortName: 'DUBAI' },
-                { PortCode: 'AEFAT', PortName: 'FATEH TERMINAL' },
-                { PortCode: 'AEFJR', PortName: 'FUJAIRAH' },
-                { PortCode: 'SGSIN', PortName: 'GGGGG' },
-                { PortCode: 'SEHAD', PortName: 'HALMSTAD' },
-                { PortCode: 'HKHKG', PortName: 'HONG KONG' },
-                { PortCode: 'IDJKT', PortName: 'JAKARTA' },
-                { PortCode: 'AEJEA', PortName: 'JEBEL ALI' },
-                { PortCode: 'AEJED', PortName: 'JEBEL DHANNA' },
-                { PortCode: 'TWKEL', PortName: 'KEELUNG' },
-                { PortCode: 'AEKLF', PortName: 'KHOR AL FAKKAN' },
-                { PortCode: 'BDKHL', PortName: 'KHULNA' },
-                { PortCode: 'HKKWN', PortName: 'KOWLOON' },
-                { PortCode: 'AUKAH', PortName: 'MELBOURNE-CITY HELIPORT, VI' },
-                { PortCode: 'ADZZZ', PortName: 'O P ANDORRA' },
-                { PortCode: 'VAZZZ', PortName: 'O P VATICAN CITYSTATE(HOLYSEE)' },
-                { PortCode: 'MYPEN', PortName: 'PENANG' },
-                { PortCode: 'AEKHL', PortName: 'PORT KHALID' },
-                { PortCode: 'CVRAI', PortName: 'PRAIA' },
-                { PortCode: 'IDBAP', PortName: 'PULAU BATAM' },
-                { PortCode: 'PGRAA', PortName: 'RAKANDA' },
-                { PortCode: 'RERUN', PortName: 'REUNION ISL/POINTE DES GALETS' },
-                { PortCode: 'ANSAB', PortName: 'SABA IS' },
-                { PortCode: 'USSSM', PortName: 'SAULT STE MARIE, MIWWW' },
-                { PortCode: 'CNSHA', PortName: 'SHANGHAI' },
-                { PortCode: 'VCSVD', PortName: 'ST VINCENT-ARNOS VALE' },
-                { PortCode: 'FOFAE', PortName: 'THORSHAVN-VAGAR APT' },
-                { PortCode: 'FIVAA', PortName: 'VAASA/VASA' },
-                { PortCode: 'SAAWI', PortName: 'WAISUMAH' },
-                { PortCode: 'DEAGE', PortName: 'WANGEROOGE' }
-            ];
-            $timeout(function () {
-                ionicMaterialInk.displayEffect();
-                ionicMaterialMotion.ripple();
-            }, 0);
+            $scope.GoToDetail = function (PortOfDischargeName) {
+                $state.go('vesselScheduleDetail', { 'PortOfDischargeName': PortOfDischargeName }, { reload: true });
+            };
+            $('#txt-PortOfDischargeName').on('keydown', function (e) {
+                if (e.which === 9 || e.which === 13) {
+                    getRcvy1($scope.rcvy.PortOfDischargeName);
+                }
+            });
+            var getRcvy1 = function (PortOfDischargeName) {
+                $ionicLoading.show();
+                var strUri = "/api/freight/rcvy1";
+                if (PortOfDischargeName != null && PortOfDischargeName.length > 0) {
+                    strUri = strUri + "/" + PortOfDischargeName;
+                }
+                var onSuccess = function (response) {
+                    $ionicLoading.hide();
+                    $scope.PortOfDischargeNames = response.data.results;
+                    $timeout(function () {
+                        ionicMaterialMotion.ripple();
+                        ionicMaterialInk.displayEffect();
+                    }, 0);
+                };
+                var onError = function (response) {
+                    $ionicLoading.hide();
+                };
+                JsonServiceClient.getFromService(strUri, onSuccess);
+            };
+            getRcvy1(null);
         }]);
 
 appControllers.controller('VesselScheduleDetailCtl',
         ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
         function ($scope, $http, $state, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
-            $scope.Rcsv1Detail = {};
-            $scope.Rcsv1Detail.POD = $stateParams.PortCode;
+            $scope.Rcsv1Detail = {
+                PortOfDischargeName : $stateParams.PortOfDischargeName
+            };
             $scope.returnList = function () {
-                $state.go('vesselSchedule', {}, { reload: true });
+                $state.go('vesselSchedule', {}, {});
             };
             $scope.Rcsv1s = [
                 { PortCode: 'All', PortName: 'ALL', DepartureDate: '04/11/2015', VesselVoyage: 'A P MOLLER', Carrier: 'SysMagic SHIPPING (S) PTE LTD', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '2' },
