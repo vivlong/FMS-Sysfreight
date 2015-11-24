@@ -1,0 +1,21 @@
+﻿<ion-view title="ShipmentStatusList">
+    <div class="bar bar-header bar-calm-900">
+        <div class="buttons buttons-left header-item">
+            <span class="left-buttons">
+                <button class="button button-icon button-clear ion-navicon" ng-click="returnShipmentStatus()"></button>
+            </span>
+        </div>
+        <div class="title">Tracking - <span ng-bind="List.FilterName"></span></div>
+    </div>
+    <ion-content class="has-header">
+        <ion-list class="animate-blinds">
+            <ion-item nav-clear menu-close class="item ink" ng-repeat="Jmjm1 in Jmjm1s" ng-click="GoToDetail(Jmjm1)">
+                <h2>Job No&nbsp;:&nbsp;<span ng-bind="Jmjm1.JobNo"></span></h2>
+                <p>B/L No&nbsp;:&nbsp;<span ng-bind="Jmjm1.AwbBlNo"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ref No&nbsp;:&nbsp;<span ng-bind="Jmjm1.CustomerRefNo"></span></p>
+                <p>ETD&nbsp;:&nbsp;<span ng-bind="funcShowDatetime(Jmjm1.ETD)"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ETA&nbsp;:&nbsp;<span ng-bind="funcShowDatetime(Jmjm1.ETA)"></span></p>
+                <p>Origin&nbsp;:&nbsp;<span ng-bind="Jmjm1.OriginCode"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Destination&nbsp;:&nbsp;<span ng-bind="Jmjm1.DestCode"></span></p>
+                <p>Vessel&nbsp;:&nbsp;<span ng-bind="Jmjm1.VesselName"></span></p>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

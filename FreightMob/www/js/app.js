@@ -224,6 +224,12 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
                 templateUrl: 'view/tracking/ShipmentStatus.html',
                 controller: 'ShipmentStatusCtl'
             })
+            .state('shipmentStatusList', {
+                url: '/shipmentStatus/list/:FilterName/:FilterValue',
+                cache: 'false',
+                templateUrl: 'view/tracking/ShipmentStatus-list.html',
+                controller: 'ShipmentStatusListCtl'
+            })
             .state('shipmentStatusDetail', {
                 url: '/shipmentStatus/detail/:FilterName/:FilterValue',
                 cache: 'false',

@@ -699,11 +699,60 @@ appControllers.controller('VesselScheduleDetailCtl',
         }]);
 
 appControllers.controller('ShipmentStatusCtl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
-        function ($scope, $http, $state, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
-            $scope.Tracking = {};
+        ['$scope', '$http', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
+        function ($scope, $http, $state, $stateParams, $ionicLoading, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+            $scope.Tracking = {
+                ContainerNo: '',
+                JobNo: '',
+                BLNo: '',
+                AWBNo: '',
+                OrderNo: '',
+                ReferenceNo: ''
+            };
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
+            };
+            var getSearchResult = function (FilterName, FilterValue) {
+                $ionicLoading.show();
+                var strUri = "";
+                var onSuccess = null;
+                var onError = function (response) {
+                    $ionicLoading.hide();
+                };
+                var onFinally = function (response) {
+                    $ionicLoading.hide();
+                };
+                if (FilterName === 'ContainerNo') {
+                    strUri = "/api/freight/tracking/ContainerNo/count/" + FilterValue;
+                    onSuccess = function (response) {
+                        $ionicLoading.hide();
+                        if (response.data.results.length > 1) {
+                            $state.go('shipmentStatusList', { 'FilterName': FilterName, 'FilterValue': FilterValue }, { reload: true });
+                        } else if (response.data.results.length === 1) {
+                            $state.go('shipmentStatusDetail', { 'FilterName': FilterName, 'FilterValue': FilterValue, 'ModuleCode': response.data.results[0].ModuleCode }, { reload: true });
+                        } else {
+                            var alertPopup = $ionicPopup.alert({
+                                title: 'No Records Found.',
+                                okType: 'button-assertive'
+                            });
+                            $timeout(function () {
+                                alertPopup.close();
+                            }, 2500);
+                        }
+                    };
+                } else {
+                    $ionicLoading.hide();
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'No Records Found.',
+                        okType: 'button-assertive'
+                    });
+                    $timeout(function () {
+                        alertPopup.close();
+                    }, 2500);
+                    return;
+                    //To-Do
+                }
+                JsonServiceClient.getFromService(strUri, onSuccess, onError, onFinally);
             };
             $scope.GoToDetail = function (FilterName) {
                 var FilterValue = '';
@@ -713,12 +762,67 @@ appControllers.controller('ShipmentStatusCtl',
                 else if (FilterName === 'AWBNo') { FilterValue = $scope.Tracking.AWBNo }
                 else if (FilterName === 'OrderNo') { FilterValue = $scope.Tracking.OrderNo }
                 else if (FilterName === 'ReferenceNo') { FilterValue = $scope.Tracking.ReferenceNo }
-                $state.go('shipmentStatusDetail', { 'FilterName': FilterName, 'FilterValue': FilterValue }, { reload: true });
+                if (FilterValue.length > 0) {
+                    getSearchResult(FilterName, FilterValue);
+                } else {
+                    var alertPopup = $ionicPopup.alert({
+                        title: FilterName + ' is Empty.',
+                        okType: 'button-assertive'
+                    });
+                    $timeout(function () {
+                        alertPopup.close();
+                    }, 2500);
+                }
             };
             $timeout(function () {
                 ionicMaterialInk.displayEffect();
                 ionicMaterialMotion.blinds();
             }, 0);
+        }]);
+
+appControllers.controller('ShipmentStatusListCtl',
+        ['$scope', '$http', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
+        function ($scope, $http, $state, $stateParams, $ionicLoading, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+            $scope.List = {};
+            $scope.List.FilterName = $stateParams.FilterName;
+            $scope.List.FilterValue = $stateParams.FilterValue;
+            $scope.returnShipmentStatus = function () {
+                $state.go('shipmentStatus', {}, {});
+            };
+            $scope.funcShowDatetime = function (utc) {
+                if (typeof (utc) === 'undefined') return ''
+                var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
+                var newDate = new Date(utcDate);
+                if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
+                    return newDate.Format('yyyy-MM-dd hh:mm');
+                } else {
+                    return '';
+                }
+            };
+            var getJmjm1 = function (FilterName, FilterValue) {
+                $ionicLoading.show();
+                var strUri = '';
+                var onSuccess = null;
+                var onError = function (response) {
+                    $ionicLoading.hide();
+                };
+                var onFinally = function (response) {
+                    $ionicLoading.hide();
+                };
+                if (FilterName === 'ContainerNo') {
+                    strUri = '/api/freight/tracking/ContainerNo/' + FilterValue;
+                    onSuccess = function (response) {
+                        $ionicLoading.hide();
+                        $scope.Jmjm1s = response.data.results;
+                        $timeout(function () {
+                            ionicMaterialMotion.blinds();
+                            ionicMaterialInk.displayEffect();
+                        }, 0);
+                    };
+                }
+                JsonServiceClient.getFromService(strUri, onSuccess, onError, onFinally);
+            };
+            getJmjm1($scope.List.FilterName, $scope.List.FilterValue);
         }]);
 
 appControllers.controller('ShipmentStatusDetailCtl',
