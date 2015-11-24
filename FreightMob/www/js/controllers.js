@@ -412,7 +412,10 @@ appControllers.controller('ContactsCtl',
                 var onError = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.getFromService(strUri, onSuccess);
+                var onFinally = function (response) {
+                    $ionicLoading.hide();
+                };
+                JsonServiceClient.getFromService(strUri, onSuccess, onError, onFinally);
             };
             getRcbp1(null);
         }]);
@@ -446,7 +449,10 @@ appControllers.controller('ContactsDetailCtl',
                 var onError = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.getFromService(strUri, onSuccess, onError);
+                var onFinally = function (response) {
+                    $ionicLoading.hide();
+                };
+                JsonServiceClient.getFromService(strUri, onSuccess, onError, onFinally);
             };
             var GetRcbp1Detail = function (TrxNo) {
                 $ionicLoading.show();
@@ -459,7 +465,10 @@ appControllers.controller('ContactsDetailCtl',
                 var onError = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.getFromService(strUri, onSuccess, onError);
+                var onFinally = function (response) {
+                    $ionicLoading.hide();
+                };
+                JsonServiceClient.getFromService(strUri, onSuccess, onError, onFinally);
             };
             GetRcbp1Detail($scope.rcbpDetail.TrxNo);
             $ionicModal.fromTemplateUrl('rcbp3Detail.html', {
@@ -598,7 +607,10 @@ appControllers.controller('PaymentApprovalCtl',
                 var onError = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.getFromService(strUri, onSuccess);
+                var onFinally = function (response) {
+                    $ionicLoading.hide();
+                };
+                JsonServiceClient.getFromService(strUri, onSuccess, onFinally);
             };
             getPlcp1(null, null, $scope.plcpStatus.text);
         }]);
@@ -637,46 +649,53 @@ appControllers.controller('VesselScheduleCtl',
                 var onError = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.getFromService(strUri, onSuccess);
+                var onFinally = function (response) {
+                    $ionicLoading.hide();
+                };
+                JsonServiceClient.getFromService(strUri, onSuccess, onFinally);
             };
             getRcvy1(null);
         }]);
 
 appControllers.controller('VesselScheduleDetailCtl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
-        function ($scope, $http, $state, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
-            $scope.Rcsv1Detail = {
+        ['$scope', '$http', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
+        function ($scope, $http, $state, $stateParams, $ionicLoading, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+            $scope.Rcvy1Detail = {
                 PortOfDischargeName : $stateParams.PortOfDischargeName
             };
             $scope.returnList = function () {
                 $state.go('vesselSchedule', {}, {});
             };
-            $scope.Rcsv1s = [
-                { PortCode: 'All', PortName: 'ALL', DepartureDate: '04/11/2015', VesselVoyage: 'A P MOLLER', Carrier: 'SysMagic SHIPPING (S) PTE LTD', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '2' },
-                { PortCode: 'DEAAH', PortName: 'AACHEN', DepartureDate: '04/11/2015', VesselVoyage: 'KEE', Carrier: 'JOSINDO CONTAINER SERVICES', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '1' },
-                { PortCode: 'DKAAL', PortName: 'AALBORG', DepartureDate: '04/11/2015', VesselVoyage: 'HAI XIONG', Carrier: 'HEUNG-A (SPORE) PTE LTD', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '1' },
-                { PortCode: 'JPABA', PortName: 'ABASHIRI, HOKKAIDO', DepartureDate: '04/11/2015', VesselVoyage: 'SOPHIA BRITTANIA', Carrier: 'DELMAS SHIPPING (S) PTE LTD', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '0' },
-                { PortCode: 'PGABW', PortName: 'ABAU', DepartureDate: '04/11/2015', VesselVoyage: 'A&B&C', Carrier: 'ADVANCE CONTAINER LINES (PTE) LTD', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '0' },
-                { PortCode: 'DEABH', PortName: 'ABBEHAUSEN', DepartureDate: '04/11/2015', VesselVoyage: 'HAMMURABI', Carrier: 'SAL AGENCIES', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '1' },
-                { PortCode: 'DEABF', PortName: 'ABBENFLETH', DepartureDate: '04/11/2015', VesselVoyage: 'GENIKI', Carrier: 'FOONG SUN SHIPPING & TRADING', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '1' },
-                { PortCode: 'FRABB', PortName: 'ABBEVILLE', DepartureDate: '04/11/2015', VesselVoyage: 'WQSDA12313', Carrier: 'SysMagic SHIPPING (S) PTE LTD', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '7' },
-                { PortCode: 'YEEAB', PortName: 'ABBSE', DepartureDate: '04/11/2015', VesselVoyage: 'H-A CARM', Carrier: 'KIE GWAN SHIPPING', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '7' },
-                { PortCode: 'SAAAK', PortName: 'ABU AL KHOOSH', DepartureDate: '04/11/2015', VesselVoyage: 'J FASTER', Carrier: 'SINO EXPRESS PTE LTD', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '1' },
-                { PortCode: 'AEAUH', PortName: 'ABU DHABI', DepartureDate: '04/11/2015', VesselVoyage: 'JEEWE', Carrier: 'SAMUDERA SHIPPING LINE PTE LTD', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '5' },
-                { PortCode: 'FIAHV', PortName: 'AHVENANMAA MUUT', DepartureDate: '04/11/2015', VesselVoyage: 'KADIMA', Carrier: 'KADIMA PTE LTD', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '2' },
-                { PortCode: 'AEAJM', PortName: 'AJMAN', DepartureDate: '04/11/2015', VesselVoyage: 'BEAUTE', Carrier: 'FAIRMACS MULTILINE', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '0' },
-                { PortCode: 'GAAKE', PortName: 'AKIENI', DepartureDate: '04/11/2015', VesselVoyage: 'KINGKONG', Carrier: 'SysMagic SHIPPING (S) PTE LTD', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '8' },
-                { PortCode: 'SAAHA', PortName: 'AL HADA', DepartureDate: '04/11/2015', VesselVoyage: 'WQSDA12313', Carrier: 'SysMagic SHIPPING (S) PTE LTD', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '0' },
-                { PortCode: 'JMALP', PortName: 'ALLIGATOR POND', DepartureDate: '04/11/2015', VesselVoyage: 'WQSDA12313', Carrier: 'SysMagic SHIPPING (S) PTE LTD', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '0' },
-                { PortCode: 'DEAMR', PortName: 'AMRUN I.', DepartureDate: '04/11/2015', VesselVoyage: 'WQSDA12313', Carrier: 'SysMagic SHIPPING (S) PTE LTD', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '5' },
-                { PortCode: 'PFAAA', PortName: 'ANAAB', DepartureDate: '04/11/2015', VesselVoyage: 'WQSDA12313', Carrier: 'SysMagic SHIPPING (S) PTE LTD', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '2' },
-                { PortCode: 'DZAAE', PortName: 'ANNABA (FORMERLY BONE)', DepartureDate: '04/11/2015', VesselVoyage: 'WQSDA12313', Carrier: 'SysMagic SHIPPING (S) PTE LTD', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '1' },
-                { PortCode: 'DEAGE', PortName: 'WANGEROOGE', DepartureDate: '04/11/2015', VesselVoyage: 'WQSDA12313', Carrier: 'SysMagic SHIPPING (S) PTE LTD', POD: 'XMN', ArrivalDate: '06/11/2015', TransitTime: '2' }
-            ];
-            $timeout(function () {
-                ionicMaterialInk.displayEffect();
-                ionicMaterialMotion.ripple();
-            }, 0);
+            $scope.funcShowDatetime = function (utc) {
+                if (typeof (utc) === 'undefined') return ''
+                var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
+                var newDate = new Date(utcDate);
+                if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
+                    return newDate.Format('yyyy-MM-dd hh:mm');
+                } else {
+                    return '';
+                }
+            };
+            var getRcvy1 = function (PortOfDischargeName) {
+                $ionicLoading.show();
+                var strUri = "/api/freight/rcvy1/sps/" + PortOfDischargeName;
+                var onSuccess = function (response) {
+                    $ionicLoading.hide();
+                    $scope.Rcvy1s = response.data.results;
+                    $timeout(function () {
+                        ionicMaterialMotion.ripple();
+                        ionicMaterialInk.displayEffect();
+                    }, 0);
+                };
+                var onError = function (response) {
+                    $ionicLoading.hide();
+                };
+                var onFinally = function (response) {
+                    $ionicLoading.hide();
+                };
+                JsonServiceClient.getFromService(strUri, onSuccess, onFinally);
+            };
+            getRcvy1($scope.Rcvy1Detail.PortOfDischargeName);
         }]);
 
 appControllers.controller('ShipmentStatusCtl',
