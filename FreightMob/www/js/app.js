@@ -111,6 +111,9 @@ app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$io
                 // org.apache.cordova.statusbar required
                 StatusBar.styleDefault();
             }
+            // Add JPush
+            window.plugins.jPushPlugin.init();
+            window.plugins.jPushPlugin.setDebugMode(true);
         });
         $ionicPlatform.registerBackButtonAction(function (e) {
             e.preventDefault();
