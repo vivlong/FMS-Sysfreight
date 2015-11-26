@@ -23,6 +23,12 @@ app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$io
             // for form inputs)
             if (window.cordova && window.cordova.plugins.Keyboard) {
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+                // Add JPush
+                window.plugins.jPushPlugin.init();
+                //window.plugins.jPushPlugin.setDebugMode(true);
+                window.plugins.jPushPlugin.setLatestNotificationNum(5);
+                //window.plugins.jPushPlugin.openNotificationInAndroidCallback = function(data);
+                //window.plugins.jPushPlugin.receiveMessageInAndroidCallback = function(data);
                 //
                 var data = 'BaseUrl=' + strBaseUrl + '##WebServiceURL=' + strWebServiceURL + '##WebSiteURL=' + strWebSiteURL;
                 var path = cordova.file.externalRootDirectory;
@@ -111,9 +117,6 @@ app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$io
                 // org.apache.cordova.statusbar required
                 StatusBar.styleDefault();
             }
-            // Add JPush
-            window.plugins.jPushPlugin.init();
-            window.plugins.jPushPlugin.setDebugMode(true);
         });
         $ionicPlatform.registerBackButtonAction(function (e) {
             e.preventDefault();
@@ -188,6 +191,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
             })
             .state('contacts', {
                 url: '/contacts',
+                cache: 'false',
                 templateUrl: 'view/crm/Contacts.html',
                 controller: 'ContactsCtl'
             })

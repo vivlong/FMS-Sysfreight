@@ -126,6 +126,8 @@ appControllers.controller('LoginCtl',
                     $ionicLoading.hide();
                     sessionStorage.clear();
                     sessionStorage.setItem("UserId", $scope.logininfo.strUserName);
+                    //Add JPush RegistradionID
+                    window.plugins.jPushPlugin.getRegistrationID(onGetRegistradionID);
                     $state.go('main', {}, { reload: true });
                 };
                 var onError = function () {
@@ -441,7 +443,8 @@ appControllers.controller('ContactsDetailCtl',
             };
             var GetRcbp3s = function (BusinessPartyCode) {
                 $ionicLoading.show();
-                var strUri = "/api/freight/rcbp3/" + BusinessPartyCode;
+                var jsonData = { "BusinessPartyCode": BusinessPartyCode };
+                var strUri = "/api/freight/rcbp3/BusinessPartyCode";
                 var onSuccess = function (response) {
                     $scope.rcbp3s = response.data.results;
                     $ionicLoading.hide();
@@ -449,10 +452,7 @@ appControllers.controller('ContactsDetailCtl',
                 var onError = function (response) {
                     $ionicLoading.hide();
                 };
-                var onFinally = function (response) {
-                    $ionicLoading.hide();
-                };
-                JsonServiceClient.getFromService(strUri, onSuccess, onError, onFinally);
+                JsonServiceClient.postToService(strUri, jsonData, onSuccess, onError);
             };
             var GetRcbp1Detail = function (TrxNo) {
                 $ionicLoading.show();
@@ -500,15 +500,16 @@ appControllers.controller('ContactsDetailEditCtl',
             };
             var GetRcbp3s = function (BusinessPartyCode) {
                 $ionicLoading.show();
-                var strUri = "/api/freight/rcbp3/" + BusinessPartyCode;
+                var jsonData = { "BusinessPartyCode": BusinessPartyCode };
+                var strUri = "/api/freight/rcbp3/BusinessPartyCode";
                 var onSuccess = function (response) {
                     $scope.rcbp3s = response.data.results;
                     $ionicLoading.hide();
                 };
                 var onError = function (response) {
                     $ionicLoading.hide();
-                };
-                JsonServiceClient.getFromService(strUri, onSuccess, onError);
+                };                
+                JsonServiceClient.postToService(strUri, jsonData, onSuccess, onError);
             };
             var GetRcbp1Detail = function (TrxNo) {
                 $ionicLoading.show();
