@@ -127,13 +127,15 @@ appControllers.controller('LoginCtl',
                     sessionStorage.clear();
                     sessionStorage.setItem("UserId", $scope.logininfo.strUserName);
                     //Add JPush RegistradionID
-                    window.plugins.jPushPlugin.getRegistrationID(onGetRegistradionID);
+                    if (window.plugins.jPushPlugin) {
+                        window.plugins.jPushPlugin.getRegistrationID(onGetRegistradionID);
+                    }
                     $state.go('main', {}, { reload: true });
                 };
                 var onError = function () {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.postToService(strUri, jsonData, onSuccess, onError);
+                JsonServiceClient.Post(strUri, jsonData, onSuccess, onError);
             };
             $timeout(function () {
                 ionicMaterialInk.displayEffect();
@@ -417,7 +419,7 @@ appControllers.controller('ContactsCtl',
                 var onFinally = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.getFromService(strUri, onSuccess, onError, onFinally);
+                JsonServiceClient.Get(strUri, onSuccess, onError, onFinally);
             };
             getRcbp1(null);
         }]);
@@ -443,8 +445,7 @@ appControllers.controller('ContactsDetailCtl',
             };
             var GetRcbp3s = function (BusinessPartyCode) {
                 $ionicLoading.show();
-                var jsonData = { "BusinessPartyCode": BusinessPartyCode };
-                var strUri = "/api/freight/rcbp3/BusinessPartyCode";
+                var strUri = "/api/freight/rcbp3?BusinessPartyCode=" + BusinessPartyCode;
                 var onSuccess = function (response) {
                     $scope.rcbp3s = response.data.results;
                     $ionicLoading.hide();
@@ -452,7 +453,10 @@ appControllers.controller('ContactsDetailCtl',
                 var onError = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.postToService(strUri, jsonData, onSuccess, onError);
+                var onFinally = function (response) {
+                    $ionicLoading.hide();
+                };
+                JsonServiceClient.GetParam(strUri, onSuccess, onError, OnFinally);
             };
             var GetRcbp1Detail = function (TrxNo) {
                 $ionicLoading.show();
@@ -468,7 +472,7 @@ appControllers.controller('ContactsDetailCtl',
                 var onFinally = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.getFromService(strUri, onSuccess, onError, onFinally);
+                JsonServiceClient.Get(strUri, onSuccess, onError, onFinally);
             };
             GetRcbp1Detail($scope.rcbpDetail.TrxNo);
             $ionicModal.fromTemplateUrl('rcbp3Detail.html', {
@@ -500,16 +504,18 @@ appControllers.controller('ContactsDetailEditCtl',
             };
             var GetRcbp3s = function (BusinessPartyCode) {
                 $ionicLoading.show();
-                var jsonData = { "BusinessPartyCode": BusinessPartyCode };
-                var strUri = "/api/freight/rcbp3/BusinessPartyCode";
+                var strUri = "/api/freight/rcbp3?BusinessPartyCode=" + BusinessPartyCode;
                 var onSuccess = function (response) {
                     $scope.rcbp3s = response.data.results;
                     $ionicLoading.hide();
                 };
                 var onError = function (response) {
                     $ionicLoading.hide();
-                };                
-                JsonServiceClient.postToService(strUri, jsonData, onSuccess, onError);
+                };
+                var onFinally = function (response) {
+                    $ionicLoading.hide();
+                };
+                JsonServiceClient.GetParam(strUri, onSuccess, onError, OnFinally);
             };
             var GetRcbp1Detail = function (TrxNo) {
                 $ionicLoading.show();
@@ -522,7 +528,10 @@ appControllers.controller('ContactsDetailEditCtl',
                 var onError = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.getFromService(strUri, onSuccess, onError);
+                var onFinally = function (response) {
+                    $ionicLoading.hide();
+                };
+                JsonServiceClient.Get(strUri, onSuccess, onError, onFinally);
             };
             GetRcbp1Detail($scope.rcbpDetail.TrxNo);
             $scope.returnUpdateRcbp1 = function () {
@@ -536,7 +545,7 @@ appControllers.controller('ContactsDetailEditCtl',
                 var onError = function () {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.postToService(strUri, jsonData, onSuccess, onError);
+                JsonServiceClient.Post(strUri, jsonData, onSuccess, onError);
             };
         }]);
 
@@ -574,7 +583,7 @@ appControllers.controller('PaymentApprovalCtl',
                 var onSuccess = function (response) {
                     $scope.Rcbp1s = response.data.results;
                 };
-                JsonServiceClient.getFromService(strUri, onSuccess);
+                JsonServiceClient.Get(strUri, onSuccess);
             };
             $scope.funcShowDatetime = function (utc) {
                 if (typeof (utc) === 'undefined') return ''
@@ -611,7 +620,7 @@ appControllers.controller('PaymentApprovalCtl',
                 var onFinally = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.getFromService(strUri, onSuccess, onFinally);
+                JsonServiceClient.Get(strUri, onSuccess, onFinally);
             };
             getPlcp1(null, null, $scope.plcpStatus.text);
         }]);
@@ -653,7 +662,7 @@ appControllers.controller('VesselScheduleCtl',
                 var onFinally = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.getFromService(strUri, onSuccess, onFinally);
+                JsonServiceClient.Get(strUri, onSuccess, onFinally);
             };
             getRcvy1(null);
         }]);
@@ -694,7 +703,7 @@ appControllers.controller('VesselScheduleDetailCtl',
                 var onFinally = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.getFromService(strUri, onSuccess, onFinally);
+                JsonServiceClient.Get(strUri, onSuccess, onFinally);
             };
             getRcvy1($scope.Rcvy1Detail.PortOfDischargeName);
         }]);
@@ -753,7 +762,7 @@ appControllers.controller('ShipmentStatusCtl',
                     return;
                     //To-Do
                 }
-                JsonServiceClient.getFromService(strUri, onSuccess, onError, onFinally);
+                JsonServiceClient.Get(strUri, onSuccess, onError, onFinally);
             };
             $scope.GoToDetail = function (FilterName) {
                 var FilterValue = '';
@@ -821,7 +830,7 @@ appControllers.controller('ShipmentStatusListCtl',
                         }, 0);
                     };
                 }
-                JsonServiceClient.getFromService(strUri, onSuccess, onError, onFinally);
+                JsonServiceClient.Get(strUri, onSuccess, onError, onFinally);
             };
             getJmjm1($scope.List.FilterName, $scope.List.FilterValue);
         }]);
