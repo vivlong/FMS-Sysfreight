@@ -27,15 +27,16 @@ angular.module('MobileAPP.services', ['ionic', 'ionic-material'])
     }
     this.Post = function (requestUrl, requestData, onSuccess, onError) {
         var strSignature = hex_md5(strBaseUrl + requestUrl + strSecretKey.replace(/-/ig, ""));
-        $http({
-            method: "POST",
-            url: strWebServiceURL + strBaseUrl + requestUrl,
-            data: requestData,
-            withCredentials: false
-            //headers: {
-            //    "Signature": strSignature
-            //}
-        }).success(function (response) {
+		var url = strWebServiceURL + strBaseUrl + requestUrl;
+		var config = {
+			withCredentials: false,
+			headers: {
+				'content-type': 'application/json',
+				'cache-control': 'no-cache'
+				//'Signature': strSignature
+			}
+		};
+        $http.post(url, requestData, config).success(function (response) {
             if (!response) {
                 if (onSuccess) onSuccess(null);
                 return;

@@ -127,7 +127,7 @@ appControllers.controller('LoginCtl',
                     sessionStorage.clear();
                     sessionStorage.setItem("UserId", $scope.logininfo.strUserName);
                     //Add JPush RegistradionID
-                    if (window.plugins.jPushPlugin) {
+                    if (window.plugins) {
                         window.plugins.jPushPlugin.getRegistrationID(onGetRegistradionID);
                     }
                     $state.go('main', {}, { reload: true });
