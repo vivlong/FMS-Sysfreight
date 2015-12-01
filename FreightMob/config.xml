@@ -3,7 +3,7 @@
   <name>FreightMob</name>
   <description>
   </description>
-  <author email="vivlong@163.com" href="http://www.28story.com">SysMagic Software Solution</author>
+  <author email="vivlong@163.com" href="http://www.28story.com">James Liao</author>
   <content src="index.html" />
   <access origin="*" />
   <vs:features />

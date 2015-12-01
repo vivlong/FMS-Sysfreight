@@ -14,7 +14,7 @@ var app = angular.module('MobileAPP', [
     'MobileAPP.directives',
     'MobileAPP.services',
     'MobileAPP.controllers'
-])
+]);
 
 app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$ionicPopup', '$ionicHistory', '$ionicLoading', '$cordovaToast', '$cordovaFile',
     function ($ionicPlatform, $rootScope, $state, $location, $timeout, $ionicPopup, $ionicHistory, $ionicLoading, $cordovaToast, $cordovaFile) {

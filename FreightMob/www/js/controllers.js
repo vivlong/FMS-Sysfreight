@@ -24,8 +24,8 @@ appControllers.controller('LoadingCtl',
         }]);
 
 appControllers.controller('LoginCtl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$timeout', '$ionicLoading', 'ionicMaterialInk', 'ionicMaterialMotion', '$cordovaToast', '$cordovaAppVersion', 'JsonServiceClient', 
-        function ($scope, $http, $state, $stateParams, $ionicPopup, $timeout, $ionicLoading, ionicMaterialInk, ionicMaterialMotion, $cordovaToast, $cordovaAppVersion, JsonServiceClient) {
+        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$timeout', '$ionicLoading', 'ionicMaterialInk', 'ionicMaterialMotion', '$cordovaToast', '$cordovaAppVersion', 'WebApiService', 
+        function ($scope, $http, $state, $stateParams, $ionicPopup, $timeout, $ionicLoading, ionicMaterialInk, ionicMaterialMotion, $cordovaToast, $cordovaAppVersion, WebApiService) {
             $scope.logininfo = {};
             $scope.logininfo.strUserName = "";
             $scope.logininfo.strPassword = "";
@@ -135,7 +135,7 @@ appControllers.controller('LoginCtl',
                 var onError = function () {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.Post(strUri, jsonData, onSuccess, onError);
+                WebApiService.Post(strUri, jsonData, onSuccess, onError);
             };
             $timeout(function () {
                 ionicMaterialInk.displayEffect();
@@ -259,8 +259,8 @@ appControllers.controller('UpdateCtl',
         }]);
 
 appControllers.controller('MainCtl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', '$cordovaBarcodeScanner', 'JsonServiceClient',
-        function ($scope, $http, $state, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, $cordovaBarcodeScanner, JsonServiceClient) {
+        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', '$cordovaBarcodeScanner', 'WebApiService',
+        function ($scope, $http, $state, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, $cordovaBarcodeScanner, WebApiService) {
             $scope.GoToSA = function () {
                 $state.go('salesmanActivity', {}, { reload: true });
             };
@@ -321,8 +321,8 @@ appControllers.controller('MainCtl',
         }]);
 
 appControllers.controller('SalesmanActivityCtl',
-        ['$scope', '$state', '$stateParams', '$http', '$ionicPopup', '$timeout', '$ionicLoading', '$cordovaDialogs', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
-        function ($scope, $state, $stateParams, $http, $ionicPopup, $timeout, $ionicLoading, $cordovaDialogs, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+        ['$scope', '$state', '$stateParams', '$http', '$ionicPopup', '$timeout', '$ionicLoading', '$cordovaDialogs', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
+        function ($scope, $state, $stateParams, $http, $ionicPopup, $timeout, $ionicLoading, $cordovaDialogs, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -383,8 +383,8 @@ appControllers.controller('SalesmanActivityCtl',
         }]);
 
 appControllers.controller('ContactsCtl',
-        ['$scope', '$state', '$stateParams', '$http', '$ionicPopup', '$timeout', '$ionicLoading', '$cordovaDialogs', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
-        function ($scope, $state, $stateParams, $http, $ionicPopup, $timeout, $ionicLoading, $cordovaDialogs, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+        ['$scope', '$state', '$stateParams', '$http', '$ionicPopup', '$timeout', '$ionicLoading', '$cordovaDialogs', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
+        function ($scope, $state, $stateParams, $http, $ionicPopup, $timeout, $ionicLoading, $cordovaDialogs, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
             $scope.Rcbp = {
                 BusinessPartyName: ''
             };
@@ -419,14 +419,14 @@ appControllers.controller('ContactsCtl',
                 var onFinally = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.Get(strUri, onSuccess, onError, onFinally);
+                WebApiService.Get(strUri, onSuccess, onError, onFinally);
             };
             getRcbp1(null);
         }]);
 
 appControllers.controller('ContactsDetailCtl',
-        ['$scope', '$stateParams', '$state', '$http', '$timeout', '$ionicHistory', '$ionicLoading', '$ionicPopup', '$ionicModal', 'JsonServiceClient',
-        function ($scope, $stateParams, $state, $http, $timeout, $ionicHistory, $ionicLoading, $ionicPopup, $ionicModal, JsonServiceClient) {
+        ['$scope', '$stateParams', '$state', '$http', '$timeout', '$ionicHistory', '$ionicLoading', '$ionicPopup', '$ionicModal', 'WebApiService',
+        function ($scope, $stateParams, $state, $http, $timeout, $ionicHistory, $ionicLoading, $ionicPopup, $ionicModal, WebApiService) {
             $scope.rcbpDetail = {};
             $scope.rcbp3Detail = {};
             $scope.rcbpDetail.TrxNo = $stateParams.TrxNo;
@@ -456,7 +456,7 @@ appControllers.controller('ContactsDetailCtl',
                 var onFinally = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.GetParam(strUri, onSuccess, onError, OnFinally);
+                WebApiService.GetParam(strUri, onSuccess, onError, OnFinally);
             };
             var GetRcbp1Detail = function (TrxNo) {
                 $ionicLoading.show();
@@ -472,7 +472,7 @@ appControllers.controller('ContactsDetailCtl',
                 var onFinally = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.Get(strUri, onSuccess, onError, onFinally);
+                WebApiService.Get(strUri, onSuccess, onError, onFinally);
             };
             GetRcbp1Detail($scope.rcbpDetail.TrxNo);
             $ionicModal.fromTemplateUrl('rcbp3Detail.html', {
@@ -494,8 +494,8 @@ appControllers.controller('ContactsDetailCtl',
         }]);
 
 appControllers.controller('ContactsDetailEditCtl',
-        ['$scope', '$stateParams', '$state', '$http', '$timeout', '$ionicLoading', '$ionicPopup', 'JsonServiceClient',
-        function ($scope, $stateParams, $state, $http, $timeout, $ionicLoading, $ionicPopup, JsonServiceClient) {
+        ['$scope', '$stateParams', '$state', '$http', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService',
+        function ($scope, $stateParams, $state, $http, $timeout, $ionicLoading, $ionicPopup, WebApiService) {
             $scope.rcbpDetail = {};
             $scope.rcbp3Detail = {};
             $scope.rcbpDetail.TrxNo = $stateParams.TrxNo;
@@ -515,7 +515,7 @@ appControllers.controller('ContactsDetailEditCtl',
                 var onFinally = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.GetParam(strUri, onSuccess, onError, OnFinally);
+                WebApiService.GetParam(strUri, onSuccess, onError, OnFinally);
             };
             var GetRcbp1Detail = function (TrxNo) {
                 $ionicLoading.show();
@@ -531,7 +531,7 @@ appControllers.controller('ContactsDetailEditCtl',
                 var onFinally = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.Get(strUri, onSuccess, onError, onFinally);
+                WebApiService.Get(strUri, onSuccess, onError, onFinally);
             };
             GetRcbp1Detail($scope.rcbpDetail.TrxNo);
             $scope.returnUpdateRcbp1 = function () {
@@ -545,13 +545,13 @@ appControllers.controller('ContactsDetailEditCtl',
                 var onError = function () {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.Post(strUri, jsonData, onSuccess, onError);
+                WebApiService.Post(strUri, jsonData, onSuccess, onError);
             };
         }]);
 
 appControllers.controller('PaymentApprovalCtl',
-        ['$scope', '$http', '$timeout', '$state', '$ionicHistory', '$ionicLoading', '$ionicPopup', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
-        function ($scope, $http, $timeout, $state, $ionicHistory, $ionicLoading, $ionicPopup, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+        ['$scope', '$http', '$timeout', '$state', '$ionicHistory', '$ionicLoading', '$ionicPopup', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
+        function ($scope, $http, $timeout, $state, $ionicHistory, $ionicLoading, $ionicPopup, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
             $scope.plcp1 = {};
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
@@ -583,7 +583,7 @@ appControllers.controller('PaymentApprovalCtl',
                 var onSuccess = function (response) {
                     $scope.Rcbp1s = response.data.results;
                 };
-                JsonServiceClient.Get(strUri, onSuccess);
+                WebApiService.Get(strUri, onSuccess);
             };
             $scope.funcShowDatetime = function (utc) {
                 if (typeof (utc) === 'undefined') return ''
@@ -620,14 +620,14 @@ appControllers.controller('PaymentApprovalCtl',
                 var onFinally = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.Get(strUri, onSuccess, onFinally);
+                WebApiService.Get(strUri, onSuccess, onFinally);
             };
             getPlcp1(null, null, $scope.plcpStatus.text);
         }]);
 
 appControllers.controller('VesselScheduleCtl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
-        function ($scope, $http, $state, $stateParams, $ionicLoading, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+        ['$scope', '$http', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
+        function ($scope, $http, $state, $stateParams, $ionicLoading, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
             $scope.rcvy = {
                 PortOfDischargeName: ''
             };
@@ -662,14 +662,14 @@ appControllers.controller('VesselScheduleCtl',
                 var onFinally = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.Get(strUri, onSuccess, onFinally);
+                WebApiService.Get(strUri, onSuccess, onFinally);
             };
             getRcvy1(null);
         }]);
 
 appControllers.controller('VesselScheduleDetailCtl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
-        function ($scope, $http, $state, $stateParams, $ionicLoading, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+        ['$scope', '$http', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
+        function ($scope, $http, $state, $stateParams, $ionicLoading, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
             $scope.Rcvy1Detail = {
                 PortOfDischargeName : $stateParams.PortOfDischargeName
             };
@@ -703,14 +703,14 @@ appControllers.controller('VesselScheduleDetailCtl',
                 var onFinally = function (response) {
                     $ionicLoading.hide();
                 };
-                JsonServiceClient.Get(strUri, onSuccess, onFinally);
+                WebApiService.Get(strUri, onSuccess, onFinally);
             };
             getRcvy1($scope.Rcvy1Detail.PortOfDischargeName);
         }]);
 
 appControllers.controller('ShipmentStatusCtl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
-        function ($scope, $http, $state, $stateParams, $ionicLoading, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+        ['$scope', '$http', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
+        function ($scope, $http, $state, $stateParams, $ionicLoading, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
             $scope.Tracking = {
                 ContainerNo: '',
                 JobNo: '',
@@ -762,7 +762,7 @@ appControllers.controller('ShipmentStatusCtl',
                     return;
                     //To-Do
                 }
-                JsonServiceClient.Get(strUri, onSuccess, onError, onFinally);
+                WebApiService.Get(strUri, onSuccess, onError, onFinally);
             };
             $scope.GoToDetail = function (FilterName) {
                 var FilterValue = '';
@@ -791,8 +791,8 @@ appControllers.controller('ShipmentStatusCtl',
         }]);
 
 appControllers.controller('ShipmentStatusListCtl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
-        function ($scope, $http, $state, $stateParams, $ionicLoading, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+        ['$scope', '$http', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
+        function ($scope, $http, $state, $stateParams, $ionicLoading, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
             $scope.List = {};
             $scope.List.FilterName = $stateParams.FilterName;
             $scope.List.FilterValue = $stateParams.FilterValue;
@@ -830,14 +830,14 @@ appControllers.controller('ShipmentStatusListCtl',
                         }, 0);
                     };
                 }
-                JsonServiceClient.Get(strUri, onSuccess, onError, onFinally);
+                WebApiService.Get(strUri, onSuccess, onError, onFinally);
             };
             getJmjm1($scope.List.FilterName, $scope.List.FilterValue);
         }]);
 
 appControllers.controller('ShipmentStatusDetailCtl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
-        function ($scope, $http, $state, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
+        function ($scope, $http, $state, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
             $scope.Detail = {};
             $scope.Detail.FilterName = $stateParams.FilterName;
             $scope.Detail.FilterValue = $stateParams.FilterValue;
@@ -855,8 +855,8 @@ appControllers.controller('ShipmentStatusDetailCtl',
         }]);
 
 appControllers.controller('InvoiceCtl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$ionicLoading', '$timeout', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
-        function ($scope, $http, $state, $stateParams, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$ionicLoading', '$timeout', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
+        function ($scope, $http, $state, $stateParams, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -919,8 +919,8 @@ appControllers.controller('InvoiceCtl',
         }]);
 
 appControllers.controller('BlCtl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$ionicLoading', '$timeout', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
-        function ($scope, $http, $state, $stateParams, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$ionicLoading', '$timeout', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
+        function ($scope, $http, $state, $stateParams, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -983,8 +983,8 @@ appControllers.controller('BlCtl',
         }]);
 
 appControllers.controller('AwbCtl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$ionicLoading', '$timeout', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
-        function ($scope, $http, $state, $stateParams, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$ionicLoading', '$timeout', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
+        function ($scope, $http, $state, $stateParams, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -1047,8 +1047,8 @@ appControllers.controller('AwbCtl',
         }]);
 
 appControllers.controller('SOACtl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$ionicLoading', '$timeout', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
-        function ($scope, $http, $state, $stateParams, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$ionicLoading', '$timeout', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
+        function ($scope, $http, $state, $stateParams, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -1111,8 +1111,8 @@ appControllers.controller('SOACtl',
         }]);
 
 appControllers.controller('MemoCtl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
-        function ($scope, $http, $state, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
+        function ($scope, $http, $state, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -1122,8 +1122,8 @@ appControllers.controller('MemoCtl',
         }]);
 
 appControllers.controller('ReminderCtl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'JsonServiceClient',
-        function ($scope, $http, $state, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, JsonServiceClient) {
+        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
+        function ($scope, $http, $state, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };

@@ -1,5 +1,5 @@
 angular.module('MobileAPP.services', ['ionic', 'ionic-material'])
-.service('JsonServiceClient', ['$http', '$ionicPopup', '$timeout', 'ionicMaterialInk', function ($http, $ionicPopup, $timeout, ionicMaterialInk) {
+.service('WebApiService', ['$http', '$ionicPopup', '$timeout', 'ionicMaterialInk', function ($http, $ionicPopup, $timeout, ionicMaterialInk) {
     function parseResponseStatus (status) {
         if (!status) return { isSuccess: true };
         var result =
