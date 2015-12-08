@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "ngCordova": "~0.1.19-alpha",
+    "ngCordova": "~0.1.23-alpha",
     "jquery": "~2.1.4",
-    "bootstrap": "~3.3.5",
+    "bootstrap": "~3.3.6",
     "ionic": "~1.0.1",
     "ionic-material": "~0.4.2",
     "robotodraft": "~1.1.0",
