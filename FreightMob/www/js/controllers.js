@@ -139,7 +139,6 @@ appControllers.controller('LoginCtl',
             };
             $timeout(function () {
                 ionicMaterialInk.displayEffect();
-                ionicMaterialMotion.ripple();
             }, 0);
         }]);
 
@@ -676,12 +675,22 @@ appControllers.controller('VesselScheduleDetailCtl',
             $scope.returnList = function () {
                 $state.go('vesselSchedule', {}, {});
             };
-            $scope.funcShowDatetime = function (utc) {
+            $scope.funcShowDate= function (utc) {
                 if (typeof (utc) === 'undefined') return ''
                 var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
                 var newDate = new Date(utcDate);
                 if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
-                    return newDate.Format('yyyy-MM-dd hh:mm');
+                    return newDate.Format('dd-NNN-yyyy');
+                } else {
+                    return '';
+                }
+            };
+			$scope.funcShowDatetime = function (utc) {
+                if (typeof (utc) === 'undefined') return ''
+                var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
+                var newDate = new Date(utcDate);
+                if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
+                    return newDate.Format('dd-NNN-yyyy HH:mm');
                 } else {
                     return '';
                 }
@@ -804,7 +813,7 @@ appControllers.controller('ShipmentStatusListCtl',
                 var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
                 var newDate = new Date(utcDate);
                 if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
-                    return newDate.Format('yyyy-MM-dd hh:mm');
+                    return newDate.Format('dd-NNN-yyyy');
                 } else {
                     return '';
                 }

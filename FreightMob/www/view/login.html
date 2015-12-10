@@ -8,11 +8,13 @@
                     </div>
                 </div>
             </div>
-            <div class="list ripple">
-                <ion-md-input id="iUserName" placeholder="Username" highlight-color="balanced" type="text" ng-model="logininfo.strUserName" required>
-                </ion-md-input>
-                <ion-md-input id="iPassword" placeholder="Password" highlight-color="energized" type="password" ng-model="logininfo.strPassword">
-                </ion-md-input>
+            <div class="list">
+				<label class="item item-input">
+					<input type="text" placeholder="Username" id="iUserName" ng-model="logininfo.strUserName" required>
+				</label>
+				<label class="item item-input">
+					<input type="password" placeholder="Password" id="iPassword"  ng-model="logininfo.strPassword">
+				</label>
             </div>
             <div class="padding">
                 <button class="button button-full button-positive ink" ng-click="login()">SIGN IN</button>
