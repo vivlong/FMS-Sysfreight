@@ -15,10 +15,10 @@
                     <p>Carrier&nbsp;:&nbsp;<span ng-bind="Rcvy1.ShippinglineName"></span></p>
 					<p>Transit Time&nbsp;:&nbsp;<span ng-bind="Rcvy1.TranSit"></span></p>
                     <p>
-					ETD&nbsp;:&nbsp;<span ng-bind="funcShowDate(Rcvy1.ETD)"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					ETA&nbsp;:&nbsp;<span ng-bind="funcShowDate(Rcvy1.ETA)"></span>					
+					<i class="icon ion-calendar"></i>&nbsp;&nbsp;ETD&nbsp;:&nbsp;<span ng-bind="ShowDate(Rcvy1.ETD)"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<i class="icon ion-calendar"></i>&nbsp;&nbsp;ETA&nbsp;:&nbsp;<span ng-bind="ShowDate(Rcvy1.ETA)"></span>					
 					</p>
-					<p>Close Date&nbsp;:&nbsp;<span ng-bind="funcShowDatetime(Rcvy1.CloseDateTime)"></span></p>
+					<p><i class="icon ion-calendar"></i>&nbsp;&nbsp;Close Date&nbsp;:&nbsp;<span ng-bind="ShowDatetime(Rcvy1.CloseDateTime)"></span></p>
                 </ion-item>
             </div>
         </div>
