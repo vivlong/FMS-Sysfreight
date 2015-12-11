@@ -12,12 +12,13 @@
             <div class="list">
                 <ion-item nav-clear menu-close class="item">
                     <h3>Vessel Voyage&nbsp;:&nbsp;<span ng-bind="Rcvy1.VesselCode"></span>&nbsp;V.&nbsp;<span ng-bind="Rcvy1.VoyageNo"></span></h3>
-                    <p>Carrier&nbsp;:&nbsp;<span ng-bind="Rcvy1.ShippinglineName"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Transit Time&nbsp;:&nbsp;<span ng-bind="Rcvy1.TranSit"></span></p>
+                    <p>Carrier&nbsp;:&nbsp;<span ng-bind="Rcvy1.ShippinglineName"></span></p>
+					<p>Transit Time&nbsp;:&nbsp;<span ng-bind="Rcvy1.TranSit"></span></p>
                     <p>
 					ETD&nbsp;:&nbsp;<span ng-bind="funcShowDate(Rcvy1.ETD)"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					ETA&nbsp;:&nbsp;<span ng-bind="funcShowDate(Rcvy1.ETA)"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					Close Date&nbsp;:&nbsp;<span ng-bind="funcShowDatetime(Rcvy1.CloseDateTime)"></span>
+					ETA&nbsp;:&nbsp;<span ng-bind="funcShowDate(Rcvy1.ETA)"></span>					
 					</p>
+					<p>Close Date&nbsp;:&nbsp;<span ng-bind="funcShowDatetime(Rcvy1.CloseDateTime)"></span></p>
                 </ion-item>
             </div>
         </div>
