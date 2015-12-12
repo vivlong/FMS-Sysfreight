@@ -29,7 +29,28 @@ Date.prototype.Format = function (fmt) {
 	}
     return fmt;
 }
-
+/*
+var funcShowDate = function (utc) {
+	if (typeof (utc) === 'undefined') return ''
+	var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
+	var newDate = new Date(utcDate);
+	if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
+		return newDate.Format('dd-NNN-yyyy');
+	} else {
+		return '';
+	}
+};
+var funcShowDatetime = function (utc) {
+	if (typeof (utc) === 'undefined') return ''
+	var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
+	var newDate = new Date(utcDate);
+	if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
+		return newDate.Format('dd-NNN-yyyy HH:mm');
+	} else {
+		return '';
+	}
+};
+*/		
 var onGetRegistradionID = function (data) {
     try {
         console.log("JPushPlugin:registrationID is " + data)
