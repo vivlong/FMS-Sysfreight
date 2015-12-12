@@ -139,6 +139,7 @@ appControllers.controller('LoginCtl',
             };
             $timeout(function () {
                 ionicMaterialInk.displayEffect();
+                ionicMaterialMotion.ripple();
             }, 0);
         }]);
 
@@ -382,10 +383,13 @@ appControllers.controller('SalesmanActivityCtl',
         }]);
 
 appControllers.controller('ContactsCtl',
-        ['$scope', '$state', '$stateParams', '$http', '$ionicPopup', '$timeout', '$ionicLoading', '$cordovaDialogs', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
-        function ($scope, $state, $stateParams, $http, $ionicPopup, $timeout, $ionicLoading, $cordovaDialogs, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
-            $scope.Rcbp = {
-                BusinessPartyName: ''
+        ['$scope', '$state', '$stateParams', '$http', '$ionicPopup', '$timeout', '$ionicLoading', '$ionicScrollDelegate', '$cordovaDialogs', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
+        function ($scope, $state, $stateParams, $http, $ionicPopup, $timeout, $ionicLoading, $ionicScrollDelegate, $cordovaDialogs, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
+			var RecordCount = 0;
+			var dataResults = new Array();
+			$scope.Rcbp = {
+                BusinessPartyName: '',
+				moreDataCanBeLoaded: true
             };
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
@@ -398,19 +402,44 @@ appControllers.controller('ContactsCtl',
                     getRcbp1($scope.Rcbp.BusinessPartyName);
                 }
             });
+			$scope.loadMore = function() {
+				var strUri = "/api/freight/rcbp1/sps/" + RecordCount;
+				if ($scope.Rcbp.BusinessPartyName != null && $scope.Rcbp.BusinessPartyName.length > 0) {
+                    strUri = strUri + "/" + $scope.Rcbp.BusinessPartyName;
+                }
+                var onSuccess = function (response) {
+					if(response.data.results.length > 0){
+						dataResults = dataResults.concat(response.data.results);
+						$scope.Rcbp1s = dataResults;
+						RecordCount = RecordCount + 20;
+						$scope.moreDataCanBeLoaded = true;
+					}else{
+						$scope.moreDataCanBeLoaded = false;
+					}
+					$scope.$broadcast('scroll.infiniteScrollComplete');
+					runMaterial();
+                };
+                WebApiService.Get(strUri, onSuccess);
+			};
             var getRcbp1 = function (BusinessPartyName) {
                 $ionicLoading.show();
-                var strUri = "/api/freight/rcbp1";
+				RecordCount = 0;
+				dataResults = new Array();
+                $scope.Rcbp1s = dataResults;
+                var strUri = "/api/freight/rcbp1/sps/" + RecordCount;
                 if (BusinessPartyName != null && BusinessPartyName.length > 0) {
                     strUri = strUri + "/" + $scope.Rcbp.BusinessPartyName;
                 }
                 var onSuccess = function (response) {
+					if(response.data.results.length > 0){
+						dataResults = dataResults.concat(response.data.results);
+						RecordCount = RecordCount + 20;                    
+                        $scope.moreDataCanBeLoaded = true;
+					}
+					$scope.Rcbp1s = dataResults;
                     $ionicLoading.hide();
-                    $scope.Rcbp1s = response.data.results;
-                    $timeout(function () {
-                        ionicMaterialMotion.blinds();
-                        ionicMaterialInk.displayEffect();
-                    }, 0);
+					runMaterial();
+                    $ionicScrollDelegate.scrollTop();
                 };
                 var onError = function (response) {
                     $ionicLoading.hide();
@@ -420,7 +449,13 @@ appControllers.controller('ContactsCtl',
                 };
                 WebApiService.Get(strUri, onSuccess, onError, onFinally);
             };
-            getRcbp1(null);
+            //getRcbp1(null);
+			var runMaterial = function () {
+				$timeout(function () {
+					ionicMaterialMotion.blinds();
+					ionicMaterialInk.displayEffect();
+				}, 0);
+			};
         }]);
 
 appControllers.controller('ContactsDetailCtl',
@@ -442,6 +477,9 @@ appControllers.controller('ContactsDetailCtl',
                     return true;
                 } else { return false; }
             };
+			var onFinally = function (response) {
+				$ionicLoading.hide();
+			};
             var GetRcbp3s = function (BusinessPartyCode) {
                 $ionicLoading.show();
                 var strUri = "/api/freight/rcbp3?BusinessPartyCode=" + BusinessPartyCode;
@@ -455,7 +493,7 @@ appControllers.controller('ContactsDetailCtl',
                 var onFinally = function (response) {
                     $ionicLoading.hide();
                 };
-                WebApiService.GetParam(strUri, onSuccess, onError, OnFinally);
+                WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
             };
             var GetRcbp1Detail = function (TrxNo) {
                 $ionicLoading.show();
@@ -675,26 +713,25 @@ appControllers.controller('VesselScheduleDetailCtl',
             $scope.returnList = function () {
                 $state.go('vesselSchedule', {}, {});
             };
-            $scope.funcShowDate= function (utc) {
-                if (typeof (utc) === 'undefined') return ''
-                var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
-                var newDate = new Date(utcDate);
-                if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
-                    return newDate.Format('dd-NNN-yyyy');
-                } else {
-                    return '';
-                }
-            };
-			$scope.funcShowDatetime = function (utc) {
-                if (typeof (utc) === 'undefined') return ''
-                var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
-                var newDate = new Date(utcDate);
-                if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
-                    return newDate.Format('dd-NNN-yyyy HH:mm');
-                } else {
-                    return '';
-                }
-            };
+            $scope.ShowDate= function (utc) {
+				if (typeof (utc) === 'undefined') return ''
+				var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
+				var newDate = new Date(utcDate);
+				if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
+					return newDate.Format('dd-NNN-yyyy');
+				} else {
+					return '';
+				}
+			};$scope.ShowDatetime= function (utc) {
+				if (typeof (utc) === 'undefined') return ''
+				var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
+				var newDate = new Date(utcDate);
+				if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
+					return newDate.Format('dd-NNN-yyyy HH:mm');
+				} else {
+					return '';
+				}
+			};
             var getRcvy1 = function (PortOfDischargeName) {
                 $ionicLoading.show();
                 var strUri = "/api/freight/rcvy1/sps/" + PortOfDischargeName;
@@ -794,8 +831,8 @@ appControllers.controller('ShipmentStatusCtl',
                 }
             };
             $timeout(function () {
-                ionicMaterialInk.displayEffect();
                 ionicMaterialMotion.blinds();
+                ionicMaterialInk.displayEffect();
             }, 0);
         }]);
 
@@ -808,16 +845,25 @@ appControllers.controller('ShipmentStatusListCtl',
             $scope.returnShipmentStatus = function () {
                 $state.go('shipmentStatus', {}, {});
             };
-            $scope.funcShowDatetime = function (utc) {
-                if (typeof (utc) === 'undefined') return ''
-                var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
-                var newDate = new Date(utcDate);
-                if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
-                    return newDate.Format('dd-NNN-yyyy');
-                } else {
-                    return '';
-                }
-            };
+			$scope.ShowDate= function (utc) {
+				if (typeof (utc) === 'undefined') return ''
+				var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
+				var newDate = new Date(utcDate);
+				if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
+					return newDate.Format('dd-NNN-yyyy');
+				} else {
+					return '';
+				}
+			};$scope.ShowDatetime= function (utc) {
+				if (typeof (utc) === 'undefined') return ''
+				var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
+				var newDate = new Date(utcDate);
+				if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
+					return newDate.Format('dd-NNN-yyyy HH:mm');
+				} else {
+					return '';
+				}
+			};
             var getJmjm1 = function (FilterName, FilterValue) {
                 $ionicLoading.show();
                 var strUri = '';
@@ -845,22 +891,58 @@ appControllers.controller('ShipmentStatusListCtl',
         }]);
 
 appControllers.controller('ShipmentStatusDetailCtl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
-        function ($scope, $http, $state, $stateParams, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
+        ['$scope', '$http', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
+        function ($scope, $http, $state, $stateParams, $ionicLoading,$ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
             $scope.Detail = {};
             $scope.Detail.FilterName = $stateParams.FilterName;
             $scope.Detail.FilterValue = $stateParams.FilterValue;
+			$scope.Detail.ModuleCode = $stateParams.ModuleCode;
             $scope.returnList = function () {
-                $state.go('shipmentStatus', {}, { reload: true });
+                $state.go('shipmentStatus', {}, {});
             };
-            $scope.items= [
-                { JobNo: 'SESIN0905182-00', BLNo: 'SESIN0905182-00', RefNo: 'RN0907033', ETD: '04/11/2015', ETA: '07/11/2015', Origin: 'XMN', Destination: 'SIN', Vessel: 'S A ORANJE 123', Pcs: '100', Weight: '1000', Volume: '1000', Status: 'USE' },
-                { JobNo: 'SESIN1511137-02', BLNo: 'SESIN1511137-02', RefNo: 'RN1511051', ETD: '04/11/2015', ETA: '07/11/2015', Origin: 'SIN', Destination: 'XMN', Vessel: 'KADIMA', Pcs: '500', Weight: '50,000', Volume: '50,000', Status: 'USE' }
-            ];
-            $timeout(function () {
-                ionicMaterialInk.displayEffect();
-                ionicMaterialMotion.ripple();
-            }, 0);
+            $scope.ShowDate= function (utc) {
+				if (typeof (utc) === 'undefined') return ''
+				var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
+				var newDate = new Date(utcDate);
+				if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
+					return newDate.Format('dd-NNN-yyyy');
+				} else {
+					return '';
+				}
+			};$scope.ShowDatetime= function (utc) {
+				if (typeof (utc) === 'undefined') return ''
+				var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
+				var newDate = new Date(utcDate);
+				if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
+					return newDate.Format('dd-NNN-yyyy HH:mm');
+				} else {
+					return '';
+				}
+			};
+            var getJmjm1 = function (FilterName, FilterValue) {
+                $ionicLoading.show();
+                var strUri = '';
+                var onSuccess = null;
+                var onError = function (response) {
+                    $ionicLoading.hide();
+                };
+                var onFinally = function (response) {
+                    $ionicLoading.hide();
+                };
+                if (FilterName === 'ContainerNo') {
+                    strUri = '/api/freight/tracking/ContainerNo/' + FilterValue;
+                    onSuccess = function (response) {
+                        $ionicLoading.hide();
+                        $scope.Jmjm1s = response.data.results;
+                        $timeout(function () {
+                            ionicMaterialMotion.blinds();
+                            ionicMaterialInk.displayEffect();
+                        }, 0);
+                    };
+                }
+                WebApiService.Get(strUri, onSuccess, onError, onFinally);
+            };
+            getJmjm1($scope.Detail.FilterName, $scope.Detail.FilterValue);
         }]);
 
 appControllers.controller('InvoiceCtl',

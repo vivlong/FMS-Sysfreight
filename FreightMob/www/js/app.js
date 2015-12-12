@@ -238,7 +238,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
                 controller: 'ShipmentStatusListCtl'
             })
             .state('shipmentStatusDetail', {
-                url: '/shipmentStatus/detail/:FilterName/:FilterValue',
+                url: '/shipmentStatus/detail/:FilterName/:FilterValue/:ModuleCode',
                 cache: 'false',
                 templateUrl: 'view/tracking/ShipmentStatus-detail.html',
                 controller: 'ShipmentStatusDetailCtl'

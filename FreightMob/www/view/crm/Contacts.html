@@ -21,5 +21,6 @@
                 <p><i class="iconfont icon-accountcity"></i>&nbsp;&nbsp;<span ng-bind="Rcbp1.CityCode"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="iconfont icon-name"></i>&nbsp;&nbsp;<span ng-bind="Rcbp1.ContactName1"></span></p>
             </ion-item>
         </div>
+		<ion-infinite-scroll ng-if="Rcbp.moreDataCanBeLoaded" on-infinite="loadMore()" distance="1%"></ion-infinite-scroll>
 	</ion-content>
 </ion-view>
