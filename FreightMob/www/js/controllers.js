@@ -416,14 +416,19 @@ appControllers.controller('ContactsCtl',
 					}else{
 						$scope.moreDataCanBeLoaded = false;
 					}
+                };
+				var onError = function (response) {
+                };
+                var onFinally = function (response) {
 					$scope.$broadcast('scroll.infiniteScrollComplete');
 					runMaterial();
                 };
-                WebApiService.Get(strUri, onSuccess);
+                WebApiService.Get(strUri, onSuccess, OnError, onFinally);
 			};
             var getRcbp1 = function (BusinessPartyName) {
                 $ionicLoading.show();
-				RecordCount = 0;
+				RecordCount = 0;				
+				$scope.moreDataCanBeLoaded = true;
 				dataResults = new Array();
                 $scope.Rcbp1s = dataResults;
                 var strUri = "/api/freight/rcbp1/sps/" + RecordCount;
@@ -437,15 +442,13 @@ appControllers.controller('ContactsCtl',
                         $scope.moreDataCanBeLoaded = true;
 					}
 					$scope.Rcbp1s = dataResults;
-                    $ionicLoading.hide();
-					runMaterial();
-                    $ionicScrollDelegate.scrollTop();
                 };
                 var onError = function (response) {
-                    $ionicLoading.hide();
                 };
                 var onFinally = function (response) {
                     $ionicLoading.hide();
+					runMaterial();
+                    $ionicScrollDelegate.scrollTop();
                 };
                 WebApiService.Get(strUri, onSuccess, onError, onFinally);
             };
