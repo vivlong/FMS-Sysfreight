@@ -412,9 +412,9 @@ appControllers.controller('ContactsCtl',
 						dataResults = dataResults.concat(response.data.results);
 						$scope.Rcbp1s = dataResults;
 						RecordCount = RecordCount + 20;
-						$scope.moreDataCanBeLoaded = true;
+						$scope.Rcbp.moreDataCanBeLoaded = true;
 					}else{
-						$scope.moreDataCanBeLoaded = false;
+						$scope.Rcbp.moreDataCanBeLoaded = false;
 					}
                 };
 				var onError = function (response) {
@@ -428,7 +428,7 @@ appControllers.controller('ContactsCtl',
             var getRcbp1 = function (BusinessPartyName) {
                 $ionicLoading.show();
 				RecordCount = 0;				
-				$scope.moreDataCanBeLoaded = true;
+				$scope.Rcbp.moreDataCanBeLoaded = true;
 				dataResults = new Array();
                 $scope.Rcbp1s = dataResults;
                 var strUri = "/api/freight/rcbp1/sps/" + RecordCount;
@@ -439,7 +439,7 @@ appControllers.controller('ContactsCtl',
 					if(response.data.results.length > 0){
 						dataResults = dataResults.concat(response.data.results);
 						RecordCount = RecordCount + 20;                    
-                        $scope.moreDataCanBeLoaded = true;
+                        $scope.Rcbp.moreDataCanBeLoaded = true;
 					}
 					$scope.Rcbp1s = dataResults;
                 };
@@ -842,11 +842,18 @@ appControllers.controller('ShipmentStatusCtl',
 appControllers.controller('ShipmentStatusListCtl',
         ['$scope', '$http', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
         function ($scope, $http, $state, $stateParams, $ionicLoading, $ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
-            $scope.List = {};
-            $scope.List.FilterName = $stateParams.FilterName;
-            $scope.List.FilterValue = $stateParams.FilterValue;
+            var RecordCount = 0;
+			var dataResults = new Array();
+			$scope.List = {
+				FilterName:		$stateParams.FilterName,
+				FilterValue:	$stateParams.FilterValue,
+				moreDataCanBeLoaded: true
+			};
             $scope.returnShipmentStatus = function () {
                 $state.go('shipmentStatus', {}, {});
+            };
+			$scope.GoToDetail = function (Jmjm1) {
+				$state.go('shipmentStatusDetail', { 'FilterName': $scope.List.FilterName, 'FilterValue': Jmjm1.JobNo, 'ModuleCode': Jmjm1.ModuleCode }, { reload: true });    
             };
 			$scope.ShowDate= function (utc) {
 				if (typeof (utc) === 'undefined') return ''
@@ -857,7 +864,8 @@ appControllers.controller('ShipmentStatusListCtl',
 				} else {
 					return '';
 				}
-			};$scope.ShowDatetime= function (utc) {
+			};
+			$scope.ShowDatetime= function (utc) {
 				if (typeof (utc) === 'undefined') return ''
 				var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
 				var newDate = new Date(utcDate);
@@ -867,41 +875,49 @@ appControllers.controller('ShipmentStatusListCtl',
 					return '';
 				}
 			};
-            var getJmjm1 = function (FilterName, FilterValue) {
-                $ionicLoading.show();
-                var strUri = '';
-                var onSuccess = null;
-                var onError = function (response) {
-                    $ionicLoading.hide();
-                };
-                var onFinally = function (response) {
-                    $ionicLoading.hide();
-                };
-                if (FilterName === 'ContainerNo') {
-                    strUri = '/api/freight/tracking/ContainerNo/' + FilterValue;
-                    onSuccess = function (response) {
-                        $ionicLoading.hide();
-                        $scope.Jmjm1s = response.data.results;
-                        $timeout(function () {
-                            ionicMaterialMotion.blinds();
-                            ionicMaterialInk.displayEffect();
-                        }, 0);
-                    };
-                }
-                WebApiService.Get(strUri, onSuccess, onError, onFinally);
-            };
-            getJmjm1($scope.List.FilterName, $scope.List.FilterValue);
+			$scope.loadMore = function() {
+				if ($scope.List.FilterName === 'ContainerNo') {
+					var strUri = '/api/freight/tracking/ContainerNo/sps/' + RecordCount + '/' + $scope.List.FilterValue;				
+					var onSuccess = function (response) {
+						if(response.data.results.length > 0){
+							dataResults = dataResults.concat(response.data.results);						
+							$scope.Jmjm1s = dataResults;
+							RecordCount = RecordCount + 20;
+							$scope.List.moreDataCanBeLoaded = true;
+						}else{
+							$scope.List.moreDataCanBeLoaded = false;
+						}
+					};
+					var onError = function (response) {
+					};
+					var onFinally = function (response) {
+						$scope.$broadcast('scroll.infiniteScrollComplete');
+						runMaterial();
+					};
+					WebApiService.Get(strUri, onSuccess, onError, onFinally);
+				}
+			};
+			var runMaterial = function () {
+				$timeout(function () {
+					ionicMaterialMotion.blinds();
+					ionicMaterialInk.displayEffect();
+				}, 0);
+			};
         }]);
 
 appControllers.controller('ShipmentStatusDetailCtl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
-        function ($scope, $http, $state, $stateParams, $ionicLoading,$ionicPopup, $timeout, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
+        ['$scope', '$http', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$ionicHistory', '$timeout', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
+        function ($scope, $http, $state, $stateParams, $ionicLoading, $ionicPopup, $ionicHistory, $timeout, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
             $scope.Detail = {};
             $scope.Detail.FilterName = $stateParams.FilterName;
             $scope.Detail.FilterValue = $stateParams.FilterValue;
 			$scope.Detail.ModuleCode = $stateParams.ModuleCode;
             $scope.returnList = function () {
-                $state.go('shipmentStatus', {}, {});
+				if ($ionicHistory.backView()) {
+					$ionicHistory.goBack();
+				}else{
+					$state.go('shipmentStatus', {}, {});
+				}
             };
             $scope.ShowDate= function (utc) {
 				if (typeof (utc) === 'undefined') return ''
@@ -912,7 +928,8 @@ appControllers.controller('ShipmentStatusDetailCtl',
 				} else {
 					return '';
 				}
-			};$scope.ShowDatetime= function (utc) {
+			};
+			$scope.ShowDatetime= function (utc) {
 				if (typeof (utc) === 'undefined') return ''
 				var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
 				var newDate = new Date(utcDate);
@@ -922,30 +939,31 @@ appControllers.controller('ShipmentStatusDetailCtl',
 					return '';
 				}
 			};
-            var getJmjm1 = function (FilterName, FilterValue) {
+            var getJmjm1 = function (FilterName, FilterValue, ModuleCode) {
                 $ionicLoading.show();
                 var strUri = '';
                 var onSuccess = null;
                 var onError = function (response) {
-                    $ionicLoading.hide();
                 };
                 var onFinally = function (response) {
                     $ionicLoading.hide();
                 };
                 if (FilterName === 'ContainerNo') {
-                    strUri = '/api/freight/tracking/ContainerNo/' + FilterValue;
+                    strUri = '/api/freight/tracking/ContainerNo/' + ModuleCode + '/' + FilterValue;
                     onSuccess = function (response) {
-                        $ionicLoading.hide();
                         $scope.Jmjm1s = response.data.results;
-                        $timeout(function () {
-                            ionicMaterialMotion.blinds();
-                            ionicMaterialInk.displayEffect();
-                        }, 0);
+                        runMaterial();
                     };
                 }
                 WebApiService.Get(strUri, onSuccess, onError, onFinally);
             };
-            getJmjm1($scope.Detail.FilterName, $scope.Detail.FilterValue);
+            getJmjm1($scope.Detail.FilterName, $scope.Detail.FilterValue, $scope.Detail.ModuleCode);
+			var runMaterial = function () {
+				$timeout(function () {
+					ionicMaterialMotion.blinds();
+					ionicMaterialInk.displayEffect();
+				}, 0);
+			};
         }]);
 
 appControllers.controller('InvoiceCtl',

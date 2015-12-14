@@ -10,7 +10,7 @@
     <ion-content class="has-header">
         <div class="card animate-blinds" ng-repeat="Jmjm1 in Jmjm1s">
             <div class="list">
-                <ion-item nav-clear menu-close class="item ink">
+                <ion-item nav-clear menu-close class="item ink" ng-click="GoToDetail(Jmjm1)">
                     <h2>Job No&nbsp;:&nbsp;<span ng-bind="Jmjm1.JobNo"></span></h2>
                     <p>B/L No&nbsp;:&nbsp;<span ng-bind="Jmjm1.AwbBlNo"></span></p>
 					<p>OBL No&nbsp;:&nbsp;<span ng-bind="Jmjm1.MAwbOblNo"></span></p>
@@ -24,5 +24,6 @@
                 </ion-item>
             </div>
         </div>
+		<ion-infinite-scroll ng-if="List.moreDataCanBeLoaded" on-infinite="loadMore()" distance="1%"></ion-infinite-scroll>
     </ion-content>
 </ion-view>
