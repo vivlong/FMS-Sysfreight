@@ -5,17 +5,18 @@
                 <button class="button button-icon button-clear ion-navicon" ng-click="returnList()"></button>
             </span>
         </div>
-        <div class="title"><span ng-bind="Detail.FilterName"></span> - <span ng-bind="Detail.FilterValue"></span></div>
+        <div class="title">Tracking - <span ng-bind="Detail.FilterName"></span></div>
     </div>
 	<ion-content class="has-header">
         <div class="card animate-blinds" ng-repeat="Jmjm1 in Jmjm1s">
             <div class="list">
                 <ion-item nav-clear menu-close class="item ink">
                     <h2>Job No&nbsp;:&nbsp;<span ng-bind="Jmjm1.JobNo"></span></h2>
+                    <h2 ng-show="funcShowLabel('ContainerNo')">Container No&nbsp;:&nbsp;<span ng-bind="Jmjm1.ContainerNo"></span></h2>
                     <p>B/L No&nbsp;:&nbsp;<span ng-bind="Jmjm1.AwbBlNo"></span></p>
 					<p>OBL No&nbsp;:&nbsp;<span ng-bind="Jmjm1.MAwbOblNo"></span></p>
 					<p>Ref No&nbsp;:&nbsp;<span ng-bind="Jmjm1.CustomerRefNo"></span></p>
-					<p>ATA&nbsp;<span ng-bind="Jmjm1.CityCode"></span>:&nbsp;<span ng-bind="Jmjm1.ATA"></span></p>
+					<p ng-show="Jmjm1.ModuleCode === 'SE'"><i class="icon ion-calendar"></i>&nbsp;&nbsp;ATA&nbsp;-&nbsp;<span ng-bind="Jmjm1.CityCode"></span>&nbsp;:&nbsp;<span ng-bind="Jmjm1.ATA"></span></p>
                     <p><i class="icon ion-calendar"></i>&nbsp;&nbsp;ETD&nbsp;:&nbsp;<span ng-bind="ShowDate(Jmjm1.ETD)"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon ion-calendar"></i>&nbsp;&nbsp;ETA&nbsp;:&nbsp;<span ng-bind="ShowDate(Jmjm1.ETA)"></span></p>                    
                     <p>POL&nbsp;:&nbsp;<span ng-bind="Jmjm1.OriginName"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;POD&nbsp;:&nbsp;<span ng-bind="Jmjm1.DestName"></span></p>
                     <p>Vessel&nbsp;:&nbsp;<span ng-bind="Jmjm1.VesselName"></span>&nbsp;V.&nbsp;<span ng-bind="Jmjm1.VoyageNo"></span></p>

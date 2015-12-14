@@ -294,6 +294,11 @@ appControllers.controller('MainCtl',
             $scope.GoToReminder = function () {
                 $state.go('reminder', {}, { reload: true });
             };
+            $timeout(function () {
+                ionicMaterialInk.displayEffect();
+                ionicMaterialMotion.ripple();
+            }, 0);			
+            /*
             // Set Motion
             //$timeout(function () {
             //    ionicMaterialMotion.slideup({
@@ -305,11 +310,6 @@ appControllers.controller('MainCtl',
             //        startVelocity: 3000
             //    });
             //}, 700);
-            $timeout(function () {
-                ionicMaterialInk.displayEffect();
-                ionicMaterialMotion.ripple();
-            }, 0);
-            /*
             $scope.scanBarcode = function () {
                 $cordovaBarcodeScanner.scan().then(function (imageData) {
                     alert(imageData.text);
@@ -875,7 +875,12 @@ appControllers.controller('ShipmentStatusListCtl',
 					return '';
 				}
 			};
-			$scope.loadMore = function() {
+			$scope.funcShowLabel = function(FilterName){
+				if(FilterName === $scope.List.FilterName){
+					return true;
+				}else { return false; }				
+			};
+			$scope.funcLoadMore = function() {
 				if ($scope.List.FilterName === 'ContainerNo') {
 					var strUri = '/api/freight/tracking/ContainerNo/sps/' + RecordCount + '/' + $scope.List.FilterValue;				
 					var onSuccess = function (response) {
@@ -938,6 +943,11 @@ appControllers.controller('ShipmentStatusDetailCtl',
 				} else {
 					return '';
 				}
+			};			
+			$scope.funcShowLabel = function(FilterName){
+				if(FilterName === $scope.Detail.FilterName){
+					return true;
+				}else { return false; }				
 			};
             var getJmjm1 = function (FilterName, FilterValue, ModuleCode) {
                 $ionicLoading.show();
