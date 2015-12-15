@@ -423,7 +423,7 @@ appControllers.controller('ContactsCtl',
 					$scope.$broadcast('scroll.infiniteScrollComplete');
 					runMaterial();
                 };
-                WebApiService.Get(strUri, onSuccess, OnError, onFinally);
+                WebApiService.Get(strUri, onSuccess, onError, onFinally);
 			};
             var getRcbp1 = function (BusinessPartyName) {
                 $ionicLoading.show();
