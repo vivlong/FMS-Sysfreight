@@ -195,6 +195,12 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
                 templateUrl: 'view/crm/Contacts.html',
                 controller: 'ContactsCtl'
             })
+			.state('contactsList', {
+                url: '/contacts/list/:BusinessPartyName',
+                cache: 'false',
+                templateUrl: 'view/crm/Contacts-list.html',
+                controller: 'ContactsListCtl'
+            })
             .state('contactsDetail', {
                 url: '/contacts/detail/:TrxNo',
                 cache: 'false',

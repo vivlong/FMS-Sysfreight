@@ -385,23 +385,39 @@ appControllers.controller('SalesmanActivityCtl',
 appControllers.controller('ContactsCtl',
         ['$scope', '$state', '$stateParams', '$http', '$ionicPopup', '$timeout', '$ionicLoading', '$ionicScrollDelegate', '$cordovaDialogs', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
         function ($scope, $state, $stateParams, $http, $ionicPopup, $timeout, $ionicLoading, $ionicScrollDelegate, $cordovaDialogs, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
-			var RecordCount = 0;
-			var dataResults = new Array();
 			$scope.Rcbp = {
-                BusinessPartyName: '',
-				moreDataCanBeLoaded: true
+                BusinessPartyName: ''
             };
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
+            $scope.GoToList = function () {
+                $state.go('contactsList', { 'BusinessPartyName': $scope.Rcbp.BusinessPartyName }, { reload: true });
+            };
+			var runMaterial = function () {
+				$timeout(function () {
+					ionicMaterialMotion.blinds();
+					ionicMaterialInk.displayEffect();
+				}, 0);
+			};
+			runMaterial();
+        }]);
+
+appControllers.controller('ContactsListCtl',
+        ['$scope', '$state', '$stateParams', '$http', '$ionicPopup', '$timeout', '$ionicLoading', '$ionicScrollDelegate', '$cordovaDialogs', 'ionicMaterialInk', 'ionicMaterialMotion', 'WebApiService',
+        function ($scope, $state, $stateParams, $http, $ionicPopup, $timeout, $ionicLoading, $ionicScrollDelegate, $cordovaDialogs, ionicMaterialInk, ionicMaterialMotion, WebApiService) {
+			var RecordCount = 0;
+			var dataResults = new Array();
+			$scope.Rcbp = {
+                BusinessPartyName: $stateParams.BusinessPartyName,
+				moreDataCanBeLoaded: true
+            };
+            $scope.returnSearch = function () {
+                $state.go('contacts', {}, {});
+            };
             $scope.GoToDetail = function (Rcbp1) {
                 $state.go('contactsDetail', { 'TrxNo': Rcbp1.TrxNo }, { reload: true });
             };
-            $('#txt-rcbp-list-BusinessPartyName').on('keydown', function (e) {
-                if (e.which === 9 || e.which === 13) {
-                    getRcbp1($scope.Rcbp.BusinessPartyName);
-                }
-            });
 			$scope.loadMore = function() {
 				var strUri = "/api/freight/rcbp1/sps/" + RecordCount;
 				if ($scope.Rcbp.BusinessPartyName != null && $scope.Rcbp.BusinessPartyName.length > 0) {
@@ -452,7 +468,6 @@ appControllers.controller('ContactsCtl',
                 };
                 WebApiService.Get(strUri, onSuccess, onError, onFinally);
             };
-            //getRcbp1(null);
 			var runMaterial = function () {
 				$timeout(function () {
 					ionicMaterialMotion.blinds();
@@ -468,7 +483,11 @@ appControllers.controller('ContactsDetailCtl',
             $scope.rcbp3Detail = {};
             $scope.rcbpDetail.TrxNo = $stateParams.TrxNo;
             $scope.returnList = function () {
-                $state.go('contacts', {}, {});
+				if ($ionicHistory.backView()) {
+					$ionicHistory.goBack();
+				}else{
+					$state.go('contactsList', {}, {});
+				}
             };
             $scope.GoToDetailEdit = function () {
                 $state.go('contactsDetailEdit', { 'TrxNo': $scope.rcbpDetail.TrxNo }, { reload: true });
