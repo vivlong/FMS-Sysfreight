@@ -58,5 +58,25 @@ html {
 }
 
 .iconfont {
-  color: #387ef5;
+	color: #387ef5;
+}
+
+@media screen and (max-width: 1199px) { /*<1200的设备*/
+	.mainImg {
+		width: 16%;
+	}	
+}
+@media screen and (max-width: 991px) { /*<992的设备*/
+	.mainImg {
+		width: 32%;
+	}	
+}
+@media screen and (max-width: 767px) { /*<768的设备*/
+	.mainImg {
+		width: 46%;
+	}
+}@media screen and (min-width: 1200px) { /*>1200的设备*/
+	.mainImg {
+		width: 16%;
+	}
 }
