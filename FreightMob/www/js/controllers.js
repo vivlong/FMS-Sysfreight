@@ -125,7 +125,8 @@ appControllers.controller('LoginCtl',
                     $ionicLoading.hide();
                 };
                 WebApiService.Post(strUri, jsonData, onSuccess, onError);
-            };            
+            }; 
+			$('#iUserName').focus();		
         }]);
 
 appControllers.controller('SettingCtl',
