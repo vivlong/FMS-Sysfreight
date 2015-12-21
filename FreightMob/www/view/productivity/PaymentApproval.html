@@ -1,12 +1,10 @@
 ﻿<ion-view title="Detail">
-    <div class="bar bar-header bar-calm-900">
-        <div class="buttons buttons-left header-item">
-            <span class="left-buttons">
-                <button class="button button-icon button-clear ion-navicon" ng-click="returnMain()"></button>
-            </span>
-        </div>
-        <div class="title">Payment Approval</div>
-    </div>
+	<ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
+		<div class="buttons">
+			<button class="button button-icon button-clear ion-navicon" ng-click="returnMain()"></button>
+		</div>
+		<h1 class="title">Payment Approval</h1>
+	</ion-header-bar>
     <ion-pane style="margin-top:44px; height:50px; overflow:visible;">
         <div class="list item">
             <div class="row row-center" id="div-list-rcbp">
@@ -15,32 +13,6 @@
                         <option selected>Voucher No</option>
                         <option>Vendor Name</option>
                     </select>
-                </div>
-                <div class="col col-50">
-                    <ui-select ng-show="false"
-                                ng-model="Rcbp1.selected"
-                                theme="bootstrap"
-                                reset-search-input="true"
-                                on-select="getPlcp1(null, Rcbp1.selected.BusinessPartyName, plcpStatus.text)">
-                        <ui-select-match allow-clear="true" placeholder="Enter to search..." style="overflow:hidden;">{{$select.selected.BusinessPartyName}}</ui-select-match>
-                        <ui-select-choices repeat="Rcbp1 in Rcbp1s track by $index"
-                                            refresh="refreshRcbp1($select.search)"
-                                            refresh-delay="0">
-                            <div ng-bind-html="Rcbp1.BusinessPartyName | highlight: $select.search"></div>
-                        </ui-select-choices>
-                    </ui-select>
-                    <ui-select ng-show="true"
-                                ng-model="Rcbp1.selected"
-                                theme="bootstrap"
-                                reset-search-input="true"
-                                on-select="getPlcp1(null, Rcbp1.selected.BusinessPartyName, plcpStatus.text)">
-                        <ui-select-match allow-clear="true" placeholder="Enter to search..." style="overflow:hidden;">{{$select.selected.BusinessPartyName}}</ui-select-match>
-                        <ui-select-choices repeat="Rcbp1 in Rcbp1s track by $index"
-                                            refresh="refreshRcbp1($select.search)"
-                                            refresh-delay="0">
-                            <div ng-bind="Rcbp1.BusinessPartyName"></div>
-                        </ui-select-choices>
-                    </ui-select>
                 </div>
                 <ion-toggle ng-model="plcpStatus.checked" ng-change="plcpStatusChange()">
                     <span ng-bind="plcpStatus.text"></span>

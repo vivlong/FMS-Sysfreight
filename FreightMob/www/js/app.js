@@ -1,16 +1,13 @@
 var app = angular.module('MobileAPP', [
     'ionic',
-	'ionic-material',
     'ngCordova.plugins.toast',
     'ngCordova.plugins.dialogs',
-    'ngCordova.plugins.toast',
     'ngCordova.plugins.appVersion',
     'ngCordova.plugins.file',
     'ngCordova.plugins.fileTransfer',
     'ngCordova.plugins.fileOpener2',
     'ngCordova.plugins.datePicker',
     'ngCordova.plugins.barcodeScanner',
-    'ui.select',
     'MobileAPP.directives',
     'MobileAPP.services',
     'MobileAPP.controllers'
@@ -22,6 +19,7 @@ app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$io
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
             if (window.cordova && window.cordova.plugins.Keyboard) {
+				blnMobilePlatform = true;
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
                 // Add JPush
                 window.plugins.jPushPlugin.init();
@@ -202,13 +200,13 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
                 controller: 'ContactsListCtl'
             })
             .state('contactsDetail', {
-                url: '/contacts/detail/:TrxNo',
+                url: '/contacts/detail/:TrxNo/:BusinessPartyName',
                 cache: 'false',
                 templateUrl: 'view/crm/Contacts-detail.html',
                 controller: 'ContactsDetailCtl'
             })
             .state('contactsDetailEdit', {
-                url: '/contacts/detail/Edit/:TrxNo',
+                url: '/contacts/detail/Edit/:TrxNo/:BusinessPartyName',
                 cache: 'false',
                 templateUrl: 'view/crm/Contacts-detail-Edit.html',
                 controller: 'ContactsDetailEditCtl'

@@ -1,17 +1,15 @@
 ﻿<ion-view title="VesselSchedule">
-    <div class="bar bar-header bar-calm-900">
-        <div class="buttons buttons-left header-item">
-            <span class="left-buttons">
-                <button class="button button-icon button-clear ion-navicon" ng-click="returnMain()"></button>
-            </span>
-        </div>
-            <div class="item-input-inset" style="width:90%;">
-                <label class="item-input-wrapper">
-                    <i class="icon ion-ios-search placeholder-icon"></i>
-                    <input id="txt-PortOfDischargeName" type="search" placeholder="Search Port Name" style="width:100%;" ng-model="rcvy.PortOfDischargeName">
-                </label>
-            </div>
-    </div>
+	<ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
+		<div class="buttons">
+			<button class="button button-icon button-clear ion-navicon" ng-click="returnMain()"></button>
+		</div>
+		<div class="item-input-inset" style="width:90%;">
+			<label class="item-input-wrapper">
+				<i class="icon ion-ios-search placeholder-icon"></i>
+				<input id="txt-PortOfDischargeName" type="search" placeholder="Search Port Name" style="width:100%;" ng-model="rcvy.PortOfDischargeName">
+			</label>
+		</div>
+	</ion-header-bar>
     <ion-content class="has-header">
         <ion-list class="animate-ripple">
             <ion-item nav-clear menu-close class="item ink" ng-repeat="PortOfDischargeName in PortOfDischargeNames" ng-click="GoToDetail(PortOfDischargeName)">

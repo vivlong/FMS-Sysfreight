@@ -2,12 +2,10 @@
   "dependencies": {
     "ngCordova": "~0.1.23-alpha",
     "jquery": "~2.1.4",
-    "bootstrap": "~3.3.6",
     "ionic": "~1.0.1",
-    "ionic-material": "~0.4.2",
     "robotodraft": "~1.1.0",
-    "ui-select": "angular-ui-select#~0.12.1",
-    "echarts": "~2.2.7"
+    "echarts": "~2.2.7",
+    "ion-md-input": "~1.0.4"
   },
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.0.1"

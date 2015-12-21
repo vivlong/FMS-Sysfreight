@@ -1,21 +1,21 @@
 <ion-view title="Login">
 	<ion-side-menus enable-menu-with-back-views="true">
 		<ion-side-menu-content style="background: url(img/mountains.jpg) center; background-size: cover;" class="ionic login">
-            <div class="hero no-header flat">
+            <div class="no-header">
                 <div class="content">
                     <div class="app-icon">
-                        <img src="./img/login.png" width="220px;" height="220px;">
+                        <img src="./img/login.png" width="220px;" height="220px;" style="clear: both; display: block; margin:auto;">
                     </div>
                 </div>
             </div>
-            <div class="list ripple">
-                <ion-md-input id="iUserName" placeholder="Username" highlight-color="balanced" type="text" ng-model="logininfo.strUserName" required>
+            <div class="padding list">
+                <ion-md-input id="iUserName" placeholder="Username" highlight-color="balanced" type="text" ng-model="logininfo.strUserName" style="background-color:snow;">
                 </ion-md-input>
-                <ion-md-input id="iPassword" placeholder="Password" highlight-color="energized" type="password" ng-model="logininfo.strPassword">
+                <ion-md-input id="iPassword" placeholder="Password" highlight-color="energized" type="password" ng-model="logininfo.strPassword" style="background-color:snow;">
                 </ion-md-input>
             </div>
             <div class="padding">
-                <button class="button button-full button-positive ink" ng-click="login()">SIGN IN</button>
+                <button class="button button-full button-positive" ng-click="login()">SIGN IN</button>
             </div>
 		</ion-side-menu-content>
 		<ion-side-menu side="left">

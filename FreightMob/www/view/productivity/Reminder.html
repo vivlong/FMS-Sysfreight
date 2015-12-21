@@ -1,12 +1,10 @@
 ﻿<ion-view title="">
-    <div class="bar bar-header bar-calm-900">
-        <div class="buttons buttons-left header-item">
-            <span class="left-buttons">
-                <button class="button button-icon button-clear ion-navicon" ng-click="returnMain()"></button>
-            </span>
-        </div>
-        <div class="title">Reminder</div>
-    </div>
+	<ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
+		<div class="buttons">
+			<button class="button button-icon button-clear ion-navicon" ng-click="returnMain()"></button>
+		</div>
+		<h1 class="title">Reminder</h1>
+	</ion-header-bar>
     <ion-content class="has-header">
         <ion-list>
             <div class="card" ng-repeat="item in items">
@@ -18,7 +16,7 @@
             </div>
         </ion-list>
     </ion-content>
-    <ion-footer-bar class="button-bar" style="height:7%;">
-        <button class="button button-flat button-positive ink" style="max-width:100%;" ng-click="returnMain()">Back</button>
+    <ion-footer-bar class="padding button-bar" style="height:7%;">
+        <button class="button button-flat button-positive" style="max-width:100%;" ng-click="returnMain()">Back</button>
     </ion-footer-bar>
 </ion-view>
