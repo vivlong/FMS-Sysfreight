@@ -7,167 +7,172 @@
         </div>
         <div class="title">Customer Detail</div>
     </div>
-	<ion-content class="has-header">
-		<div>
-            <div class="list card">
-                <div class="item item-avatar" style="min-height: 58px;">
-                    <img src="./img/unknown.png">
-                    <h2><span ng-bind="rcbpDetail.BusinessPartyName"></span></h2>
-                </div>
-                <div class="item item-body">
-                    <div class="item">
-                        <i class="iconfont icon-address2"></i>&nbsp;&nbsp;
-                        <span ng-bind="rcbpDetail.Address1"></span>
-                    </div>
-                    <div class="item">
-                        <i class="iconfont icon-address2"></i>&nbsp;&nbsp;
-                        <span ng-bind="rcbpDetail.Address2"></span>
-                    </div>
-                    <div class="item">
-                        <i class="iconfont icon-address2"></i>&nbsp;&nbsp;
-                        <span ng-bind="rcbpDetail.Address3"></span>
-                    </div>
-                    <div class="item">
-                        <i class="iconfont icon-address2"></i>&nbsp;&nbsp;
-                        <span ng-bind="rcbpDetail.Address4"></span>
-                    </div>
-                    <div class="item">
-                        <i class="iconfont icon-accountcity"></i>&nbsp;&nbsp;
-                        <span ng-bind="rcbpDetail.CityCode"></span>&nbsp;&nbsp;|&nbsp;&nbsp;<span ng-bind="rcbpDetail.CityName"></span>
-                    </div>
-                    <div class="item">
-                        <i class="iconfont icon-accountcity"></i>&nbsp;&nbsp;
-                        <span ng-bind="rcbpDetail.CountryCode"></span>&nbsp;&nbsp;|&nbsp;&nbsp;<span ng-bind="rcbpDetail.CountryName"></span>
-                    </div>
-                    <div class="item">
-                        <i class="iconfont icon-phone3"></i>&nbsp;&nbsp;
-                        <span ng-bind="rcbpDetail.Telephone"></span>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        <i class="iconfont icon-fax1"></i>&nbsp;&nbsp;
-                        <span ng-bind="rcbpDetail.Fax"></span>
-                    </div>
-                    <div class="item">
-                        <i class="iconfont icon-email"></i>&nbsp;&nbsp;
-                        <span ng-bind="rcbpDetail.Email"></span>
-                    </div>
-                    <div class="item">
-                        <i class="iconfont icon-website1"></i>&nbsp;&nbsp;
-                        <a ng-href="{{rcbpDetail.WebSite}}" target="_blank"><span ng-bind="rcbpDetail.WebSite"></span></a>
-                    </div>
-                </div>
-                <!--div class="item tabs tabs-secondary tabs-icon-left">
-                        <i class="iconfont icon-address2"></i>
-                        Address1
-                        <i class="iconfont icon-address2"></i>
-                        Address2
-                        <i class="iconfont icon-address2"></i>
-                        Address3
-                        <i class="iconfont icon-address2"></i>
-                        Address4
-                </div-->
-            </div>
-            <div class="item item-divider">
-                Contact Info
-            </div>
-            <ion-list>
-                <ion-item ng-repeat="rcbp3 in rcbp3s" class="item-remove-animate item-icon-right" ng-click="openModal(rcbp3)">
-                    <p style="font-size:0.8em;"><i class="iconfont icon-name"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.ContactName" style="font-size:1.2em;"></span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="iconfont icon-title1"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Title" style="font-size:1.2em;"></span></p>
-                    <p style="font-size:0.8em;"><i class="iconfont icon-phone2"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Handphone" style="font-size:1.2em;"></span></p>
-                    <p style="font-size:0.8em;"><i class="iconfont icon-email"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Email" style="font-size:1.2em;"></span></p>
-                </ion-item>
-            </ion-list>
-		</div>
-        <script id="rcbp3Detail.html" type="text/ng-template">
-            <ion-modal-view>
-                <ion-header-bar class="bar-calm-900" align-title="center">
-                    <div class="title">Contact Info</div>
-                </ion-header-bar>
-                <ion-content>
-                    <div class="list card">
-                        <div class="item">
-                            <p>
-                                <i class="iconfont icon-name"></i>&nbsp;&nbsp;
-                                <span ng-bind="rcbp3Detail.ContactName"></span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                <i class="iconfont icon-title1"></i>&nbsp;&nbsp;
-                                <span ng-bind="rcbp3Detail.Title"></span>
-                            </p>                                
-                            <p>
-                                <i class="iconfont icon-phone3"></i>&nbsp;&nbsp;
-                                <span ng-bind="rcbp3Detail.Telephone"></span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                <i class="iconfont icon-fax1"></i>&nbsp;&nbsp;
-                                <span ng-bind="rcbp3Detail.Fax"></span>
-                            </p>
-                            <p>
-                                <i class="iconfont icon-phone2"></i>&nbsp;&nbsp;
-                                <span ng-bind="rcbp3Detail.Handphone"></span>
-                            </p>
-                            <p>
-                                <i class="iconfont icon-email"></i>&nbsp;&nbsp;
-                                <span ng-bind="rcbp3Detail.Email"></span>
-                            </p>
-                        </div>
-                        <div class="item item-body">
-                            <img class="full-image" ng-show="blnContainNameCard(rcbp3Detail)" ng-src="data:image/png;base64,{{rcbp3Detail.NameCard}}"/>
-                            <p>
-                                <i class="iconfont icon-birthdaycake"></i>&nbsp;&nbsp;
-                                <span ng-bind="rcbp3Detail.Birthday"></span>
-                            </p>
-                            <p>
-                                <i class="iconfont icon-like"></i>&nbsp;&nbsp;
-                                <span ng-bind="rcbp3Detail.Like"></span>
-                            </p>
-                            <p>
-                                <i class="iconfont icon-dislike"></i>&nbsp;&nbsp;
-                                <span ng-bind="rcbp3Detail.Dislike"></span>
-                            </p>
-                            <p>
-                                <i class="iconfont icon-facebook"></i>&nbsp;&nbsp;
-                                <span ng-bind="rcbp3Detail.Facebook"></span>
-                            </p>
-                            <p>
-                                <i class="iconfont icon-msn"></i>&nbsp;&nbsp;
-                                <span ng-bind="rcbp3Detail.MSN"></span>
-                            </p>
-                            <p>
-                                <i class="iconfont icon-skype"></i>&nbsp;&nbsp;
-                                <span ng-bind="rcbp3Detail.Skype"></span>
-                            </p>
-                            <p>
-                                <i class="iconfont icon-twitter"></i>&nbsp;&nbsp;
-                                <span ng-bind="rcbp3Detail.Twitter"></span>
-                            </p>
-                            <p>
-                                <i class="iconfont icon-qq"></i>&nbsp;&nbsp;
-                                <span ng-bind="rcbp3Detail.QQ"></span>
-                            </p>
-                            <p>
-                                Others&nbsp;&nbsp;:&nbsp;&nbsp;<span ng-bind="rcbp3Detail.Others"></span>
-                            </p>
-                        </div>
-                        <!--div class="item tabs tabs-secondary tabs-icon-left">
-                            <a class="tab-item" href="#">
-                                <i class="iconfont icon-phone3"></i>&nbsp;&nbsp;
-                                <span ng-bind="rcbp3Detail.Handphone"></span>
-                            </a>
-                            <a class="tab-item" href="#">
-                                <i class="iconfont icon-email2"></i>&nbsp;&nbsp;
-                                <span ng-bind="rcbp3Detail.Email"></span>
-                            </a>
-                            <a class="tab-item" href="#">
-                                <i class="icon ion-share"></i>&nbsp;&nbsp;
-                                Share
-                            </!a>
-                        </div-->
-                    </div>
-                </ion-content>
-                <ion-footer-bar class="button-bar" style="height:7%;">
-                    <button class="button button-flat button-positive ink" style="max-width:100%;" ng-click="closeModal()">Return</button>
-                </ion-footer-bar>
-            </ion-modal-view>
-        </script>
-	</ion-content>
-	<ion-footer-bar class="button-bar" style="height:7%;">
+	<ion-pane>
+		<ion-tabs class="tabs-top tabs-background-positive tabs-color-light tabs-icon-left">
+			<ion-tab title="Customer" icon-on="ion-ios-world" icon-off="ion-ios-world-outline">
+				<ion-content style="margin-top:93px;">
+					<div class="list card">
+						<div class="item item-avatar" style="min-height: 58px;">
+							<img src="./img/unknown.png">
+							<h2><span ng-bind="rcbpDetail.BusinessPartyName"></span></h2>
+						</div>
+						<div class="item item-body">
+							<div class="item">
+								<i class="iconfont icon-address2"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbpDetail.Address1"></span>
+							</div>
+							<div class="item">
+								<i class="iconfont icon-address2"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbpDetail.Address2"></span>
+							</div>
+							<div class="item">
+								<i class="iconfont icon-address2"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbpDetail.Address3"></span>
+							</div>
+							<div class="item">
+								<i class="iconfont icon-address2"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbpDetail.Address4"></span>
+							</div>
+							<div class="item">
+								<i class="iconfont icon-accountcity"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbpDetail.CityCode"></span>&nbsp;&nbsp;|&nbsp;&nbsp;<span ng-bind="rcbpDetail.CityName"></span>
+							</div>
+							<div class="item">
+								<i class="iconfont icon-accountcity"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbpDetail.CountryCode"></span>&nbsp;&nbsp;|&nbsp;&nbsp;<span ng-bind="rcbpDetail.CountryName"></span>
+							</div>
+							<div class="item">
+								<i class="iconfont icon-phone3"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbpDetail.Telephone"></span>
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<i class="iconfont icon-fax1"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbpDetail.Fax"></span>
+							</div>
+							<div class="item">
+								<i class="iconfont icon-email"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbpDetail.Email"></span>
+							</div>
+							<div class="item">
+								<i class="iconfont icon-website1"></i>&nbsp;&nbsp;
+								<a ng-href="{{rcbpDetail.WebSite}}" target="_blank"><span ng-bind="rcbpDetail.WebSite"></span></a>
+							</div>
+						</div>
+						<!--div class="item tabs tabs-secondary tabs-icon-left">
+								<i class="iconfont icon-address2"></i>
+								Address1
+								<i class="iconfont icon-address2"></i>
+								Address2
+								<i class="iconfont icon-address2"></i>
+								Address3
+								<i class="iconfont icon-address2"></i>
+								Address4
+						</div-->
+					</div>
+				</ion-content>				
+			</ion-tab>
+			<ion-tab title="Contacts" icon-on="ion-ios-people" icon-off="ion-ios-people-outline">
+				<ion-content style="margin-top:93px;">
+					<ion-list>
+						<ion-item ng-repeat="rcbp3 in rcbp3s" class="item-remove-animate item-icon-right" ng-click="openModal(rcbp3)">
+							<p style="font-size:0.8em;"><i class="iconfont icon-name"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.ContactName" style="font-size:1.2em;"></span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="iconfont icon-title1"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Title" style="font-size:1.2em;"></span></p>
+							<p style="font-size:0.8em;"><i class="iconfont icon-phone2"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Handphone" style="font-size:1.2em;"></span></p>
+							<p style="font-size:0.8em;"><i class="iconfont icon-email"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Email" style="font-size:1.2em;"></span></p>
+						</ion-item>
+					</ion-list>
+				</ion-content>
+			</ion-tab>
+		</ion-tabs>
+		<script id="rcbp3Detail.html" type="text/ng-template">
+			<ion-modal-view>
+				<ion-header-bar class="bar-calm-900" align-title="center">
+					<div class="title">Contact Info</div>
+				</ion-header-bar>
+				<ion-content>
+					<div class="list card">
+						<div class="item">
+							<p>
+								<i class="iconfont icon-name"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbp3Detail.ContactName"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+								<i class="iconfont icon-title1"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbp3Detail.Title"></span>
+							</p>                                
+							<p>
+								<i class="iconfont icon-phone3"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbp3Detail.Telephone"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+								<i class="iconfont icon-fax1"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbp3Detail.Fax"></span>
+							</p>
+							<p>
+								<i class="iconfont icon-phone2"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbp3Detail.Handphone"></span>
+							</p>
+							<p>
+								<i class="iconfont icon-email"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbp3Detail.Email"></span>
+							</p>
+						</div>
+						<div class="item item-body">
+							<img class="full-image" ng-show="blnContainNameCard(rcbp3Detail)" ng-src="data:image/png;base64,{{rcbp3Detail.NameCard}}"/>
+							<p>
+								<i class="iconfont icon-birthdaycake"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbp3Detail.Birthday"></span>
+							</p>
+							<p>
+								<i class="iconfont icon-like"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbp3Detail.Like"></span>
+							</p>
+							<p>
+								<i class="iconfont icon-dislike"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbp3Detail.Dislike"></span>
+							</p>
+							<p>
+								<i class="iconfont icon-facebook"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbp3Detail.Facebook"></span>
+							</p>
+							<p>
+								<i class="iconfont icon-msn"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbp3Detail.MSN"></span>
+							</p>
+							<p>
+								<i class="iconfont icon-skype"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbp3Detail.Skype"></span>
+							</p>
+							<p>
+								<i class="iconfont icon-twitter"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbp3Detail.Twitter"></span>
+							</p>
+							<p>
+								<i class="iconfont icon-qq"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbp3Detail.QQ"></span>
+							</p>
+							<p>
+								Others&nbsp;&nbsp;:&nbsp;&nbsp;<span ng-bind="rcbp3Detail.Others"></span>
+							</p>
+						</div>
+						<!--div class="item tabs tabs-secondary tabs-icon-left">
+							<a class="tab-item" href="#">
+								<i class="iconfont icon-phone3"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbp3Detail.Handphone"></span>
+							</a>
+							<a class="tab-item" href="#">
+								<i class="iconfont icon-email2"></i>&nbsp;&nbsp;
+								<span ng-bind="rcbp3Detail.Email"></span>
+							</a>
+							<a class="tab-item" href="#">
+								<i class="icon ion-share"></i>&nbsp;&nbsp;
+								Share
+							</!a>
+						</div-->
+					</div>
+				</ion-content>
+				<ion-footer-bar class="button-bar" style="height:7%;">
+					<button class="button button-flat button-positive ink" style="max-width:100%;" ng-click="closeModal()">Return</button>
+				</ion-footer-bar>
+			</ion-modal-view>
+		</script>
+	</ion-pane>
+	<!--ion-footer-bar class="button-bar" style="height:7%;">
         <button class="button button-flat button-positive ink" style="max-width:49%;" ng-click="GoToDetailEdit()">Edit</button>
         <button class="button button-positive ink" style="position:relative;max-width:49%;top:0;bottom:0;right:-5px;" ng-click="returnList()">Cancel</button>
-	</ion-footer-bar>
+	</ion-footer-bar-->
 </ion-view>
