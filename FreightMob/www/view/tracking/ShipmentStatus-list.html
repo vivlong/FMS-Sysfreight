@@ -11,8 +11,8 @@
                 <ion-item nav-clear menu-close class="item ink" ng-click="GoToDetail(Jmjm1)">
                     <h2>Job No&nbsp;:&nbsp;<span ng-bind="Jmjm1.JobNo"></span></h2>
                     <h2 ng-show="funcShowLabel('ContainerNo')">Container No&nbsp;:&nbsp;<span ng-bind="Jmjm1.ContainerNo"></span></h2>
-                    <p><i class="icon ion-calendar"></i>&nbsp;&nbsp;ETD&nbsp;:&nbsp;<span ng-bind="ShowDate(Jmjm1.ETD)"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon ion-calendar"></i>&nbsp;&nbsp;ETA&nbsp;:&nbsp;<span ng-bind="ShowDate(Jmjm1.ETA)"></span></p>                    
-                    <p ng-show="Jmjm1.ModuleCode === 'SE'">POL&nbsp;:&nbsp;<span ng-bind="Jmjm1.PortOfLoadingName"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;POD&nbsp;:&nbsp;<span ng-bind="Jmjm1.PortOfDischargeName"></span></p>
+                    <p><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;ETD&nbsp;:&nbsp;<span ng-bind="ShowDate(Jmjm1.ETD)"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;ETA&nbsp;:&nbsp;<span ng-bind="ShowDate(Jmjm1.ETA)"></span></p>                    
+                    <p ng-show="Jmjm1.ModuleCode === 'SE'"><i class="iconfont icon-accountcity"></i>&nbsp;&nbsp;POL&nbsp;:&nbsp;<span ng-bind="Jmjm1.PortOfLoadingName"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="iconfont icon-accountcity"></i>&nbsp;&nbsp;POD&nbsp;:&nbsp;<span ng-bind="Jmjm1.PortOfDischargeName"></span></p>
                     <p ng-show="Jmjm1.ModuleCode != 'SE'">POL&nbsp;:&nbsp;<span ng-bind="Jmjm1.OriginName"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;POD&nbsp;:&nbsp;<span ng-bind="Jmjm1.DestName"></span></p>
                     <p>Vessel&nbsp;:&nbsp;<span ng-bind="Jmjm1.VesselName"></span>&nbsp;V.&nbsp;<span ng-bind="Jmjm1.VoyageNo"></span></p>
                 </ion-item>
