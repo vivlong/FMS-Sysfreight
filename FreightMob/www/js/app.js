@@ -211,6 +211,12 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
                 templateUrl: 'view/crm/Contacts-detail-Edit.html',
                 controller: 'ContactsDetailEditCtl'
             })
+            .state('contactsDetailAdd', {
+                url: '/contacts/detail/Add/:BusinessPartyName',
+                cache: 'false',
+                templateUrl: 'view/crm/Contacts-detail-Add.html',
+                controller: 'ContactsDetailAddCtl'
+            })
             .state('paymentApproval', {
                 url: '/paymentApproval',
                 cache: 'false',

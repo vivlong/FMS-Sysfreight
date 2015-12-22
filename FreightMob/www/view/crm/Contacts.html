@@ -8,16 +8,23 @@
         <div class="title">
             Search Contact
         </div>
+		<div class="buttons">
+			<button class="button button-small button-icon button-clear ion-android-person-add" ng-click="GoToAdd()"></button>
+		</div>
     </div>
     <ion-pane class="has-header" style="margin-top:44px;">
 		<ion-list>
             <div class="card">
-                <div class="item">
-                    <label class="item item-input item-stacked-label pull-left" style="width:80%;">
-                        <span class="input-label">Business Party Name</span>
-                        <input type="text" style="border-bottom:1px solid #808080;" ng-model="Rcbp.BusinessPartyName">
-                    </label>
-                    <button class="button button-clear icon ion-android-search" ng-click="GoToList()"></button>
+                <div class="item row">
+					<div class="col col-80">
+						<label class="item item-input item-stacked-label">
+							<span class="input-label">Business Party Name</span>
+							<input type="text" style="border-bottom:1px solid #808080;" ng-model="Rcbp.BusinessPartyName">
+						</label>
+					</div>
+					<div class="col col-20">
+						<button class="button button-clear button-large icon ion-android-search" ng-click="GoToList()"></button>
+					</div>
                 </div>
             </div>
 			<!--div class="card">
