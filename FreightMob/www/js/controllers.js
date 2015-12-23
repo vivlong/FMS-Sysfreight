@@ -13,7 +13,7 @@ var appControllers = angular.module('MobileAPP.controllers', [
     'MobileAPP.services'
 ]);
 
-appControllers.controller('LoadingCtl',
+appControllers.controller('LoadingCtrl',
         ['$state', '$timeout',
         function ($state, $timeout) {
             $timeout(function () {
@@ -21,9 +21,9 @@ appControllers.controller('LoadingCtl',
             }, 2500);
         }]);
 
-appControllers.controller('LoginCtl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$timeout', '$ionicLoading', '$cordovaToast', '$cordovaAppVersion', 'WebApiService', 
-        function ($scope, $http, $state, $stateParams, $ionicPopup, $timeout, $ionicLoading, $cordovaToast, $cordovaAppVersion, WebApiService) {
+appControllers.controller('LoginCtrl',
+        ['$scope', '$http', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', '$cordovaToast', '$cordovaAppVersion', 'WebApiService', 
+        function ($scope, $http, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, $cordovaToast, $cordovaAppVersion, WebApiService) {
             $scope.logininfo = {};
             $scope.logininfo.strUserName = "";
             $scope.logininfo.strPassword = "";
@@ -36,20 +36,7 @@ appControllers.controller('LoginCtl',
                 if (e.which === 9 || e.which === 13) {
                     $scope.login();
                 }
-            });
-            if ($stateParams.CheckUpdate === 'Y') {
-                var url = strWebSiteURL + '/update.json';
-                $http.get(url)
-                .success(function (res) {
-                        var serverAppVersion = res.version;
-                        $cordovaAppVersion.getVersionNumber().then(function (version) {
-                            if (version != serverAppVersion) {
-                                $state.go('update', { 'Version': serverAppVersion });
-                            }
-                        });
-                    })
-                .error(function (res) {});
-            }
+            });            
             $scope.checkUpdate = function () {
                 var url = strWebServiceURL + strBaseUrl + '/update.json';
                 $http.get(url)
@@ -126,10 +113,23 @@ appControllers.controller('LoginCtl',
                 };
                 WebApiService.Post(strUri, jsonData, onSuccess, onError);
             }; 
-			$('#iUserName').focus();		
+			$('#iUserName').focus();
+			if ($stateParams.CheckUpdate === 'Y') {
+                var url = strWebSiteURL + '/update.json';
+                $http.get(url)
+                .success(function (res) {
+                        var serverAppVersion = res.version;
+                        $cordovaAppVersion.getVersionNumber().then(function (version) {
+                            if (version != serverAppVersion) {
+                                $state.go('update', { 'Version': serverAppVersion });
+                            }
+                        });
+                    })
+                .error(function (res) {});
+            }			
         }]);
 
-appControllers.controller('SettingCtl',
+appControllers.controller('SettingCtrl',
         ['$scope', '$state', '$timeout', '$ionicLoading', '$ionicPopup', '$cordovaToast', '$cordovaFile',
         function ($scope, $state, $timeout, $ionicLoading, $ionicPopup, $cordovaToast, $cordovaFile) {
             $scope.Setting = {};
@@ -185,9 +185,9 @@ appControllers.controller('SettingCtl',
             };
         }]);
 
-appControllers.controller('UpdateCtl',
-        ['$scope', '$stateParams', '$state', '$timeout', '$ionicLoading', '$cordovaToast', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2',
-        function ($scope, $stateParams, $state, $timeout, $ionicLoading, $cordovaToast, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2) {
+appControllers.controller('UpdateCtrl',
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$cordovaToast', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $cordovaToast, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2) {
             $scope.strVersion = $stateParams.Version;
             $scope.returnLogin = function () {
                 $state.go('login', { 'CheckUpdate': 'N' }, { reload: true });
@@ -239,9 +239,9 @@ appControllers.controller('UpdateCtl',
             };
         }]);
 
-appControllers.controller('MainCtl',
-        ['$scope', '$state', '$stateParams', '$ionicPopup', '$timeout', '$cordovaBarcodeScanner', 'WebApiService',
-        function ($scope, $state, $stateParams, $ionicPopup, $timeout, $cordovaBarcodeScanner, WebApiService) {
+appControllers.controller('MainCtrl',
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicPopup, WebApiService) {
             $scope.GoToSA = function () {
                 $state.go('salesmanActivity', {}, { reload: true });
             };
@@ -274,21 +274,12 @@ appControllers.controller('MainCtl',
             };
             $scope.GoToReminder = function () {
                 $state.go('reminder', {}, { reload: true });
-            };            			
-            /*
-            $scope.scanBarcode = function () {
-                $cordovaBarcodeScanner.scan().then(function (imageData) {
-                    alert(imageData.text);
-                }, function (error) {
-                    alert(error);
-                });
             };
-            */
         }]);
 
-appControllers.controller('SalesmanActivityCtl',
-        ['$scope', '$state', '$stateParams', '$ionicPopup', '$timeout', '$ionicLoading', '$cordovaDialogs', 'WebApiService',
-        function ($scope, $state, $stateParams, $ionicPopup, $timeout, $ionicLoading, $cordovaDialogs, WebApiService) {
+appControllers.controller('SalesmanActivityCtrl',
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', '$cordovaDialogs', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, $cordovaDialogs, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -348,9 +339,9 @@ appControllers.controller('SalesmanActivityCtl',
             myChart.setOption(option);
         }]);
 
-appControllers.controller('ContactsCtl',
-        ['$scope', '$state', '$stateParams', '$ionicPopup', '$timeout', '$ionicLoading', '$ionicScrollDelegate', '$cordovaDialogs', 'WebApiService',
-        function ($scope, $state, $stateParams, $ionicPopup, $timeout, $ionicLoading, $ionicScrollDelegate, $cordovaDialogs, WebApiService) {
+appControllers.controller('ContactsCtrl',
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', '$cordovaDialogs', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, $cordovaDialogs, WebApiService) {
 			$scope.Rcbp = {
                 BusinessPartyName: ''
             };
@@ -361,13 +352,18 @@ appControllers.controller('ContactsCtl',
                 $state.go('contactsList', { 'BusinessPartyName': $scope.Rcbp.BusinessPartyName }, { reload: true });
             };
 			$scope.GoToAdd = function () {
-                $state.go('contactsDetailAdd', { 'BusinessPartyName': '' }, { reload: true });
+                $state.go('contactsDetailAdd', { 'TrxNo':'New', 'BusinessPartyName': 'New' }, { reload: true });
             };
+			$('#iBusinessPartyName').on('keydown', function (e) {
+                if (e.which === 9 || e.which === 13) {
+                    $scope.GoToList();
+                }
+            });
         }]);
 
-appControllers.controller('ContactsListCtl',
-        ['$scope', '$state', '$stateParams', '$ionicPopup', '$timeout', '$ionicLoading', '$ionicScrollDelegate', '$cordovaDialogs', 'WebApiService',
-        function ($scope, $state, $stateParams, $ionicPopup, $timeout, $ionicLoading, $ionicScrollDelegate, $cordovaDialogs, WebApiService) {
+appControllers.controller('ContactsListCtrl',
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', '$ionicScrollDelegate', '$cordovaDialogs', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, $ionicScrollDelegate, $cordovaDialogs, WebApiService) {
 			var RecordCount = 0;
 			var dataResults = new Array();
 			$scope.Rcbp = {
@@ -381,7 +377,7 @@ appControllers.controller('ContactsListCtl',
                 $state.go('contactsDetail', { 'TrxNo': Rcbp1.TrxNo, 'BusinessPartyName': $stateParams.BusinessPartyName }, { reload: true });
             };			
 			$scope.GoToAdd = function () {
-                $state.go('contactsDetailAdd', { 'BusinessPartyName': $stateParams.BusinessPartyName }, { reload: true });
+                $state.go('contactsDetailAdd', { 'TrxNo': 'New', 'BusinessPartyName': $stateParams.BusinessPartyName }, { reload: true });
             };
 			$scope.loadMore = function() {
 				var strUri = "/api/freight/rcbp1/sps/" + RecordCount;
@@ -433,7 +429,7 @@ appControllers.controller('ContactsListCtl',
             };
         }]);
 
-appControllers.controller('ContactsDetailCtl',
+appControllers.controller('ContactsDetailCtrl',
         ['$scope', '$stateParams', '$state', '$timeout', '$ionicHistory', '$ionicLoading', '$ionicPopup', '$ionicModal', 'WebApiService',
         function ($scope, $stateParams, $state, $timeout, $ionicHistory, $ionicLoading, $ionicPopup, $ionicModal, WebApiService) {
             $scope.rcbpDetail = {
@@ -513,7 +509,7 @@ appControllers.controller('ContactsDetailCtl',
             };
         }]);
 
-appControllers.controller('ContactsDetailEditCtl',
+appControllers.controller('ContactsDetailEditCtrl',
         ['$scope', '$stateParams', '$state', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService',
         function ($scope, $stateParams, $state, $timeout, $ionicLoading, $ionicPopup, WebApiService) {
             $scope.rcbpDetail = {
@@ -570,12 +566,13 @@ appControllers.controller('ContactsDetailEditCtl',
             };
         }]);
 
-appControllers.controller('ContactsDetailAddCtl',
-        ['$scope', '$stateParams', '$state', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService',
-        function ($scope, $stateParams, $state, $timeout, $ionicLoading, $ionicPopup, WebApiService) {
+appControllers.controller('ContactsDetailAddCtrl',
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, WebApiService) {
+			var TrxNo = $stateParams.TrxNo;
 			var BusinessPartyName = $stateParams.BusinessPartyName;
 			$scope.returnTo = function () {
-				if(BusinessPartyName != ''){
+				if(BusinessPartyName != 'New'){
 					$state.go('contactsList', { 'BusinessPartyName': BusinessPartyName }, {});
 				}else{
 					$state.go('contacts', {}, {});
@@ -585,9 +582,9 @@ appControllers.controller('ContactsDetailAddCtl',
 			};
 		}]);
 		
-appControllers.controller('PaymentApprovalCtl',
-        ['$scope', '$timeout', '$state', '$ionicHistory', '$ionicLoading', '$ionicPopup', 'WebApiService',
-        function ($scope, $timeout, $state, $ionicHistory, $ionicLoading, $ionicPopup, WebApiService) {
+appControllers.controller('PaymentApprovalCtrl',
+        ['$scope', '$state', '$timeout', '$ionicHistory', '$ionicLoading', '$ionicPopup', 'WebApiService',
+        function ($scope, $state, $timeout, $ionicHistory, $ionicLoading, $ionicPopup, WebApiService) {
             $scope.plcp1 = {};
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
@@ -652,9 +649,9 @@ appControllers.controller('PaymentApprovalCtl',
             getPlcp1(null, null, $scope.plcpStatus.text);
         }]);
 
-appControllers.controller('VesselScheduleCtl',
-        ['$scope', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$timeout', 'WebApiService',
-        function ($scope, $state, $stateParams, $ionicLoading, $ionicPopup, $timeout, WebApiService) {
+appControllers.controller('VesselScheduleCtrl',
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, WebApiService) {
             $scope.rcvy = {
                 PortOfDischargeName: ''
             };
@@ -690,9 +687,9 @@ appControllers.controller('VesselScheduleCtl',
             getRcvy1(null);
         }]);
 
-appControllers.controller('VesselScheduleDetailCtl',
-        ['$scope', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$timeout', 'WebApiService',
-        function ($scope, $state, $stateParams, $ionicLoading, $ionicPopup, $timeout, WebApiService) {
+appControllers.controller('VesselScheduleDetailCtrl',
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, WebApiService) {
             $scope.Rcvy1Detail = {
                 PortOfDischargeName : $stateParams.PortOfDischargeName
             };
@@ -736,9 +733,9 @@ appControllers.controller('VesselScheduleDetailCtl',
             getRcvy1($scope.Rcvy1Detail.PortOfDischargeName);
         }]);
 
-appControllers.controller('ShipmentStatusCtl',
-        ['$scope', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$timeout', 'WebApiService',
-        function ($scope, $state, $stateParams, $ionicLoading, $ionicPopup, $timeout, WebApiService) {
+appControllers.controller('ShipmentStatusCtrl',
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, WebApiService) {
             $scope.Tracking = {
                 ContainerNo: '',
                 JobNo: '',
@@ -821,9 +818,9 @@ appControllers.controller('ShipmentStatusCtl',
             };
         }]);
 
-appControllers.controller('ShipmentStatusListCtl',
-        ['$scope', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$timeout', 'WebApiService',
-        function ($scope, $state, $stateParams, $ionicLoading, $ionicPopup, $timeout, WebApiService) {
+appControllers.controller('ShipmentStatusListCtrl',
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, WebApiService) {
             var RecordCount = 0;
 			var dataResults = new Array();
 			$scope.List = {
@@ -885,9 +882,9 @@ appControllers.controller('ShipmentStatusListCtl',
 			};
         }]);
 
-appControllers.controller('ShipmentStatusDetailCtl',
-        ['$scope', '$state', '$stateParams', '$ionicLoading', '$ionicPopup', '$ionicHistory', '$timeout', 'WebApiService',
-        function ($scope, $state, $stateParams, $ionicLoading, $ionicPopup, $ionicHistory, $timeout, WebApiService) {
+appControllers.controller('ShipmentStatusDetailCtrl',
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicHistory', '$ionicLoading', '$ionicPopup', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicHistory, $ionicLoading, $ionicPopup, WebApiService) {
             $scope.Detail = {};
             $scope.Detail.FilterName = $stateParams.FilterName;
             $scope.Detail.FilterValue = $stateParams.FilterValue;
@@ -949,9 +946,9 @@ appControllers.controller('ShipmentStatusDetailCtl',
             getJmjm1($scope.Detail.FilterName, $scope.Detail.FilterValue, $scope.Detail.ModuleCode);
         }]);
 
-appControllers.controller('InvoiceCtl',
-        ['$scope', '$state', '$stateParams', '$ionicPopup', '$ionicLoading', '$timeout', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2', 'WebApiService',
-        function ($scope, $state, $stateParams, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, WebApiService) {
+appControllers.controller('InvoiceCtrl',
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -1010,9 +1007,9 @@ appControllers.controller('InvoiceCtl',
             
         }]);
 
-appControllers.controller('BlCtl',
-        ['$scope', '$state', '$stateParams', '$ionicPopup', '$ionicLoading', '$timeout', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2', 'WebApiService',
-        function ($scope, $state, $stateParams, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, WebApiService) {
+appControllers.controller('BlCtrl',
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -1071,9 +1068,9 @@ appControllers.controller('BlCtl',
             
         }]);
 
-appControllers.controller('AwbCtl',
-        ['$scope', '$state', '$stateParams', '$ionicPopup', '$ionicLoading', '$timeout', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2', 'WebApiService',
-        function ($scope, $state, $stateParams, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, WebApiService) {
+appControllers.controller('AwbCtrl',
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -1132,9 +1129,9 @@ appControllers.controller('AwbCtl',
             
         }]);
 
-appControllers.controller('SOACtl',
-        ['$scope', '$state', '$stateParams', '$ionicPopup', '$ionicLoading', '$timeout', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2', 'WebApiService',
-        function ($scope, $state, $stateParams, $ionicPopup, $ionicLoading, $timeout, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, WebApiService) {
+appControllers.controller('SOACtrl',
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -1193,9 +1190,9 @@ appControllers.controller('SOACtl',
             
         }]);
 
-appControllers.controller('MemoCtl',
-        ['$scope', '$state', '$stateParams', '$ionicPopup', '$timeout', 'WebApiService',
-        function ($scope, $http, $state, $stateParams, $ionicPopup, $timeout, WebApiService) {
+appControllers.controller('MemoCtrl',
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', 'WebApiService',
+        function ($scope, $http, $state, $stateParams, $timeout, $ionicPopup, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -1204,9 +1201,9 @@ appControllers.controller('MemoCtl',
             };
         }]);
 
-appControllers.controller('ReminderCtl',
-        ['$scope', '$state', '$stateParams', '$ionicPopup', '$timeout', 'WebApiService',
-        function ($scope, $http, $state, $stateParams, $ionicPopup, $timeout, WebApiService) {
+appControllers.controller('ReminderCtrl',
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', 'WebApiService',
+        function ($scope, $http, $state, $stateParams, $timeout, $ionicPopup, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };

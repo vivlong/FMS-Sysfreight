@@ -157,137 +157,137 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
                 url: '/loading',
                 cache: 'false',
                 templateUrl: 'view/loading.html',
-                controller: 'LoadingCtl'
+                controller: 'LoadingCtrl'
             })
             .state('login', {
                 url: '/login/:CheckUpdate',
                 cache: 'false',
                 templateUrl: 'view/login.html',
-                controller: 'LoginCtl'
+                controller: 'LoginCtrl'
             })
             .state('setting', {
                 url: '/setting',
                 cache: 'false',
                 templateUrl: 'view/setting.html',
-                controller: 'SettingCtl'
+                controller: 'SettingCtrl'
             })
             .state('update', {
                 url: '/update/:Version',
                 cache: 'false',
                 templateUrl: 'view/update.html',
-                controller: 'UpdateCtl'
+                controller: 'UpdateCtrl'
             })
             .state('main', {
                 url: "/main",
                 templateUrl: "view/main.html",
-                controller: 'MainCtl'
+                controller: 'MainCtrl'
             })
             .state('salesmanActivity', {
                 url: '/salesmanActivity',
                 templateUrl: 'view/crm/SalesmanActivity.html',
-                controller: 'SalesmanActivityCtl'
+                controller: 'SalesmanActivityCtrl'
             })
             .state('contacts', {
                 url: '/contacts',
                 cache: 'false',
                 templateUrl: 'view/crm/Contacts.html',
-                controller: 'ContactsCtl'
+                controller: 'ContactsCtrl'
             })
 			.state('contactsList', {
                 url: '/contacts/list/:BusinessPartyName',
                 cache: 'false',
                 templateUrl: 'view/crm/Contacts-list.html',
-                controller: 'ContactsListCtl'
+                controller: 'ContactsListCtrl'
             })
             .state('contactsDetail', {
                 url: '/contacts/detail/:TrxNo/:BusinessPartyName',
                 cache: 'false',
                 templateUrl: 'view/crm/Contacts-detail.html',
-                controller: 'ContactsDetailCtl'
+                controller: 'ContactsDetailCtrl'
             })
             .state('contactsDetailEdit', {
                 url: '/contacts/detail/Edit/:TrxNo/:BusinessPartyName',
                 cache: 'false',
                 templateUrl: 'view/crm/Contacts-detail-Edit.html',
-                controller: 'ContactsDetailEditCtl'
+                controller: 'ContactsDetailEditCtrl'
             })
             .state('contactsDetailAdd', {
-                url: '/contacts/detail/Add/:BusinessPartyName',
+                url: '/contacts/detail/Add/:TrxNo/:BusinessPartyName',
                 cache: 'false',
                 templateUrl: 'view/crm/Contacts-detail-Add.html',
-                controller: 'ContactsDetailAddCtl'
+                controller: 'ContactsDetailAddCtrl'
             })
             .state('paymentApproval', {
                 url: '/paymentApproval',
                 cache: 'false',
                 templateUrl: 'view/productivity/PaymentApproval.html',
-                controller: 'PaymentApprovalCtl'
+                controller: 'PaymentApprovalCtrl'
             })
             .state('vesselSchedule', {
                 url: '/vesselSchedule',
                 //cache: 'false',
                 templateUrl: 'view/tracking/VesselSchedule.html',
-                controller: 'VesselScheduleCtl'
+                controller: 'VesselScheduleCtrl'
             })
             .state('vesselScheduleDetail', {
                 url: '/vesselSchedule/detail/:PortOfDischargeName',
                 cache: 'false',
                 templateUrl: 'view/tracking/VesselSchedule-detail.html',
-                controller: 'VesselScheduleDetailCtl'
+                controller: 'VesselScheduleDetailCtrl'
             })
             .state('shipmentStatus', {
                 url: '/shipmentStatus',
                 //cache: 'false',
                 templateUrl: 'view/tracking/ShipmentStatus.html',
-                controller: 'ShipmentStatusCtl'
+                controller: 'ShipmentStatusCtrl'
             })
             .state('shipmentStatusList', {
                 url: '/shipmentStatus/list/:FilterName/:FilterValue',
                 cache: 'false',
                 templateUrl: 'view/tracking/ShipmentStatus-list.html',
-                controller: 'ShipmentStatusListCtl'
+                controller: 'ShipmentStatusListCtrl'
             })
             .state('shipmentStatusDetail', {
                 url: '/shipmentStatus/detail/:FilterName/:FilterValue/:ModuleCode',
                 cache: 'false',
                 templateUrl: 'view/tracking/ShipmentStatus-detail.html',
-                controller: 'ShipmentStatusDetailCtl'
+                controller: 'ShipmentStatusDetailCtrl'
             })
             .state('invoice', {
                 url: '/invoice',
                 cache: 'false',
                 templateUrl: 'view/tracking/Invoice.html',
-                controller: 'InvoiceCtl'
+                controller: 'InvoiceCtrl'
             })
             .state('bl', {
                 url: '/bl',
                 cache: 'false',
                 templateUrl: 'view/tracking/BL.html',
-                controller: 'BlCtl'
+                controller: 'BlCtrl'
             })
             .state('awb', {
                 url: '/awb',
                 cache: 'false',
                 templateUrl: 'view/tracking/AWB.html',
-                controller: 'AwbCtl'
+                controller: 'AwbCtrl'
             })
             .state('soa', {
                 url: '/soa',
                 cache: 'false',
                 templateUrl: 'view/tracking/SOA.html',
-                controller: 'SOACtl'
+                controller: 'SOACtrl'
             })
             .state('memo', {
                 url: '/Memo',
                 cache: 'false',
                 templateUrl: 'view/productivity/Memo.html',
-                controller: 'MemoCtl'
+                controller: 'MemoCtrl'
             })
             .state('reminder', {
                 url: '/Reminder',
                 cache: 'false',
                 templateUrl: 'view/productivity/Reminder.html',
-                controller: 'ReminderCtl'
+                controller: 'ReminderCtrl'
             });
         $urlRouterProvider.otherwise('/login/N');
     }]);
