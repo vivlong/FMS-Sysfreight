@@ -11,8 +11,8 @@
 		</div>
 	</ion-header-bar>
     <ion-content class="has-header">
-        <ion-list class="animate-ripple">
-            <ion-item nav-clear menu-close class="item ink" ng-repeat="PortOfDischargeName in PortOfDischargeNames" ng-click="GoToDetail(PortOfDischargeName)">
+        <ion-list>
+            <ion-item nav-clear menu-close class="item" ng-repeat="PortOfDischargeName in PortOfDischargeNames" ng-click="GoToDetail(PortOfDischargeName)">
                 <h2><i class="iconfont icon-address4"></i>&nbsp;&nbsp;<span ng-bind="PortOfDischargeName"></span></h2>
             </ion-item>
         </ion-list>
