@@ -3,7 +3,7 @@
 		<div class="buttons">
 			<button class="button button-icon button-clear ion-navicon" ng-click="returnSearch()"></button>
 		</div>
-		<h1 class="title">Contacts - <span ng-bind="Rcbp.BusinessPartyName"></span></h1>
+		<h1 class="title">Contacts <span ng-show="Rcbp.BusinessPartyName != ''">-</span> <span ng-bind="Rcbp.BusinessPartyName"></span></h1>
 		<div class="buttons">
 			<button class="button button-small button-icon button-clear ion-android-person-add" ng-click="GoToAdd()"></button>
 		</div>
@@ -13,8 +13,10 @@
             <ion-item class="item item-avatar" ng-repeat="Rcbp1 in Rcbp1s" ng-click="GoToDetail(Rcbp1)">
                 <img src="./img/unknown.png">
                 <h2><span ng-bind="Rcbp1.BusinessPartyName"></span></h2>
-                <p><i class="iconfont icon-phone3"></i>&nbsp;&nbsp;<span ng-bind="Rcbp1.Telephone"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="iconfont icon-fax1"></i>&nbsp;&nbsp;<span ng-bind="Rcbp1.Fax"></span></p>
-                <p><i class="iconfont icon-accountcity"></i>&nbsp;&nbsp;<span ng-bind="Rcbp1.CityCode"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="iconfont icon-name"></i>&nbsp;&nbsp;<span ng-bind="Rcbp1.ContactName1"></span></p>
+                <p><i class="iconfont icon-phone3"></i>&nbsp;&nbsp;<span ng-bind="Rcbp1.Telephone"></span></p>
+				<p><i class="iconfont icon-fax1"></i>&nbsp;&nbsp;<span ng-bind="Rcbp1.Fax"></span></p>
+                <p><i class="iconfont icon-accountcity"></i>&nbsp;&nbsp;<span ng-bind="Rcbp1.CityName"></span></p>
+				<p><i class="iconfont icon-name"></i>&nbsp;&nbsp;<span ng-bind="Rcbp1.ContactName1"></span></p>
             </ion-item>
         </div>
 		<ion-infinite-scroll ng-if="Rcbp.moreDataCanBeLoaded" on-infinite="loadMore()" distance="1%"></ion-infinite-scroll>
