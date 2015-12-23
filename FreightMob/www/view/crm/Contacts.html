@@ -1,25 +1,21 @@
-<ion-view title="List">
-    <div class="bar bar-header bar-positive">
-        <div class="buttons buttons-left header-item">
-            <span class="left-buttons">
-                <button class="button button-icon button-clear ion-navicon" ng-click="returnMain()"></button>
-            </span>
-        </div>
-        <div class="title">
-            Search Contact
-        </div>
+<ion-view title="Contacts">
+	<ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
+		<div class="buttons">
+			<button class="button button-icon button-clear ion-navicon" ng-click="returnMain()"></button>
+		</div>
+		<h1 class="title">Search Contact</h1>
 		<div class="buttons">
 			<button class="button button-small button-icon button-clear ion-android-person-add" ng-click="GoToAdd()"></button>
 		</div>
-    </div>
-    <ion-pane class="has-header" style="margin-top:44px;">
+	</ion-header-bar>
+    <ion-content class="has-header">
 		<ion-list>
             <div class="card">
                 <div class="item row">
 					<div class="col col-80">
 						<label class="item item-input item-stacked-label">
 							<span class="input-label">Business Party Name</span>
-							<input type="text" style="border-bottom:1px solid #808080;" ng-model="Rcbp.BusinessPartyName">
+							<input id="iBusinessPartyName" type="text" style="border-bottom:1px solid #808080;" ng-model="Rcbp.BusinessPartyName">
 						</label>
 					</div>
 					<div class="col col-20">
@@ -27,15 +23,6 @@
 					</div>
                 </div>
             </div>
-			<!--div class="card">
-                <div class="item">
-                    <label class="item-input pull-left" style="width:80%;">
-                        <span class="input-label">Business Party Code</span>
-                        <input type="text" style="border-bottom:1px solid #808080;" ng-model="Rcbp.BusinessPartyCode">
-                    </label>
-                    <button class="button button-clear icon ion-android-search" ng-click="GoToDetail('ContainerNo')"></button>
-                </div>
-            </div-->
 		</ion-list>
 	</ion-content>
 </ion-view>

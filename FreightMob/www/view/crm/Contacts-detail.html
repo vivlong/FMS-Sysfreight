@@ -1,4 +1,4 @@
-﻿<ion-view title="Detail">
+﻿<ion-view title="Contacts-Detail">
 	<ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
 		<div class="buttons">
 			<button class="button button-icon button-clear ion-navicon" ng-click="returnList()"></button>
@@ -11,7 +11,7 @@
 	<ion-pane>
 		<ion-tabs class="tabs-striped tabs-top tabs-background-positive tabs-color-light tabs-icon-left">
 			<ion-tab title="Customer" icon-on="ion-ios-world" icon-off="ion-ios-world-outline">
-				<ion-content style="margin-top:93px;">
+				<ion-content style="padding-top:43px;margin-top:50px;">
 					<div class="list card">
 						<div class="item item-avatar" style="min-height: 60px;">
 							<img src="./img/unknown.png">
@@ -58,29 +58,19 @@
 								<a ng-href="{{rcbpDetail.WebSite}}" target="_blank"><span ng-bind="rcbpDetail.WebSite"></span></a>
 							</div>
 						</div>
-						<!--div class="item tabs tabs-secondary tabs-icon-left">
-								<i class="iconfont icon-address2"></i>
-								Address1
-								<i class="iconfont icon-address2"></i>
-								Address2
-								<i class="iconfont icon-address2"></i>
-								Address3
-								<i class="iconfont icon-address2"></i>
-								Address4
-						</div-->
 					</div>      
 				</ion-content>
 			</ion-tab>
 			<ion-tab title="Contacts" icon-on="ion-ios-people" icon-off="ion-ios-people-outline">
-			<ion-content style="margin-top:93px;">
-			<ion-list>
-                <ion-item ng-repeat="rcbp3 in rcbp3s" class="item-remove-animate item-icon-right" ng-click="openModal(rcbp3)">
-                    <p style="font-size:0.8em;"><i class="iconfont icon-name"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.ContactName" style="font-size:1.2em;"></span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="iconfont icon-title1"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Title" style="font-size:1.2em;"></span></p>
-                    <p style="font-size:0.8em;"><i class="iconfont icon-phone2"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Handphone" style="font-size:1.2em;"></span></p>
-                    <p style="font-size:0.8em;"><i class="iconfont icon-email"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Email" style="font-size:1.2em;"></span></p>
-                </ion-item>
-            </ion-list>
-			</ion-content>
+				<ion-content style="padding-top:43px;margin-top:50px;">
+					<ion-list>
+						<ion-item ng-repeat="rcbp3 in rcbp3s" class="item-remove-animate item-icon-right" ng-click="openModal(rcbp3)">
+							<p style="font-size:0.8em;"><i class="iconfont icon-name"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.ContactName" style="font-size:1.2em;"></span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="iconfont icon-title1"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Title" style="font-size:1.2em;"></span></p>
+							<p style="font-size:0.8em;"><i class="iconfont icon-phone2"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Handphone" style="font-size:1.2em;"></span></p>
+							<p style="font-size:0.8em;"><i class="iconfont icon-email"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Email" style="font-size:1.2em;"></span></p>
+						</ion-item>
+					</ion-list>
+				</ion-content>
 			</ion-tab>
 		</ion-tabs>
         <script id="rcbp3Detail.html" type="text/ng-template">
@@ -166,14 +156,10 @@
                         </div-->
                     </div>
                 </ion-content>
-                <ion-footer-bar class="padding button-bar" style="height:7%;">
+                <ion-footer-bar class="button-bar">
                     <button class="button button-flat button-positive" ng-click="closeModal()">Return</button>
                 </ion-footer-bar>
             </ion-modal-view>
         </script>
 	</ion-pane>
-	<!--ion-footer-bar class="button-bar" style="height:7%;">
-        <button class="button button-flat button-positive ink" style="max-width:49%;" ng-click="GoToDetailEdit()">Edit</button>
-        <button class="button button-positive ink" style="position:relative;max-width:49%;top:0;bottom:0;right:-5px;" ng-click="returnList()">Cancel</button>
-	</ion-footer-bar-->
 </ion-view>
