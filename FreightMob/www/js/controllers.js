@@ -1192,7 +1192,7 @@ appControllers.controller('SOACtrl',
 
 appControllers.controller('MemoCtrl',
         ['$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', 'WebApiService',
-        function ($scope, $http, $state, $stateParams, $timeout, $ionicPopup, WebApiService) {
+        function ($scope, $state, $stateParams, $timeout, $ionicPopup, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -1203,7 +1203,7 @@ appControllers.controller('MemoCtrl',
 
 appControllers.controller('ReminderCtrl',
         ['$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', 'WebApiService',
-        function ($scope, $http, $state, $stateParams, $timeout, $ionicPopup, WebApiService) {
+        function ($scope, $state, $stateParams, $timeout, $ionicPopup, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };

@@ -14,7 +14,12 @@
             </div>
         </div>
     </ion-content>
-    <ion-footer-bar class="padding button-bar" style="height:7%;">
-        <button class="button button-flat button-positive" style="max-width:100%;" ng-click="returnMain()">Save</button>
-    </ion-footer-bar>
+	<ion-footer-bar align-title="center" class="bar-positive">
+		<div class="buttons">
+			<button class="button" ng-click="returnMain()">
+				<i class="icon ion-android-done"></i>&nbsp;&nbsp;Save
+			</button>
+		</div>
+		<h1 class="title"></h1>
+	</ion-footer-bar>
 </ion-view>
