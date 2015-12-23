@@ -16,7 +16,12 @@
             </div>
         </ion-list>
     </ion-content>
-    <ion-footer-bar class="padding button-bar" style="height:7%;">
-        <button class="button button-flat button-positive" style="max-width:100%;" ng-click="returnMain()">Back</button>
-    </ion-footer-bar>
+	<ion-footer-bar align-title="center" class="bar-positive">
+		<h1 class="title"></h1>
+		<div class="buttons">
+			<button class="button" ng-click="returnMain()">
+				<i class="icon ion-arrow-return-right"></i>&nbsp;&nbsp;Back
+			</button>
+		</div>
+	</ion-footer-bar>
 </ion-view>
