@@ -1,9 +1,9 @@
 ﻿<ion-view title="VesselScheduleDetail">
-	<ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
+	<ion-header-bar align-title="center" no-tap-scroll=true class="bar-positive">
 		<div class="buttons">
 			<button class="button button-icon button-clear ion-navicon" ng-click="returnList()"></button>
 		</div>
-		<h1 class="title">Schedule - <span ng-bind="Rcvy1Detail.PortOfDischargeName"></span></h1>
+		<h1 class="title"><span ng-bind="Rcvy1Detail.PortOfDischargeName"></span></h1>
 	</ion-header-bar>
 	<ion-content class="has-header">
         <div class="card" ng-repeat="Rcvy1 in Rcvy1s">
@@ -12,10 +12,8 @@
                     <h3>Vessel Voyage&nbsp;:&nbsp;<span ng-bind="Rcvy1.VesselCode"></span>&nbsp;V.&nbsp;<span ng-bind="Rcvy1.VoyageNo"></span></h3>
                     <p>Carrier&nbsp;:&nbsp;<span ng-bind="Rcvy1.ShippinglineName"></span></p>
 					<p>Transit&nbsp;:&nbsp;<span ng-bind="Rcvy1.TranSit"></span>&nbsp;&nbsp;Days</p>
-                    <p>
-					<i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;ETD&nbsp;:&nbsp;<span ng-bind="ShowDate(Rcvy1.ETD)"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;ETA&nbsp;:&nbsp;<span ng-bind="ShowDate(Rcvy1.ETA)"></span>					
-					</p>
+                    <p><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;ETD&nbsp;:&nbsp;<span ng-bind="ShowDate(Rcvy1.ETD)"></span></p>
+					<p><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;ETA&nbsp;:&nbsp;<span ng-bind="ShowDate(Rcvy1.ETA)"></span></p>
 					<p><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;Close Date&nbsp;:&nbsp;<span ng-bind="ShowDatetime(Rcvy1.CloseDateTime)"></span></p>
                 </ion-item>
             </ion-list>
