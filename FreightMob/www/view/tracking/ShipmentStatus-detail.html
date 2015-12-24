@@ -6,16 +6,17 @@
 		<h1 class="title"><span ng-bind="Detail.FilterValue"></span></h1>
 	</ion-header-bar>
 	<ion-content class="has-header">
-        <div class="card animate-blinds" ng-repeat="Jmjm1 in Jmjm1s">
+        <div class="card" ng-repeat="Jmjm1 in Jmjm1s">
             <div class="list">
                 <ion-item nav-clear menu-close class="item ink">
                     <h2>Job No&nbsp;:&nbsp;<span ng-bind="Jmjm1.JobNo"></span></h2>
                     <h2 ng-show="funcShowLabel('ContainerNo')">Container No&nbsp;:&nbsp;<span ng-bind="Jmjm1.ContainerNo"></span></h2>
-                    <p>B/L No&nbsp;:&nbsp;<span ng-bind="Jmjm1.AwbBlNo"></span></p>
-					<p>OBL No&nbsp;:&nbsp;<span ng-bind="Jmjm1.MAwbOblNo"></span></p>
-					<p>Ref No&nbsp;:&nbsp;<span ng-bind="Jmjm1.CustomerRefNo"></span></p>
+                    <p>B/L No&nbsp;&nbsp;&nbsp;:&nbsp;<span ng-bind="Jmjm1.AwbBlNo"></span></p>
+					<p>OBL No&nbsp;&nbsp;:&nbsp;<span ng-bind="Jmjm1.MAwbOblNo"></span></p>
+					<p>Ref No&nbsp;&nbsp;&nbsp;:&nbsp;<span ng-bind="Jmjm1.CustomerRefNo"></span></p>
 					<p ng-show="Jmjm1.ModuleCode === 'SE'"><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;ATA&nbsp;-&nbsp;<span ng-bind="Jmjm1.CityCode"></span>&nbsp;:&nbsp;<span ng-bind="ShowDate(Jmjm1.ATA)"></span></p>
-                    <p><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;ETD&nbsp;:&nbsp;<span ng-bind="ShowDate(Jmjm1.ETD)"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;ETA&nbsp;:&nbsp;<span ng-bind="ShowDate(Jmjm1.ETA)"></span></p>
+                    <p><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;&nbsp;ETD&nbsp;:&nbsp;<span ng-bind="ShowDate(Jmjm1.ETD)"></span></p>
+					<p><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;&nbsp;ETA&nbsp;:&nbsp;<span ng-bind="ShowDate(Jmjm1.ETA)"></span></p>
                     <p>
 						<i class="iconfont icon-accountcity"></i>&nbsp;&nbsp;POL&nbsp;:&nbsp;
 						<span ng-show="Jmjm1.ModuleCode === 'SE' || Jmjm1.ModuleCode === 'SI'" ng-bind="Jmjm1.PortOfLoadingName"></span>
@@ -28,8 +29,8 @@
 					</p>
                     <p>Vessel&nbsp;:&nbsp;<span ng-bind="Jmjm1.VesselName"></span>&nbsp;V.&nbsp;<span ng-bind="Jmjm1.VoyageNo"></span></p>
                     <p>Commodity&nbsp;:&nbsp;<span ng-bind="Jmjm1.CommodityDescription"></span></p>
-                    <p>Pcs&nbsp;:&nbsp;<span ng-bind="Jmjm1.Pcs | number:0"></span>&nbsp;<span ng-bind="Jmjm1.UomDescription"></span></p>
-					<p>Weight&nbsp;:&nbsp;<span ng-bind="Jmjm1.GrossWeight | number:4"></span>&nbsp;KGS</p>
+                    <p>Pcs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;<span ng-bind="Jmjm1.Pcs | number:0"></span>&nbsp;<span ng-bind="Jmjm1.UomDescription"></span></p>
+					<p>Weight&nbsp;&nbsp;:&nbsp;<span ng-bind="Jmjm1.GrossWeight | number:4"></span>&nbsp;KGS</p>
 					<p>Volume&nbsp;:&nbsp;<span ng-bind="Jmjm1.Volume | number:4"></span>&nbsp;m3</p>
                 </ion-item>
             </div>
