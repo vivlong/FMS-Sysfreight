@@ -12,14 +12,13 @@
 		<ion-list>
             <div class="card">
                 <div class="item row">
-					<div class="col col-80">
-						<label class="item item-input item-stacked-label">
-							<span class="input-label">Business Party Name</span>
-							<input id="iBusinessPartyName" type="text" style="border-bottom:1px solid #808080;" ng-model="Rcbp.BusinessPartyName">
-						</label>
+					<div class="col col-75">
+						<ion-md-input id="iBusinessPartyName" placeholder="Business Party Name" highlight-color="balanced" type="text" ng-model="Rcbp.BusinessPartyName"></ion-md-input>
 					</div>
-					<div class="col col-20">
-						<button class="button button-clear button-large icon ion-android-search" ng-click="GoToList()"></button>
+					<div class="col col-25">
+						<button class="button button-clear button-large" ng-click="GoToList()">
+							<i class="icon iconfont ion-android-search"></i>
+						</button>
 					</div>
                 </div>
             </div>
