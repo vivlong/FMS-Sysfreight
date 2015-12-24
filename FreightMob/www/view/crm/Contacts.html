@@ -11,12 +11,10 @@
     <ion-content class="has-header">
 		<ion-list>
             <div class="card">
-                <div class="item row">
-					<div class="col col-75">
-						<ion-md-input id="iBusinessPartyName" placeholder="Business Party Name" highlight-color="balanced" type="text" ng-model="Rcbp.BusinessPartyName"></ion-md-input>
-					</div>
-					<div class="col col-25">
-						<button class="button button-clear button-large" ng-click="GoToList()">
+                <div class="item">
+					<ion-md-input type="text" id="iBusinessPartyName" class="pull-left" style="width:80%;" placeholder="Business Party Name" highlight-color="balanced" ng-model="Rcbp.BusinessPartyName"></ion-md-input>
+					<div style="width:20%;position:relative;">
+						<button class="button button-clear" style="position:absolute; top:50%; margin-top:20%;" ng-click="GoToList()">
 							<i class="icon iconfont ion-android-search"></i>
 						</button>
 					</div>
