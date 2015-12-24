@@ -249,7 +249,7 @@ appControllers.controller('MainCtrl',
                 $state.go('contacts', {}, { reload: true });
             };
             $scope.GoToPa = function () {
-                $state.go('paymentApproval', {}, { reload: true });
+                //$state.go('paymentApproval', {}, { reload: true });
             };
             $scope.GoToVS = function () {
                 $state.go('vesselSchedule', {}, { reload: true });
