@@ -816,6 +816,11 @@ appControllers.controller('ShipmentStatusCtrl',
                     }, 2500);
                 }
             };
+			$('#iContainerNo').on('keydown', function (e) {
+                if (e.which === 9 || e.which === 13) {
+                    $scope.GoToDetail('ContainerNo');
+                }
+            });
         }]);
 
 appControllers.controller('ShipmentStatusListCtrl',
