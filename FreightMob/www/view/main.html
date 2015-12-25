@@ -4,6 +4,7 @@
 			<ion-pane>
 				<div class="nav-info">
 					<p>Login Infos</p>
+					<p><span ng-bind="LoginInfo.UserName"></span></p>
 				</div>
 				<div class="nav-menu">					
 					<ion-list>
@@ -13,14 +14,14 @@
 						<ion-item nav-clear>
 							<i class="icon iconfont ion-android-upload"></i>&nbsp;&nbsp;
 						</ion-item>
+						<ion-item nav-clear>
+							<i class="icon iconfont ion-android-options"></i>&nbsp;&nbsp;
+						</ion-item>
 						<ion-item nav-clear ng-click="setConf()">  
 							<i class="icon iconfont ion-android-settings"></i>&nbsp;&nbsp;Server-Side Configuration
 						</ion-item>
 						<ion-item nav-clear ng-click="checkUpdate()">
 							<i class="icon iconfont ion-android-sync"></i>&nbsp;&nbsp;Check New Version
-						</ion-item>
-						<ion-item nav-clear>
-							<i class="icon iconfont ion-android-options"></i>&nbsp;&nbsp;
 						</ion-item>
 						<ion-item nav-clear>
 							<i class="icon iconfont ion-android-exit"></i>&nbsp;&nbsp;Log Out

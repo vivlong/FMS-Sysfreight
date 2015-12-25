@@ -242,6 +242,9 @@ appControllers.controller('UpdateCtrl',
 appControllers.controller('MainCtrl',
         ['$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', 'WebApiService',
         function ($scope, $state, $stateParams, $timeout, $ionicPopup, WebApiService) {
+			$scope.LoginInfo = {
+				UserName: sessionStorage.getItem("UserId")
+			};			
             $scope.GoToSA = function () {
                 $state.go('salesmanActivity', {}, { reload: true });
             };
