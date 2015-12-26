@@ -240,11 +240,11 @@ appControllers.controller('UpdateCtrl',
         }]);
 
 appControllers.controller('MainCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', 'WebApiService',
-        function ($scope, $state, $stateParams, $timeout, $ionicPopup, WebApiService) {
+        ['$scope', '$http', '$state', '$stateParams', '$timeout', '$ionicPopup', 'WebApiService',
+        function ($scope, $http, $state, $stateParams, $timeout, $ionicPopup, WebApiService) {
 			$scope.LoginInfo = {
 				UserName: sessionStorage.getItem("UserId")
-			};			
+			};
             $scope.GoToSA = function () {
                 $state.go('salesmanActivity', {}, { reload: true });
             };
@@ -277,6 +277,41 @@ appControllers.controller('MainCtrl',
             };
             $scope.GoToReminder = function () {
                 $state.go('reminder', {}, { reload: true });
+            };
+			$scope.GoToLogin = function () {
+                $state.go('login', { 'CheckUpdate': 'N' }, { reload: true });
+            };
+			$scope.GoToSetting = function () {
+                $state.go('setting', {}, { reload: true });
+            };
+			$scope.GoToUpdate = function () {
+				var url = strWebServiceURL + strBaseUrl + '/update.json';
+                $http.get(url)
+                .success(function (res) {
+                        var serverAppVersion = res.version;
+                        $cordovaAppVersion.getVersionNumber().then(function (version) {
+                            if (version != serverAppVersion) {
+                                $state.go('update', { 'Version': serverAppVersion });
+                            } else {
+                                var alertPopup = $ionicPopup.alert({
+                                    title: "Already the Latest Version!",
+                                    okType: 'button-assertive'
+                                });
+                                $timeout(function () {
+                                    alertPopup.close();
+                                }, 2500);
+                            }
+                        });
+                    })
+                .error(function (res) {
+                        var alertPopup = $ionicPopup.alert({
+                            title: "Connect Update Server Error!",
+                            okType: 'button-assertive'
+                        });
+                        $timeout(function () {
+                            alertPopup.close();
+                        }, 2500);
+                    });
             };
         }]);
 
