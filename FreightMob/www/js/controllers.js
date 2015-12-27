@@ -37,7 +37,7 @@ appControllers.controller('LoginCtrl',
                     $scope.login();
                 }
             });            
-            $scope.checkUpdate = function () {
+            $scope.GoToUpdate = function () {
                 var url = strWebServiceURL + strBaseUrl + '/update.json';
                 $http.get(url)
                 .success(function (res) {
@@ -66,7 +66,7 @@ appControllers.controller('LoginCtrl',
                         }, 2500);
                     });
             };
-            $scope.setConf = function () {
+            $scope.GoToSetting = function () {
                 $state.go('setting', {}, { reload: true });
             };
             $scope.login = function () {
