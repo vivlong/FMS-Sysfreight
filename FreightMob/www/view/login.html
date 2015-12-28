@@ -1,40 +1,20 @@
 <ion-view title="Login" class="material">
-	<ion-side-menus enable-menu-with-back-views="true">
-		<ion-side-menu-content>
-			<div class="login">				
-	            <div class="hero no-header flat">
-	                <div class="content">
-	                        <img src="./img/login.png" class="hero-icon">
-	                </div>
+	<ion-pane>		
+		<div class="login">				
+	        <div class="hero no-header flat">
+	            <div class="content">
+	                    <img src="./img/login.png" class="hero-icon">
 	            </div>
-	            <div class="list">
-	                <ion-md-input id="iUserName" placeholder="Username" highlight-color="balanced" type="text" ng-model="logininfo.strUserName">
-	                </ion-md-input>
-	                <ion-md-input id="iPassword" placeholder="Password" highlight-color="balanced" type="password" ng-model="logininfo.strPassword">
-	                </ion-md-input>
-	            </div>
-	            <div class="padding">
-	                <button class="button button-full button-positive" ng-click="login()">SIGN IN</button>
-	            </div>
-			</div>
-		</ion-side-menu-content>
-		<ion-side-menu side="left">
-			<ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive" menu-close>
-				<h1 class="title">Settings</h1>
-				<!--div class="buttons" menu-close>
-					<button class="button button-small button-icon button-clear ion-android-options"></button>
-				</div-->
-			</ion-header-bar>
-			<ion-pane style="margin-top:44px;">
-				<ion-list>  
-					<ion-item nav-clear ng-click="GoToSetting()">  
-						<i class="icon iconfont ion-android-settings"></i>&nbsp;&nbsp;Server Config
-					</ion-item>
-                    <ion-item nav-clear ng-click="GoToUpdate()">
-                        <i class="icon iconfont ion-arrow-up-c"></i>&nbsp;&nbsp;Check Update
-                    </ion-item>  
-				</ion-list>
-			</ion-pane> 
-		</ion-side-menu>
-	</ion-side-menus>
+	        </div>
+	        <div class="list">
+	            <ion-md-input id="iUserName" placeholder="Username" highlight-color="balanced" type="text" ng-model="logininfo.strUserName">
+	            </ion-md-input>
+	            <ion-md-input id="iPassword" placeholder="Password" highlight-color="balanced" type="password" ng-model="logininfo.strPassword">
+	            </ion-md-input>
+	        </div>
+	        <div class="padding">
+	            <button class="button button-full button-positive" ng-click="login()">SIGN IN</button>
+	        </div>
+		</div>
+	</ion-pane>
 </ion-view>

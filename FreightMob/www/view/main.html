@@ -1,127 +1,93 @@
 ﻿<ion-view title="Main">
-	<ion-side-menus enable-menu-with-back-views="true">
-		<ion-side-menu side="left" expose-aside-when="large">
-			<ion-pane>
-				<div class="nav-info">
-					<p>Login Infos</p>
-					<p><span ng-bind="LoginInfo.UserName"></span></p>
+	<ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
+		<h1 class="title">SysFreight Mobile</h1>
+	</ion-header-bar>
+	<ion-tabs class="tabs-striped tabs-top tabs-background-positive tabs-color-light tabs-icon-left">
+		<ion-tab title="CRM" icon-on="ion-ios-people" icon-off="ion-ios-people-outline">
+			<div style="margin-top:8.0em;">
+				<div class="row row-center">
+					<div class="col" style="text-align:center;">
+						<a style="width:70%;height:100%;"><img src="./img/free-60-icons-52.png" alt="" class="img-circle mainImg"></a>
+						<h5>Sales</h5>
+					</div>
+					<div class="col" style="text-align:center;">
+						<a style="width:70%;height:100%;"><img src="./img/free-60-icons-53.png" alt="" class="img-circle mainImg"></a>
+						<h5>Cost</h5>
+					</div>
 				</div>
-				<div class="nav-menu">					
-					<ion-list>
-						<ion-item nav-clear>
-							<i class="icon iconfont ion-android-star"></i>&nbsp;&nbsp;
-						</ion-item>
-						<ion-item nav-clear>
-							<i class="icon iconfont ion-android-upload"></i>&nbsp;&nbsp;
-						</ion-item>
-						<ion-item nav-clear>
-							<i class="icon iconfont ion-android-options"></i>&nbsp;&nbsp;
-						</ion-item>
-						<ion-item nav-clear ng-click="GoToSetting()">  
-							<i class="icon iconfont ion-android-settings"></i>&nbsp;&nbsp;Server Config
-						</ion-item>
-						<ion-item nav-clear ng-click="GoToUpdate()">
-							<i class="icon iconfont ion-android-sync"></i>&nbsp;&nbsp;Check Update
-						</ion-item>
-						<ion-item nav-clear ng-click="GoToLogin()">
-							<i class="icon iconfont ion-android-exit"></i>&nbsp;&nbsp;Log Out
-						</ion-item>
-					</ion-list>
+				<div class="row row-center">
+					<div class="col" style="text-align:center;">
+						<a style="width:70%;height:100%;" ng-click="GoToSA()"><img src="./img/free-60-icons-28.png" alt="" class="img-circle mainImg"></a>
+						<h5>Salesman Activity</h5>
+					</div>
+					<div class="col" style="text-align:center;">
+						<a style="width:70%;height:100%;" ng-click="GoToRcbp()"><img src="./img/free-60-icons-50.png" alt="" class="img-circle mainImg"></a>
+						<h5>Contacts</h5>
+					</div>
 				</div>
-			</ion-pane> 
-		</ion-side-menu>
-		<ion-side-menu-content>
-			<ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
-				<h1 class="title">SysFreight Mobile</h1>
-			</ion-header-bar>
-			<ion-tabs class="tabs-striped tabs-top tabs-background-positive tabs-color-light tabs-icon-left">
-				<ion-tab title="CRM" icon-on="ion-ios-people" icon-off="ion-ios-people-outline">
-					<div style="margin-top:8.0em;">
-						<div class="row row-center">
-							<div class="col" style="text-align:center;">
-								<a style="width:70%;height:100%;"><img src="./img/free-60-icons-52.png" alt="" class="img-circle mainImg"></a>
-								<h5>Sales</h5>
-							</div>
-							<div class="col" style="text-align:center;">
-								<a style="width:70%;height:100%;"><img src="./img/free-60-icons-53.png" alt="" class="img-circle mainImg"></a>
-								<h5>Cost</h5>
-							</div>
+			</div>
+		</ion-tab>
+		<ion-tab title="Productivity" icon-on="ion-ios-speedometer" icon-off="ion-ios-speedometer-outline">
+			<div style="margin-top:8.0em;">
+				<div class="row row-center">
+					<div class="col" style="text-align:center;">
+						<a style="width:70%;height:100%;" ng-click="GoToPa()"><img src="./img/free-60-icons-58.png" alt="" class="img-circle mainImg"></a>
+						<h5>Payment Approval</h5>
+					</div>
+					<div class="col" style="text-align:center;">
+						<a style="width:70%;height:100%;" ng-click="GoToReminder()"><img src="./img/free-60-icons-16.png" alt="" class="img-circle mainImg"></a>
+						<h5>Reminder</h5>
+					</div>
+				</div>
+				<div class="row row-center">
+					<div class="col" style="text-align:center;">
+						<a style="width:70%;height:100%;" ng-click="GoToMemo()"><img src="./img/free-60-icons-59.png" alt="" class="img-circle mainImg"></a>
+						<h5>Memo</h5>
+					</div>
+					<div class="col" style="text-align:center;">
+						<a style="width:70%;height:100%;"></a>
+					</div>
+				</div>
+			</div>
+		</ion-tab>
+		<ion-tab title="Tracking" icon-on="ion-ios-navigate" icon-off="ion-ios-navigate-outline">
+			<div style="margin-top:8.0em;">
+				<div class="list">
+					<div class="row row-center">
+						<div class="col" style="text-align:center;">
+							<a style="width:70%;height:100%;" ng-click="GoToVS()"><img src="./img/free-60-icons-18.png" alt="" class="img-circle mainImg"></a>
+							<h5>Vessel Schedule</h5>
 						</div>
-						<div class="row row-center">
-							<div class="col" style="text-align:center;">
-								<a style="width:70%;height:100%;" ng-click="GoToSA()"><img src="./img/free-60-icons-28.png" alt="" class="img-circle mainImg"></a>
-								<h5>Salesman Activity</h5>
-							</div>
-							<div class="col" style="text-align:center;">
-								<a style="width:70%;height:100%;" ng-click="GoToRcbp()"><img src="./img/free-60-icons-50.png" alt="" class="img-circle mainImg"></a>
-								<h5>Contacts</h5>
-							</div>
+						<div class="col" style="text-align:center;">
+							<a style="width:70%;height:100%;" ng-click="GoToSS()"><img src="./img/free-60-icons-13.png" alt="" class="img-circle mainImg"></a>
+							<h5>Shipment Status</h5>
 						</div>
 					</div>
-				</ion-tab>
-				<ion-tab title="Productivity" icon-on="ion-ios-speedometer" icon-off="ion-ios-speedometer-outline">
-					<div style="margin-top:8.0em;">
-						<div class="row row-center">
-							<div class="col" style="text-align:center;">
-								<a style="width:70%;height:100%;" ng-click="GoToPa()"><img src="./img/free-60-icons-58.png" alt="" class="img-circle mainImg"></a>
-								<h5>Payment Approval</h5>
-							</div>
-							<div class="col" style="text-align:center;">
-								<a style="width:70%;height:100%;" ng-click="GoToReminder()"><img src="./img/free-60-icons-16.png" alt="" class="img-circle mainImg"></a>
-								<h5>Reminder</h5>
-							</div>
+					<div class="row row-center">
+						<div class="col" style="text-align:center;">
+							<a style="width:70%;height:100%;" ng-click="GoToInv()"><img src="./img/menu-icons-BusinessFormWizard.png" alt="" class="img-circle mainImg"></a>
+							<h5>Invoice</h5>
 						</div>
-						<div class="row row-center">
-							<div class="col" style="text-align:center;">
-								<a style="width:70%;height:100%;" ng-click="GoToMemo()"><img src="./img/free-60-icons-59.png" alt="" class="img-circle mainImg"></a>
-								<h5>Memo</h5>
-							</div>
-							<div class="col" style="text-align:center;">
-								<a style="width:70%;height:100%;"></a>
-							</div>
+						<div class="col" style="text-align:center;">
+							<a style="width:70%;height:100%;" ng-click="GoToBL()"><img src="./img/menu-icons-FileExcelServicesOptions.png" alt="" class="img-circle mainImg"></a>
+							<h5>BL</h5>
 						</div>
 					</div>
-				</ion-tab>
-				<ion-tab title="Tracking" icon-on="ion-ios-navigate" icon-off="ion-ios-navigate-outline">
-					<div style="margin-top:8.0em;">
-						<div class="list">
-							<div class="row row-center">
-								<div class="col" style="text-align:center;">
-									<a style="width:70%;height:100%;" ng-click="GoToVS()"><img src="./img/free-60-icons-18.png" alt="" class="img-circle mainImg"></a>
-									<h5>Vessel Schedule</h5>
-								</div>
-								<div class="col" style="text-align:center;">
-									<a style="width:70%;height:100%;" ng-click="GoToSS()"><img src="./img/free-60-icons-13.png" alt="" class="img-circle mainImg"></a>
-									<h5>Shipment Status</h5>
-								</div>
-							</div>
-							<div class="row row-center">
-								<div class="col" style="text-align:center;">
-									<a style="width:70%;height:100%;" ng-click="GoToInv()"><img src="./img/menu-icons-BusinessFormWizard.png" alt="" class="img-circle mainImg"></a>
-									<h5>Invoice</h5>
-								</div>
-								<div class="col" style="text-align:center;">
-									<a style="width:70%;height:100%;" ng-click="GoToBL()"><img src="./img/menu-icons-FileExcelServicesOptions.png" alt="" class="img-circle mainImg"></a>
-									<h5>BL</h5>
-								</div>
-							</div>
-							<div class="row row-center">
-								<div class="col" style="text-align:center;">
-									<a style="width:70%;height:100%;" ng-click="GoToAWB()"><img src="./img/menu-icons-CustomGallery1.png" alt="" class="img-circle mainImg"></a>
-									<h5>AWB</h5>
-								</div>
-								<div class="col" style="text-align:center;">
-									<a style="width:70%;height:100%;" ng-click="GoToSOA()"><img src="./img/menu-icons-GroupChangesTracking.png" alt="" class="img-circle mainImg"></a>
-									<h5>SOA</h5>
-								</div>
-							</div>
-						</div>                    
+					<div class="row row-center">
+						<div class="col" style="text-align:center;">
+							<a style="width:70%;height:100%;" ng-click="GoToAWB()"><img src="./img/menu-icons-CustomGallery1.png" alt="" class="img-circle mainImg"></a>
+							<h5>AWB</h5>
+						</div>
+						<div class="col" style="text-align:center;">
+							<a style="width:70%;height:100%;" ng-click="GoToSOA()"><img src="./img/menu-icons-GroupChangesTracking.png" alt="" class="img-circle mainImg"></a>
+							<h5>SOA</h5>
+						</div>
 					</div>
-				</ion-tab>
-			</ion-tabs>
-			<ion-footer-bar align-title="center" class="bar-positive" style="height:15%; padding:0px;">
-				<img src="./img/ad.png" alt="" style="width:100%;height:100%;">
-			</ion-footer-bar>
-		</ion-side-menu-content>
-	</ion-side-menus>
+				</div>                    
+			</div>
+		</ion-tab>
+	</ion-tabs>
+	<ion-footer-bar align-title="center" class="bar-positive" style="height:15%; padding:0px;">
+		<img src="./img/ad.png" alt="" style="width:100%;height:100%;">
+	</ion-footer-bar>
 </ion-view>
