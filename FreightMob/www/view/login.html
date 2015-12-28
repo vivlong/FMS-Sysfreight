@@ -1,40 +1,40 @@
-<ion-view title="Login">
+<ion-view title="Login" class="material">
 	<ion-side-menus enable-menu-with-back-views="true">
-		<ion-side-menu-content style="background: url(img/mountains.jpg) center; background-size: cover;" class="ionic login">
-            <div class="no-header">
-                <div class="content">
-                    <div class="app-icon">
-                        <img src="./img/login.png" width="220px;" height="220px;" style="clear: both; display: block; margin:auto;">
-                    </div>
-                </div>
-            </div>
-            <div class="padding list">
-                <ion-md-input id="iUserName" placeholder="Username" highlight-color="balanced" type="text" ng-model="logininfo.strUserName" style="background-color:snow;">
-                </ion-md-input>
-                <ion-md-input id="iPassword" placeholder="Password" highlight-color="energized" type="password" ng-model="logininfo.strPassword" style="background-color:snow;">
-                </ion-md-input>
-            </div>
-            <div class="padding">
-                <button class="button button-full button-positive" ng-click="login()">SIGN IN</button>
-            </div>
+		<ion-side-menu-content>
+			<div class="login" style="background-image: url('../img/mountains.jpg');">				
+	            <div class="hero no-header flat">
+	                <div class="content">
+	                        <img src="./img/login.png" class="hero-icon">
+	                </div>
+	            </div>
+	            <div class="list">
+	                <ion-md-input id="iUserName" placeholder="Username" highlight-color="balanced" type="text" ng-model="logininfo.strUserName">
+	                </ion-md-input>
+	                <ion-md-input id="iPassword" placeholder="Password" highlight-color="balanced" type="password" ng-model="logininfo.strPassword">
+	                </ion-md-input>
+	            </div>
+	            <div class="padding">
+	                <button class="button button-full button-positive" ng-click="login()">SIGN IN</button>
+	            </div>
+			</div>
 		</ion-side-menu-content>
 		<ion-side-menu side="left">
-			<ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
+			<ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive" menu-close>
 				<h1 class="title">Settings</h1>
-				<div class="buttons" menu-close>
+				<!--div class="buttons" menu-close>
 					<button class="button button-small button-icon button-clear ion-android-options"></button>
-				</div>
+				</div-->
 			</ion-header-bar>
-			<ion-content class="has-header">  
+			<ion-pane style="margin-top:44px;">
 				<ion-list>  
 					<ion-item nav-clear ng-click="GoToSetting()">  
-						<i class="icon ion-android-settings"></i> Server-Side Configuration
+						<i class="icon iconfont ion-android-settings"></i>&nbsp;&nbsp;Server Config
 					</ion-item>
                     <ion-item nav-clear ng-click="GoToUpdate()">
-                        <i class="icon ion-arrow-up-c"></i> Check New Version
+                        <i class="icon iconfont ion-arrow-up-c"></i>&nbsp;&nbsp;Check Update
                     </ion-item>  
 				</ion-list>
-			</ion-content> 
+			</ion-pane> 
 		</ion-side-menu>
 	</ion-side-menus>
 </ion-view>
