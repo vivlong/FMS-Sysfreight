@@ -167,6 +167,7 @@ html {
 .material {
 }
 .material .login {
+    background-image: url('../img/mountains.jpg');
     background-position: 25% 25%;
     background-size: 180% 180%;
     height: 100%;
