@@ -13,6 +13,47 @@ var appControllers = angular.module('MobileAPP.controllers', [
     'MobileAPP.services'
 ]);
 
+appControllers.controller('IndexCtrl',
+        ['$scope', '$state', '$http', '$timeout', '$ionicPopup', '$cordovaAppVersion',
+        function ($scope, $state, $http, $timeout, $ionicPopup, $cordovaAppVersion) {
+            $scope.GoToLogin = function () {
+                $state.go('login', { 'blnCheckUpdate': 'N' }, { reload: true });
+            };
+            $scope.GoToSetting = function () {
+                $state.go('setting', {}, { reload: true });
+            };
+            $scope.GoToUpdate = function () {
+                var url = strWebSiteURL + '/update.json';
+                $http.get(url)
+                .success(function (res) {
+                        var serverAppVersion = res.version;
+                        $cordovaAppVersion.getVersionNumber().then(function (version) {
+                            if (version != serverAppVersion) {
+                                $state.go('update', { 'Version': serverAppVersion });
+                            } else {
+                                var alertPopup = $ionicPopup.alert({
+                                    title: "Already the Latest Version!",
+                                    okType: 'button-assertive'
+                                });
+                                $timeout(function () {
+                                    alertPopup.close();
+                                }, 2500);
+                            }
+                        });
+                    })
+                .error(function (res) {
+                        var alertPopup = $ionicPopup.alert({
+                            title: "Connect Update Server Error!",
+                            okType: 'button-assertive'
+                        });
+                        $timeout(function () {
+                            alertPopup.close();
+                        }, 2500);
+                    });
+            };
+            $state.go('login', { 'blnCheckUpdate': 'N' }, { reload: true });
+        }]);
+
 appControllers.controller('LoadingCtrl',
         ['$state', '$timeout',
         function ($state, $timeout) {
@@ -27,7 +68,7 @@ appControllers.controller('LoginCtrl',
             $scope.logininfo = {
                 strUserName: "",
                 strPassword: ""
-            };         
+            };
             $scope.GoToUpdate = function () {
                 var url = strWebSiteURL + '/update.json';
                 $http.get(url)
@@ -121,9 +162,10 @@ appControllers.controller('LoginCtrl',
 appControllers.controller('SettingCtrl',
         ['$scope', '$state', '$timeout', '$ionicLoading', '$ionicPopup', '$cordovaToast', '$cordovaFile',
         function ($scope, $state, $timeout, $ionicLoading, $ionicPopup, $cordovaToast, $cordovaFile) {
-            $scope.Setting = {};
-            $scope.Setting.WebServiceURL = strWebServiceURL.replace('http://', '');
-            $scope.Setting.BaseUrl = strBaseUrl.replace('/', '');
+            $scope.Setting = {
+                WebServiceURL: strWebServiceURL.replace('http://', ''),
+                BaseUrl: strBaseUrl.replace('/', '')
+            };
             $scope.returnLogin = function () {
                 $state.go('login', { 'blnCheckUpdate': 'Y' }, { reload: true });
             };
@@ -231,9 +273,6 @@ appControllers.controller('UpdateCtrl',
 appControllers.controller('MainCtrl',
         ['$scope', '$http', '$state', '$stateParams', '$timeout', '$ionicPopup', 'WebApiService',
         function ($scope, $http, $state, $stateParams, $timeout, $ionicPopup, WebApiService) {
-			$scope.LoginInfo = {
-				UserName: sessionStorage.getItem("UserId")
-			};
             $scope.GoToSA = function () {
                 $state.go('salesmanActivity', {}, { reload: true });
             };
@@ -266,41 +305,6 @@ appControllers.controller('MainCtrl',
             };
             $scope.GoToReminder = function () {
                 $state.go('reminder', {}, { reload: true });
-            };
-			$scope.GoToLogin = function () {
-                $state.go('login', { 'blnCheckUpdate': 'N' }, { reload: true });
-            };
-			$scope.GoToSetting = function () {
-                $state.go('setting', {}, { reload: true });
-            };
-			$scope.GoToUpdate = function () {
-				var url = strWebServiceURL + strBaseUrl + '/update.json';
-                $http.get(url)
-                .success(function (res) {
-                        var serverAppVersion = res.version;
-                        $cordovaAppVersion.getVersionNumber().then(function (version) {
-                            if (version != serverAppVersion) {
-                                $state.go('update', { 'Version': serverAppVersion });
-                            } else {
-                                var alertPopup = $ionicPopup.alert({
-                                    title: "Already the Latest Version!",
-                                    okType: 'button-assertive'
-                                });
-                                $timeout(function () {
-                                    alertPopup.close();
-                                }, 2500);
-                            }
-                        });
-                    })
-                .error(function (res) {
-                        var alertPopup = $ionicPopup.alert({
-                            title: "Connect Update Server Error!",
-                            okType: 'button-assertive'
-                        });
-                        $timeout(function () {
-                            alertPopup.close();
-                        }, 2500);
-                    });
             };
         }]);
 
