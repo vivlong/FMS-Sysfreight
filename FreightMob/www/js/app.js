@@ -160,7 +160,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
                 controller: 'LoadingCtrl'
             })
             .state('login', {
-                url: '/login/:CheckUpdate',
+                url: '/login/:blnCheckUpdate',
                 cache: 'false',
                 templateUrl: 'view/login.html',
                 controller: 'LoginCtrl'

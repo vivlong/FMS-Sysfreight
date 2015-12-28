@@ -17,7 +17,7 @@ appControllers.controller('LoadingCtrl',
         ['$state', '$timeout',
         function ($state, $timeout) {
             $timeout(function () {
-                $state.go('login', { 'CheckUpdate': 'N' }, { reload: true });
+                $state.go('login', { 'blnCheckUpdate': 'N' }, { reload: true });
             }, 2500);
         }]);
 
@@ -83,18 +83,6 @@ appControllers.controller('LoginCtrl',
                     }, 2500);
                     return;
                 }
-                /*
-                if ($scope.logininfo.strPassword == "") {
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'Please Enter Password.',
-                        okType: 'button-assertive'
-                    });
-                    $timeout(function () {
-                        alertPopup.close();
-                    }, 2500);
-                    return;
-                }
-                */
                 $ionicLoading.show();
                 var jsonData = { "UserId": $scope.logininfo.strUserName, "Password": hex_md5($scope.logininfo.strPassword) };
                 var strUri = "/api/freight/login";
@@ -113,8 +101,7 @@ appControllers.controller('LoginCtrl',
                 };
                 WebApiService.Post(strUri, jsonData, onSuccess, onError);
             }; 
-			$('#iUserName').focus();
-			if ($stateParams.CheckUpdate === 'Y') {
+			if ($stateParams.blnCheckUpdate === 'Y') {
                 var url = strWebSiteURL + '/update.json';
                 $http.get(url)
                 .success(function (res) {
@@ -126,7 +113,8 @@ appControllers.controller('LoginCtrl',
                         });
                     })
                 .error(function (res) {});
-            }			
+            }
+            $('#iUserName').focus();
         }]);
 
 appControllers.controller('SettingCtrl',
@@ -279,7 +267,7 @@ appControllers.controller('MainCtrl',
                 $state.go('reminder', {}, { reload: true });
             };
 			$scope.GoToLogin = function () {
-                $state.go('login', { 'CheckUpdate': 'N' }, { reload: true });
+                $state.go('loading', {}, { reload: true });
             };
 			$scope.GoToSetting = function () {
                 $state.go('setting', {}, { reload: true });
@@ -397,6 +385,7 @@ appControllers.controller('ContactsCtrl',
                     $scope.GoToList();
                 }
             });
+            $('#iBusinessPartyName').focus();
         }]);
 
 appControllers.controller('ContactsListCtrl',
