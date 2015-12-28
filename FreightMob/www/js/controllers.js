@@ -18,53 +18,44 @@ appControllers.controller('LoadingCtrl',
         function ($state, $timeout) {
             $timeout(function () {
                 $state.go('login', { 'blnCheckUpdate': 'N' }, { reload: true });
-            }, 2500);
+            }, 2000);
         }]);
 
 appControllers.controller('LoginCtrl',
         ['$scope', '$http', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', '$cordovaToast', '$cordovaAppVersion', 'WebApiService', 
         function ($scope, $http, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, $cordovaToast, $cordovaAppVersion, WebApiService) {
-            $scope.logininfo = {};
-            $scope.logininfo.strUserName = "";
-            $scope.logininfo.strPassword = "";
-            $('#iUserName').on('keydown', function (e) {
-                if (e.which === 9 || e.which === 13) {
-                    $('#iPassword').focus();
-                }
-            });
-            $('#iPassword').on('keydown', function (e) {
-                if (e.which === 9 || e.which === 13) {
-                    $scope.login();
-                }
-            });            
+            $scope.logininfo = {
+                strUserName: "",
+                strPassword: ""
+            };         
             $scope.GoToUpdate = function () {
-                var url = strWebServiceURL + strBaseUrl + '/update.json';
+                var url = strWebSiteURL + '/update.json';
                 $http.get(url)
                 .success(function (res) {
-                        var serverAppVersion = res.version;
-                        $cordovaAppVersion.getVersionNumber().then(function (version) {
-                            if (version != serverAppVersion) {
-                                $state.go('update', { 'Version': serverAppVersion });
-                            } else {
-                                var alertPopup = $ionicPopup.alert({
-                                    title: "Already the Latest Version!",
-                                    okType: 'button-assertive'
-                                });
-                                $timeout(function () {
-                                    alertPopup.close();
-                                }, 2500);
-                            }
-                        });
-                    })
-                .error(function (res) {
-                        var alertPopup = $ionicPopup.alert({
-                            title: "Connect Update Server Error!",
-                            okType: 'button-assertive'
-                        });
-                        $timeout(function () {
-                            alertPopup.close();
-                        }, 2500);
+                    var serverAppVersion = res.version;
+                    $cordovaAppVersion.getVersionNumber().then(function (version) {
+                        if (version != serverAppVersion) {
+                            $state.go('update', { 'Version': serverAppVersion });
+                        } else {
+                            var alertPopup = $ionicPopup.alert({
+                                title: "Already the Latest Version!",
+                                okType: 'button-assertive'
+                            });
+                            $timeout(function () {
+                                alertPopup.close();
+                            }, 2500);
+                        }
                     });
+                })
+                .error(function (res) {
+                    var alertPopup = $ionicPopup.alert({
+                        title: "Connect Update Server Faild!",
+                        okType: 'button-assertive'
+                    });
+                    $timeout(function () {
+                        alertPopup.close();
+                    }, 2500);
+                });
             };
             $scope.GoToSetting = function () {
                 $state.go('setting', {}, { reload: true });
@@ -114,6 +105,16 @@ appControllers.controller('LoginCtrl',
                     })
                 .error(function (res) {});
             }
+            $('#iUserName').on('keydown', function (e) {
+                if (e.which === 9 || e.which === 13) {
+                    $('#iPassword').focus();
+                }
+            });
+            $('#iPassword').on('keydown', function (e) {
+                if (e.which === 9 || e.which === 13) {
+                    $scope.login();
+                }
+            }); 
             $('#iUserName').focus();
         }]);
 
@@ -124,7 +125,7 @@ appControllers.controller('SettingCtrl',
             $scope.Setting.WebServiceURL = strWebServiceURL.replace('http://', '');
             $scope.Setting.BaseUrl = strBaseUrl.replace('/', '');
             $scope.returnLogin = function () {
-                $state.go('login', { 'CheckUpdate': 'Y' }, { reload: true });
+                $state.go('login', { 'blnCheckUpdate': 'Y' }, { reload: true });
             };
             $scope.saveSetting = function () {
                 if ($scope.Setting.WebServiceURL.length > 0) {
@@ -150,7 +151,7 @@ appControllers.controller('SettingCtrl',
                 var file = strAppRootPath + "/" + strAppConfigFileName;
                 $cordovaFile.writeFile(path, file, data, true)
                 .then(function (success) {
-                    $state.go('login', { 'CheckUpdate': 'Y' }, { reload: true });
+                    $state.go('login', { 'blnCheckUpdate': 'Y' }, { reload: true });
                 }, function (error) {
                     $cordovaToast.showShortBottom(error);
                 });
@@ -178,7 +179,7 @@ appControllers.controller('UpdateCtrl',
         function ($scope, $state, $stateParams, $timeout, $ionicLoading, $cordovaToast, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2) {
             $scope.strVersion = $stateParams.Version;
             $scope.returnLogin = function () {
-                $state.go('login', { 'CheckUpdate': 'N' }, { reload: true });
+                $state.go('login', { 'blnCheckUpdate': 'N' }, { reload: true });
             };
             $scope.upgrade = function () {
                 $ionicLoading.show({
@@ -207,7 +208,7 @@ appControllers.controller('UpdateCtrl',
                     }, function (err) {
                         $cordovaToast.showShortCenter('Download faild.');
                         $ionicLoading.hide();
-                        $state.go('login', { 'CheckUpdate': 'N' }, { reload: true });
+                        $state.go('login', { 'blnCheckUpdate': 'N' }, { reload: true });
                     }, function (progress) {
                         $timeout(function () {
                             var downloadProgress = (progress.loaded / progress.total) * 100;
@@ -222,7 +223,7 @@ appControllers.controller('UpdateCtrl',
                 } else {
                     $ionicLoading.hide();
                     $cordovaToast.showShortCenter('Check APK file faild.');
-                    $state.go('login', { 'CheckUpdate': 'N' }, { reload: true });
+                    $state.go('login', { 'blnCheckUpdate': 'N' }, { reload: true });
                 }
             };
         }]);
@@ -267,7 +268,7 @@ appControllers.controller('MainCtrl',
                 $state.go('reminder', {}, { reload: true });
             };
 			$scope.GoToLogin = function () {
-                $state.go('loading', {}, { reload: true });
+                $state.go('login', { 'blnCheckUpdate': 'N' }, { reload: true });
             };
 			$scope.GoToSetting = function () {
                 $state.go('setting', {}, { reload: true });
