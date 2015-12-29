@@ -1,7 +1,8 @@
 # SysFreight Mobile APP
-An Mobile APP of SysFreight Project
+A Mobile APP For SysFreight Project
 
 # Environment
-VS 2015 Community
+JDK
+Android SDK
 Apache Cordova
 Ionic Framework
