@@ -984,8 +984,8 @@ appControllers.controller('ShipmentStatusDetailCtrl',
         }]);
 
 appControllers.controller('InvoiceCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2', 'WebApiService',
-        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2, WebApiService) {
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'DownloadFileService', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, DownloadFileService, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -994,54 +994,8 @@ appControllers.controller('InvoiceCtrl',
                 { InvoiceNo: 'SESIN1511137-02', InvoiceDate: '04/11/2015', CustomerName: 'KADIMA', Amt: '500' }
             ];
             $scope.download = function () {
-                $ionicLoading.show({
-                    template: "Download  0%"
-                });
-                var url = strWebServiceURL + "/mobileapp/INVOICE.pdf";
-                var blnError = false;
-                if (window.cordova) {
-                    $cordovaFile.checkFile(cordova.file.externalRootDirectory, "INVOICE.pdf")
-                    .then(function (success) {
-                        //
-                    }, function (error) {
-                        blnError = true;
-                    });
-                    var targetPath = cordova.file.externalRootDirectory + "INVOICE.pdf";
-                    var trustHosts = true;
-                    var options = {};
-                    if (!blnError) {
-                        $cordovaFileTransfer.download(url, targetPath, options, trustHosts).then(function (result) {
-                            $ionicLoading.hide();
-                            $cordovaFileOpener2.open(targetPath, 'application/pdf'
-                            ).then(function () {
-                                // success
-                            }, function (err) {
-                                // error
-                            });
-                        }, function (err) {
-                            $cordovaToast.showShortCenter('Download faild.');
-                            $ionicLoading.hide();
-                        }, function (progress) {
-                            $timeout(function () {
-                                var downloadProgress = (progress.loaded / progress.total) * 100;
-                                $ionicLoading.show({
-                                    template: "Download  " + Math.floor(downloadProgress) + "%"
-                                });
-                                if (downloadProgress > 99) {
-                                    $ionicLoading.hide();
-                                }
-                            })
-                        });
-                    } else {
-                        $ionicLoading.hide();
-                        $cordovaToast.showShortCenter('Download PDF file faild.');
-                    }
-                } else {
-                    $ionicLoading.hide();
-                    window.open(url);               
-                }                
+                DownloadFileService.Download('INVOICE.pdf','application/pdf');
             };
-            
         }]);
 
 appControllers.controller('BlCtrl',
