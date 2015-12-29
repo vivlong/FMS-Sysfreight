@@ -170,7 +170,7 @@ appServices.service('WebApiService', ['$http', '$ionicPopup', '$timeout',
 
 appServices.service('DownloadFileService', ['$http', '$timeout', '$ionicLoading', '$ionicPopup', '$cordovaToast', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2',
     function ($http, $timeout, $ionicLoading, $ionicPopup, $cordovaToast, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2) {
-        this.Download = function(fileName, fileType){
+        this.Download = function(fileName, fileType, onPlatformError, onCheckError, onDownloadError){
             $ionicLoading.show({
                 template: "Download  0%"
             });
@@ -198,6 +198,7 @@ appServices.service('DownloadFileService', ['$http', '$timeout', '$ionicLoading'
                     }, function (err) {
                         $cordovaToast.showShortCenter('Download faild.');
                         $ionicLoading.hide();
+                        if (onDownloadError) onDownloadError();
                     }, function (progress) {
                         $timeout(function () {
                             var downloadProgress = (progress.loaded / progress.total) * 100;
@@ -211,11 +212,12 @@ appServices.service('DownloadFileService', ['$http', '$timeout', '$ionicLoading'
                     });
                 } else {
                     $ionicLoading.hide();
-                    $cordovaToast.showShortCenter('Download file faild.');
+                    $cordovaToast.showShortCenter('Check file faild.');
+                    if (onCheckError) onCheckError();
                 }
             } else {
                 $ionicLoading.hide();
-                window.open(url);               
+                if (onPlatformError) onPlatformError(url);
             }
         };
     }]);
