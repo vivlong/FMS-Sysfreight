@@ -752,14 +752,14 @@ appControllers.controller('ShipmentStatusCtrl',
                     $ionicLoading.hide();
                 };
                 if (FilterName === 'ContainerNo') {
-                    strUri = "/api/freight/tracking/ContainerNo/count/" + FilterValue;
+                    strUri = "/api/freight/tracking/list/ContainerNo/" + FilterValue;
                     onSuccess = function (response) {
                         $ionicLoading.hide();
                         if (response.data.results.length > 1) {
                             $state.go('shipmentStatusList', { 'FilterName': FilterName, 'FilterValue': FilterValue }, { reload: true });
                         } else if (response.data.results.length === 1) {
 							$ionicLoading.show();							
-							strUri = '/api/freight/tracking/ContainerNo/sps/0/' + FilterValue;				
+							strUri = '/api/freight/tracking/sps/ContainerNo/0/' + FilterValue;				
 							onSuccess = function (response) {
 								if(response.data.results.length > 0){
 									$state.go('shipmentStatusDetail', { 'FilterName': FilterName, 'FilterValue': response.data.results[0].JobNo, 'ModuleCode': response.data.results[0].ModuleCode }, { reload: true });
@@ -860,7 +860,7 @@ appControllers.controller('ShipmentStatusListCtrl',
 			};
 			$scope.funcLoadMore = function() {
 				if ($scope.List.FilterName === 'ContainerNo') {
-					var strUri = '/api/freight/tracking/ContainerNo/sps/' + RecordCount + '/' + $scope.List.FilterValue;				
+					var strUri = '/api/freight/tracking/sps/ContainerNo/' + RecordCount + '/' + $scope.List.FilterValue;				
 					var onSuccess = function (response) {
 						if(response.data.results.length > 0){
 							dataResults = dataResults.concat(response.data.results);						
@@ -930,12 +930,7 @@ appControllers.controller('ShipmentStatusDetailCtrl',
                     $ionicLoading.hide();
                 };
                 if (FilterName === 'ContainerNo') {
-					if(ModuleCode != 'SE' && ModuleCode != 'SI' && ModuleCode != 'AE' && ModuleCode != 'AI'){						
-						strUri = '/api/freight/tracking/ContainerNo/module/' + ModuleCode + '/' + FilterValue;
-					}
-					else{						
-						strUri = '/api/freight/tracking/ContainerNo/' + ModuleCode + '/' + FilterValue;
-					}
+                    strUri = '/api/freight/tracking/ContainerNo/' + ModuleCode + '/' + FilterValue;
                     onSuccess = function (response) {
                         $scope.Jmjm1s = response.data.results;
                     };
