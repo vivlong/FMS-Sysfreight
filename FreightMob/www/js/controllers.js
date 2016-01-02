@@ -751,43 +751,67 @@ appControllers.controller('ShipmentStatusCtrl',
                 var onFinally = function (response) {
                     $ionicLoading.hide();
                 };
-                if (FilterName === 'ContainerNo') {
-                    strUri = "/api/freight/tracking/list/ContainerNo/" + FilterValue;
-                    onSuccess = function (response) {
-                        $ionicLoading.hide();
-                        if (response.data.results.length > 1) {
-                            $state.go('shipmentStatusList', { 'FilterName': FilterName, 'FilterValue': FilterValue }, { reload: true });
-                        } else if (response.data.results.length === 1) {
-							$ionicLoading.show();							
-							strUri = '/api/freight/tracking/sps/ContainerNo/0/' + FilterValue;				
-							onSuccess = function (response) {
-								if(response.data.results.length > 0){
-									$state.go('shipmentStatusDetail', { 'FilterName': FilterName, 'FilterValue': response.data.results[0].JobNo, 'ModuleCode': response.data.results[0].ModuleCode }, { reload: true });
-								}
-							};
-							WebApiService.Get(strUri, onSuccess, onError, onFinally);
-                        } else {
-                            var alertPopup = $ionicPopup.alert({
-                                title: 'No Records Found.',
-                                okType: 'button-assertive'
-                            });
-                            $timeout(function () {
-                                alertPopup.close();
-                            }, 2500);
-                        }
-                    };
-                } else {
-                    $ionicLoading.hide();
+                var onNoRecords = function () {
                     var alertPopup = $ionicPopup.alert({
-                        title: 'No Records Found.',
-                        okType: 'button-assertive'
+                            title: 'No Records Found.',
+                            okType: 'button-assertive'
                     });
                     $timeout(function () {
                         alertPopup.close();
                     }, 2500);
-                    return;
-                    //To-Do
-                }
+                };
+                //
+                strUri = '/api/freight/tracking/count/' + FilterName + '/' + FilterValue;
+                onSuccess = function (response) {
+                    $ionicLoading.hide();
+                    if (response.data.results > 1) {
+                        $state.go('shipmentStatusList', { 'FilterName': FilterName, 'FilterValue': FilterValue }, { reload: true });
+                    } else if (response.data.results === 1) {
+                        $ionicLoading.show();
+                        //
+                        strUri = '/api/freight/tracking/sps/' + FilterName + '/0/' + FilterValue;              
+                        onSuccess = function (response) {
+                            if(response.data.results.length > 0){
+                                if (FilterName === 'ContainerNo') {
+                                    /*
+                                    strUri = "/api/freight/tracking/list/ContainerNo/" + FilterValue;
+                                    onSuccess = function (response) {
+                                        $ionicLoading.hide();
+                                        if (response.data.results.length > 1) {
+                                            $state.go('shipmentStatusList', { 'FilterName': FilterName, 'FilterValue': FilterValue }, { reload: true });
+                                        } else if (response.data.results.length === 1) {
+                                            $ionicLoading.show();                           
+                                            strUri = '/api/freight/tracking/sps/ContainerNo/0/' + FilterValue;              
+                                            onSuccess = function (response) {
+                                                if(response.data.results.length > 0){
+                                                    $state.go('shipmentStatusDetail', { 'FilterName': FilterName, 'FilterValue': response.data.results[0].JobNo, 'ModuleCode': response.data.results[0].ModuleCode }, { reload: true });
+                                                }
+                                            };
+                                            WebApiService.Get(strUri, onSuccess, onError, onFinally);
+                                        } else {
+                                            onNoRecords();
+                                        }
+                                    };
+                                    */
+                                    $state.go('shipmentStatusDetail', { 'FilterName': FilterName, 'FilterValue': response.data.results[0].JobNo, 'ModuleCode': response.data.results[0].ModuleCode }, { reload: true });
+                                } else if (FilterName === 'JobNo') {
+
+                                } else if (FilterName === 'BLNo') {
+
+                                } else if (FilterName === 'AWBNo') {
+
+                                } else if (FilterName === 'OrderNo') {
+
+                                } else if (FilterName === 'ReferenceNo') {
+
+                                }
+                            }
+                        };
+                        WebApiService.Get(strUri, onSuccess, onError, onFinally);
+                    } else {
+                        onNoRecords();
+                    }
+                };                
                 WebApiService.Get(strUri, onSuccess, onError, onFinally);
             };
             $scope.GoToDetail = function (FilterName) {
@@ -813,6 +837,31 @@ appControllers.controller('ShipmentStatusCtrl',
 			$('#iContainerNo').on('keydown', function (e) {
                 if (e.which === 9 || e.which === 13) {
                     $scope.GoToDetail('ContainerNo');
+                }
+            });
+            $('#iJobNo').on('keydown', function (e) {
+                if (e.which === 9 || e.which === 13) {
+                    $scope.GoToDetail('JobNo');
+                }
+            });
+            $('#iBLNo').on('keydown', function (e) {
+                if (e.which === 9 || e.which === 13) {
+                    $scope.GoToDetail('BLNo');
+                }
+            });
+            $('#iAWBNo').on('keydown', function (e) {
+                if (e.which === 9 || e.which === 13) {
+                    $scope.GoToDetail('AWBNo');
+                }
+            });
+            $('#iOrderNo').on('keydown', function (e) {
+                if (e.which === 9 || e.which === 13) {
+                    $scope.GoToDetail('OrderNo');
+                }
+            });
+            $('#iReferenceNo').on('keydown', function (e) {
+                if (e.which === 9 || e.which === 13) {
+                    $scope.GoToDetail('ReferenceNo');
                 }
             });
         }]);
