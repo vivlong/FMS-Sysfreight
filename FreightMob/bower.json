@@ -2,13 +2,13 @@
   "dependencies": {
     "ngCordova": "~0.1.23-alpha",
     "jquery": "~2.1.4",
-    "ionic": "~1.2.1-nightly-1867",
+    "ionic": "1.2.3",
     "robotodraft": "~1.1.0",
     "echarts": "~2.2.7",
     "ion-md-input": "~1.0.4"
   },
   "devDependencies": {
-    "ionic": "driftyco/ionic-bower#1.2.1-nightly-1867"
+    "ionic": "driftyco/ionic-bower#1.2.3"
   },
   "name": "FreightMob",
   "private": true
