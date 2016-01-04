@@ -760,7 +760,6 @@ appControllers.controller('ShipmentStatusCtrl',
                         alertPopup.close();
                     }, 2500);
                 };
-                //
                 strUri = '/api/freight/tracking/count/' + FilterName + '/' + FilterValue;
                 onSuccess = function (response) {
                     $ionicLoading.hide();
@@ -768,65 +767,37 @@ appControllers.controller('ShipmentStatusCtrl',
                         $state.go('shipmentStatusList', { 'FilterName': FilterName, 'FilterValue': FilterValue }, { reload: true });
                     } else if (response.data.results === 1) {
                         $ionicLoading.show();
-                        //
-                        strUri = '/api/freight/tracking/sps/' + FilterName + '/0/' + FilterValue;              
-                        onSuccess = function (response) {
-                            if(response.data.results.length > 0){
-                                if (FilterName === 'ContainerNo') {
-                                    /*
-                                    strUri = "/api/freight/tracking/list/ContainerNo/" + FilterValue;
-                                    onSuccess = function (response) {
-                                        $ionicLoading.hide();
-                                        if (response.data.results.length > 1) {
-                                            $state.go('shipmentStatusList', { 'FilterName': FilterName, 'FilterValue': FilterValue }, { reload: true });
-                                        } else if (response.data.results.length === 1) {
-                                            $ionicLoading.show();                           
-                                            strUri = '/api/freight/tracking/sps/ContainerNo/0/' + FilterValue;              
-                                            onSuccess = function (response) {
-                                                if(response.data.results.length > 0){
-                                                    $state.go('shipmentStatusDetail', { 'FilterName': FilterName, 'FilterValue': response.data.results[0].JobNo, 'ModuleCode': response.data.results[0].ModuleCode }, { reload: true });
-                                                }
-                                            };
-                                            WebApiService.Get(strUri, onSuccess, onError, onFinally);
-                                        } else {
-                                            onNoRecords();
-                                        }
-                                    };
-                                    */
+                        if (FilterName === 'OrderNo') {
+                            $state.go('shipmentStatusDetail', { 'FilterName': FilterName, 'FilterValue': FilterValue, 'ModuleCode': '4' }, { reload: true });
+                        } else{
+                            strUri = '/api/freight/tracking/sps/' + FilterName + '/0/' + FilterValue;              
+                            onSuccess = function (response) {
+                                if(response.data.results.length > 0){
                                     $state.go('shipmentStatusDetail', { 'FilterName': FilterName, 'FilterValue': response.data.results[0].JobNo, 'ModuleCode': response.data.results[0].ModuleCode }, { reload: true });
-                                } else if (FilterName === 'JobNo') {
-
-                                } else if (FilterName === 'BLNo') {
-
-                                } else if (FilterName === 'AWBNo') {
-
-                                } else if (FilterName === 'OrderNo') {
-
-                                } else if (FilterName === 'ReferenceNo') {
-
                                 }
-                            }
-                        };
-                        WebApiService.Get(strUri, onSuccess, onError, onFinally);
+                            };
+                            WebApiService.Get(strUri, onSuccess, onError, onFinally);
+                        }
                     } else {
                         onNoRecords();
                     }
-                };                
+                };
                 WebApiService.Get(strUri, onSuccess, onError, onFinally);
             };
-            $scope.GoToDetail = function (FilterName) {
+            $scope.GoToDetail = function (TypeName) {
+                var FilterName = '';
                 var FilterValue = '';
-                if (FilterName === 'ContainerNo') { FilterValue = $scope.Tracking.ContainerNo }
-                else if (FilterName === 'JobNo') { FilterValue = $scope.Tracking.JobNo }
-                else if (FilterName === 'BLNo') { FilterValue = $scope.Tracking.BLNo }
-                else if (FilterName === 'AWBNo') { FilterValue = $scope.Tracking.AWBNo }
-                else if (FilterName === 'OrderNo') { FilterValue = $scope.Tracking.OrderNo }
-                else if (FilterName === 'ReferenceNo') { FilterValue = $scope.Tracking.ReferenceNo }
+                if (TypeName === 'Container No') { FilterValue = $scope.Tracking.ContainerNo; FilterName = 'ContainerNo'}
+                else if (TypeName === 'Job No') { FilterValue = $scope.Tracking.JobNo; FilterName = 'JobNo'}
+                else if (TypeName === 'BL No') { FilterValue = $scope.Tracking.BLNo; FilterName = 'AwbBlNo'}
+                else if (TypeName === 'AWB No') { FilterValue = $scope.Tracking.AWBNo; FilterName = 'AwbBlNo'}
+                else if (TypeName === 'Order No') { FilterValue = $scope.Tracking.OrderNo; FilterName = 'OrderNo'}
+                else if (TypeName === 'Reference No') { FilterValue = $scope.Tracking.ReferenceNo; FilterName = 'CustomerRefNo'}
                 if (FilterValue.length > 0) {
                     getSearchResult(FilterName, FilterValue);
                 } else {
                     var alertPopup = $ionicPopup.alert({
-                        title: FilterName + ' is Empty.',
+                        title: TypeName + ' is Empty.',
                         okType: 'button-assertive'
                     });
                     $timeout(function () {
@@ -836,32 +807,32 @@ appControllers.controller('ShipmentStatusCtrl',
             };
 			$('#iContainerNo').on('keydown', function (e) {
                 if (e.which === 9 || e.which === 13) {
-                    $scope.GoToDetail('ContainerNo');
+                    $scope.GoToDetail('Container No');
                 }
             });
             $('#iJobNo').on('keydown', function (e) {
                 if (e.which === 9 || e.which === 13) {
-                    $scope.GoToDetail('JobNo');
+                    $scope.GoToDetail('Job No');
                 }
             });
             $('#iBLNo').on('keydown', function (e) {
                 if (e.which === 9 || e.which === 13) {
-                    $scope.GoToDetail('BLNo');
+                    $scope.GoToDetail('BL No');
                 }
             });
             $('#iAWBNo').on('keydown', function (e) {
                 if (e.which === 9 || e.which === 13) {
-                    $scope.GoToDetail('AWBNo');
+                    $scope.GoToDetail('AWB No');
                 }
             });
             $('#iOrderNo').on('keydown', function (e) {
                 if (e.which === 9 || e.which === 13) {
-                    $scope.GoToDetail('OrderNo');
+                    $scope.GoToDetail('Order No');
                 }
             });
             $('#iReferenceNo').on('keydown', function (e) {
                 if (e.which === 9 || e.which === 13) {
-                    $scope.GoToDetail('ReferenceNo');
+                    $scope.GoToDetail('Reference No');
                 }
             });
         }]);
@@ -908,35 +879,34 @@ appControllers.controller('ShipmentStatusListCtrl',
 				}else { return false; }				
 			};
 			$scope.funcLoadMore = function() {
-				if ($scope.List.FilterName === 'ContainerNo') {
-					var strUri = '/api/freight/tracking/sps/ContainerNo/' + RecordCount + '/' + $scope.List.FilterValue;				
-					var onSuccess = function (response) {
-						if(response.data.results.length > 0){
-							dataResults = dataResults.concat(response.data.results);						
-							$scope.Jmjm1s = dataResults;
-							RecordCount = RecordCount + 20;
-							$scope.List.moreDataCanBeLoaded = true;
-						}else{
-							$scope.List.moreDataCanBeLoaded = false;
-						}
-					};
-					var onError = function (response) {
-					};
-					var onFinally = function (response) {
-						$scope.$broadcast('scroll.infiniteScrollComplete');
-					};
-					WebApiService.Get(strUri, onSuccess, onError, onFinally);
-				}
+				var strUri = '/api/freight/tracking/sps/' + $scope.List.FilterName + '/' + RecordCount + '/' + $scope.List.FilterValue;                
+				var onSuccess = function (response) {
+					if(response.data.results.length > 0){
+						dataResults = dataResults.concat(response.data.results);                        
+						$scope.Jmjm1s = dataResults;
+						RecordCount = RecordCount + 20;
+						$scope.List.moreDataCanBeLoaded = true;
+					}else{
+						$scope.List.moreDataCanBeLoaded = false;
+					}
+				};
+				var onError = function (response) {
+				};
+				var onFinally = function (response) {
+					$scope.$broadcast('scroll.infiniteScrollComplete');
+				};
+				WebApiService.Get(strUri, onSuccess, onError, onFinally);
 			};
         }]);
 
 appControllers.controller('ShipmentStatusDetailCtrl',
         ['$scope', '$state', '$stateParams', '$timeout', '$ionicHistory', '$ionicLoading', '$ionicPopup', 'WebApiService',
         function ($scope, $state, $stateParams, $timeout, $ionicHistory, $ionicLoading, $ionicPopup, WebApiService) {
-            $scope.Detail = {};
-            $scope.Detail.FilterName = $stateParams.FilterName;
-            $scope.Detail.FilterValue = $stateParams.FilterValue;
-			$scope.Detail.ModuleCode = $stateParams.ModuleCode;
+            $scope.Detail = {                
+                FilterName:  $stateParams.FilterName,
+                FilterValue: $stateParams.FilterValue,
+                ModuleCode:  $stateParams.ModuleCode
+            };
             $scope.returnList = function () {
 				if ($ionicHistory.backView()) {
 					$ionicHistory.goBack();
@@ -969,24 +939,34 @@ appControllers.controller('ShipmentStatusDetailCtrl',
 					return true;
 				}else { return false; }				
 			};
-            var getJmjm1 = function (FilterName, FilterValue, ModuleCode) {
-                $ionicLoading.show();
-                var strUri = '';
-                var onSuccess = null;
-                var onError = function (response) {
+            var strUri = '';
+            var onSuccess = null;
+            var onError = function (response) {
+            };
+            var onFinally = function (response) {
+                $ionicLoading.hide();
+            };
+            if($scope.Detail.FilterName === 'OrderNo'){
+                var getOmtx1 = function (FilterName, FilterValue) {
+                    $ionicLoading.show();
+                    strUri = '/api/freight/tracking/' + FilterName + '/' + FilterValue;
+                    onSuccess = function (response) {
+                        $scope.Omtx1s = response.data.results;
+                    };
+                    WebApiService.Get(strUri, onSuccess, onError, onFinally);
                 };
-                var onFinally = function (response) {
-                    $ionicLoading.hide();
-                };
-                if (FilterName === 'ContainerNo') {
-                    strUri = '/api/freight/tracking/ContainerNo/' + ModuleCode + '/' + FilterValue;
+                getOmtx1($scope.Detail.FilterName, $scope.Detail.FilterValue);
+            }else{
+                var getJmjm1 = function (FilterName, FilterValue, ModuleCode) {
+                    $ionicLoading.show();
+                    strUri = '/api/freight/tracking/' + FilterName + '/' + ModuleCode + '/' + FilterValue;
                     onSuccess = function (response) {
                         $scope.Jmjm1s = response.data.results;
                     };
-                }
-                WebApiService.Get(strUri, onSuccess, onError, onFinally);
-            };
-            getJmjm1($scope.Detail.FilterName, $scope.Detail.FilterValue, $scope.Detail.ModuleCode);
+                    WebApiService.Get(strUri, onSuccess, onError, onFinally);
+                };
+                getJmjm1($scope.Detail.FilterName, $scope.Detail.FilterValue, $scope.Detail.ModuleCode);
+            }            
         }]);
 
 appControllers.controller('InvoiceCtrl',
