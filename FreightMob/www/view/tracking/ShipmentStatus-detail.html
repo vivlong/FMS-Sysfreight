@@ -5,8 +5,43 @@
 		</div>
 		<h1 class="title"><span ng-bind="Detail.FilterValue"></span></h1>
 	</ion-header-bar>
-	<ion-content class="has-header">
-        <div class="card" ng-show="Detail.FilterName != 'OrderNo'" ng-repeat="Jmjm1 in Jmjm1s">
+	<ion-tabs class="tabs-top tabs-background-positive tabs-color-light" ng-show="Detail.FilterName === 'OrderNo'">
+		<ion-tab title="Booking Info">
+			<ion-scroll style="padding-top:93px;">
+				<div class="card" ng-repeat="Omtx1 in Omtx1s">
+		            <div class="list">
+		                <ion-item nav-clear menu-close class="item">
+		                    <h2>Order No&nbsp;:&nbsp;<span ng-bind="Omtx1.OrderNo"></span></h2>
+		                    <p>Order Date&nbsp;&nbsp;&nbsp;:&nbsp;<span ng-bind="Omtx1.OrderDate"></span></p>
+							<p>Customer&nbsp;&nbsp;:&nbsp;<span ng-bind="Omtx1.CustomerName"></span></p>
+							<p>Contact&nbsp;&nbsp;&nbsp;:&nbsp;<span ng-bind="Omtx1.ContactName"></span></p>
+		                    <p>Destination&nbsp;:&nbsp;<span ng-bind="Omtx1.DestName"></span></p>
+		                    <p>Cargo Type&nbsp;:&nbsp;<span ng-bind="Omtx1.CargoType"></span></p>
+		                    <p>Commodity&nbsp;:&nbsp;<span ng-bind="Omtx1.CommodityDescription"></span></p>
+		                    <p>Pcs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;<span ng-bind="Omtx1.Pcs | number:0"></span>&nbsp;<span ng-bind="Omtx1.UomDescription"></span></p>
+							<p>Weight&nbsp;&nbsp;:&nbsp;<span ng-bind="Omtx1.GrossWeight | number:4"></span>&nbsp;KGS</p>
+							<p>Volume&nbsp;:&nbsp;<span ng-bind="Omtx1.Volume | number:4"></span>&nbsp;m3</p>
+							<p>Mark No&nbsp;:&nbsp;<span ng-bind="Omtx1.MarkNo"></span></p>
+							<p>Special Instruction&nbsp;:&nbsp;<span ng-bind="Omtx1.SpecialInstruction"></span></p>
+		                </ion-item>
+		            </div>
+		        </div>
+			</ion-scroll>
+		</ion-tab>
+		<ion-tab title="Dimension">
+			<ion-scroll style="padding-top:93px;">
+				<ion-list>
+					<ion-item ng-repeat="rcbp3 in rcbp3s" class="item-remove-animate item-icon-right" ng-click="openModal(rcbp3)">
+						<p style="font-size:0.8em;"><i class="iconfont icon-name"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.ContactName" style="font-size:1.2em;"></span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="iconfont icon-title1"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Title" style="font-size:1.2em;"></span></p>
+						<p style="font-size:0.8em;"><i class="iconfont icon-phone2"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Handphone" style="font-size:1.2em;"></span></p>
+						<p style="font-size:0.8em;"><i class="iconfont icon-email"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Email" style="font-size:1.2em;"></span></p>
+					</ion-item>
+				</ion-list>
+			</ion-scroll>
+		</ion-tab>
+	</ion-tabs>
+	<ion-content class="has-header" ng-show="Detail.FilterName != 'OrderNo'">
+        <div class="card" ng-repeat="Jmjm1 in Jmjm1s">
             <div class="list">
                 <ion-item nav-clear menu-close class="item">
                     <h2>Job No&nbsp;:&nbsp;<span ng-bind="Jmjm1.JobNo"></span></h2>
@@ -34,27 +69,6 @@
 					<p>Volume&nbsp;:&nbsp;<span ng-bind="Jmjm1.Volume | number:4"></span>&nbsp;m3</p>
                 </ion-item>
             </div>
-        </div>
-        <div class="card" ng-show="Detail.FilterName === 'OrderNo'" ng-repeat="Omtx1 in Omtx1s">
-            <div class="list">
-                <ion-item nav-clear menu-close class="item">
-                    <h2>Order No&nbsp;:&nbsp;<span ng-bind="Omtx1.OrderNo"></span></h2>
-                    <p><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;Order Date&nbsp;&nbsp;&nbsp;:&nbsp;<span ng-bind="Omtx1.OrderDate"></span></p>
-					<p>Customer&nbsp;&nbsp;:&nbsp;<span ng-bind="Omtx1.CustomerName"></span></p>
-					<p>Contact&nbsp;&nbsp;&nbsp;:&nbsp;<span ng-bind="Omtx1.ContactName"></span></p>
-                    <p>
-						<i class="iconfont icon-accountcity"></i>&nbsp;&nbsp;Destination&nbsp;:&nbsp;
-						<span ng-bind="Omtx1.DestName"></span>
-					</p>
-                    <p>Cargo Type&nbsp;:&nbsp;<span ng-bind="Omtx1.CargoType"></span></p>
-                    <p>Commodity&nbsp;:&nbsp;<span ng-bind="Omtx1.CommodityDescription"></span></p>
-                    <p>Pcs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;<span ng-bind="Omtx1.Pcs | number:0"></span>&nbsp;<span ng-bind="Omtx1.UomDescription"></span></p>
-					<p>Weight&nbsp;&nbsp;:&nbsp;<span ng-bind="Omtx1.GrossWeight | number:4"></span>&nbsp;KGS</p>
-					<p>Volume&nbsp;:&nbsp;<span ng-bind="Omtx1.Volume | number:4"></span>&nbsp;m3</p>
-					<p>Mark No&nbsp;:&nbsp;<span ng-bind="Omtx1.MarkNo"></span></p>
-					<p>Special Instruction&nbsp;:&nbsp;<span ng-bind="Omtx1.SpecialInstruction"></span></p>
-                </ion-item>
-            </div>
-        </div>
+        </div>        
 	</ion-content>
 </ion-view>	
