@@ -245,7 +245,7 @@ html {
     letter-spacing: 0.25rem;
     padding: 0 10px;
 }
-.material .item-md-label input:focus ~ .input-label, .item-md-label input.used ~ .input-label {
+.material .item-md-label input:focus ~ .input-label, .material .item-md-label input.used ~ .input-label {
     font-weight: bold;
     opacity: 0.7;
     padding: 0;
