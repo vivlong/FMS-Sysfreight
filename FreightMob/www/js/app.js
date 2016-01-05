@@ -128,9 +128,9 @@ app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$io
                     }, 2000);
                 }
             } else if ($state.includes('setting')) {
-                $state.go('login', { 'blnCheckUpdate': 'Y' }, { reload: true });
+                $state.go('login', { 'CanCheckUpdate': 'Y' }, { reload: true });
             } else if ($state.includes('update')) {
-                $state.go('login', { 'blnCheckUpdate': 'N' }, { reload: true });
+                $state.go('login', { 'CanCheckUpdate': 'N' }, { reload: true });
             } else if ($state.includes('contacts' || $state.includes('paymentApproval') || $state.includes('vesselSchedule') || $state.includes('shipmentStatus') || $state.includes('invoice') || $state.includes('bl') || $state.includes('awb'))) {
                 $state.go('main', { }, { });
             } else if ($ionicHistory.backView()) {
@@ -158,7 +158,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
                 controller: 'LoadingCtrl'
             })
             .state('login', {
-                url: '/login/:blnCheckUpdate',
+                url: '/login/:CanCheckUpdate',
                 cache: 'false',
                 templateUrl: 'view/login.html',
                 controller: 'LoginCtrl'
