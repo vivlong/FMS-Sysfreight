@@ -24,25 +24,26 @@ appControllers.controller('IndexCtrl',
                 $state.go('setting', {}, { reload: true });
             };
             $scope.GoToUpdate = function () {
-                var url = strWebSiteURL + '/update.json';
-                $http.get(url)
-                .success(function (res) {
-                        var serverAppVersion = res.version;
-                        $cordovaAppVersion.getVersionNumber().then(function (version) {
-                            if (version != serverAppVersion) {
-                                $state.go('update', { 'Version': serverAppVersion });
-                            } else {
-                                var alertPopup = $ionicPopup.alert({
-                                    title: "Already the Latest Version!",
-                                    okType: 'button-assertive'
-                                });
-                                $timeout(function () {
-                                    alertPopup.close();
-                                }, 2500);
-                            }
-                        });
-                    })
-                .error(function (res) {
+                if(blnMobilePlatform){
+                    var url = strWebSiteURL + '/update.json';
+                    $http.get(url)
+                    .success(function (res) {
+                            var serverAppVersion = res.version;
+                            $cordovaAppVersion.getVersionNumber().then(function (version) {
+                                if (version != serverAppVersion) {
+                                    $state.go('update', { 'Version': serverAppVersion });
+                                } else {
+                                    var alertPopup = $ionicPopup.alert({
+                                        title: "Already the Latest Version!",
+                                        okType: 'button-assertive'
+                                    });
+                                    $timeout(function () {
+                                        alertPopup.close();
+                                    }, 2500);
+                                }
+                            });
+                        })
+                    .error(function (res) {
                         var alertPopup = $ionicPopup.alert({
                             title: "Connect Update Server Error!",
                             okType: 'button-assertive'
@@ -51,8 +52,17 @@ appControllers.controller('IndexCtrl',
                             alertPopup.close();
                         }, 2500);
                     });
-            };
-            $state.go('login', { 'blnCheckUpdate': 'N' }, { reload: true });
+                    $state.go('login', { 'blnCheckUpdate': 'N' }, { reload: true });
+                } else {
+                    var alertPopup = $ionicPopup.alert({
+                        title: "Web Platform Not Supported!",
+                        okType: 'button-assertive'
+                    });
+                    $timeout(function () {
+                        alertPopup.close();
+                    }, 2500);
+                }
+            }
         }]);
 
 appControllers.controller('LoadingCtrl',
