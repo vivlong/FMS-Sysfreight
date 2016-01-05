@@ -8,9 +8,9 @@ var strAppConfigFileName = "Config.txt";
 var blnMobilePlatform = false;
 
 Date.prototype.Format = function (fmt) {
-	var Month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var Month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     var o = {
-        "M+": this.getMonth() + 1,		
+        "M+": this.getMonth() + 1,
         "NNN": Month[this.getMonth()],
         "d+": this.getDate(),
         "H+": this.getHours(),
@@ -22,38 +22,16 @@ Date.prototype.Format = function (fmt) {
     };
     if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
     for (var k in o)
-	{
-		if(k==='NNN'){
-			if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length-1)));
-		}
-		else{
-			if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-		}
-	}
+    {
+        if(k==='NNN'){
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length-1)));
+        }
+        else{
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        }
+    }
     return fmt;
 }
-/*
-var funcShowDate = function (utc) {
-	if (typeof (utc) === 'undefined') return ''
-	var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
-	var newDate = new Date(utcDate);
-	if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
-		return newDate.Format('dd-NNN-yyyy');
-	} else {
-		return '';
-	}
-};
-var funcShowDatetime = function (utc) {
-	if (typeof (utc) === 'undefined') return ''
-	var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
-	var newDate = new Date(utcDate);
-	if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
-		return newDate.Format('dd-NNN-yyyy HH:mm');
-	} else {
-		return '';
-	}
-};
-*/		
 var onGetRegistradionID = function (data) {
     try {
         console.log("JPushPlugin:registrationID is " + data)
