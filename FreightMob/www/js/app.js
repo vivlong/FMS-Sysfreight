@@ -8,8 +8,6 @@ var app = angular.module('MobileAPP', [
     'ngCordova.plugins.fileOpener2',
     'ngCordova.plugins.datePicker',
     'ngCordova.plugins.barcodeScanner',
-    'MobileAPP.directives',
-    'MobileAPP.services',
     'MobileAPP.controllers'
 ]);
 
@@ -242,13 +240,13 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
                 controller: 'ShipmentStatusCtrl'
             })
             .state('shipmentStatusList', {
-                url: '/shipmentStatus/list/:FilterName/:FilterValue',
+                url: '/shipmentStatus/list',
                 cache: 'false',
                 templateUrl: 'view/tracking/ShipmentStatus-list.html',
                 controller: 'ShipmentStatusListCtrl'
             })
             .state('shipmentStatusDetail', {
-                url: '/shipmentStatus/detail/:FilterName/:FilterValue/:ModuleCode',
+                url: '/shipmentStatus/detail',
                 cache: 'false',
                 templateUrl: 'view/tracking/ShipmentStatus-detail.html',
                 controller: 'ShipmentStatusDetailCtrl'
