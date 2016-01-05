@@ -127,10 +127,10 @@ app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$io
                         $rootScope.backButtonPressedOnceToExit = false;
                     }, 2000);
                 }
-            } else if ($state.includes('setting')) {
-                $state.go('login', { 'CanCheckUpdate': 'Y' }, { reload: true });
-            } else if ($state.includes('update')) {
-                $state.go('login', { 'CanCheckUpdate': 'N' }, { reload: true });
+            //} else if ($state.includes('setting')) {
+            //    $state.go('login', { 'CanCheckUpdate': 'Y' }, { reload: true });
+            //} else if ($state.includes('update')) {
+            //    $state.go('login', { 'CanCheckUpdate': 'N' }, { reload: true });
             } else if ($state.includes('contacts' || $state.includes('paymentApproval') || $state.includes('vesselSchedule') || $state.includes('shipmentStatus') || $state.includes('invoice') || $state.includes('bl') || $state.includes('awb'))) {
                 $state.go('main', { }, { });
             } else if ($ionicHistory.backView()) {

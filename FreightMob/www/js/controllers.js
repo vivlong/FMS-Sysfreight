@@ -52,7 +52,7 @@ appControllers.controller('IndexCtrl',
                             alertPopup.close();
                         }, 2500);
                     });
-                    $state.go('login', { 'CanCheckUpdate': 'N' }, { reload: true });
+                    //$state.go('login', { 'CanCheckUpdate': 'N' }, { reload: true });
                 } else {
                     var alertPopup = $ionicPopup.alert({
                         title: "Web Platform Not Supported!",
