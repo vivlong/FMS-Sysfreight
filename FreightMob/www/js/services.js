@@ -1,4 +1,4 @@
-var appServices = angular.module('MobileAPP.services', [
+var appService = angular.module('MobileAPP.services', [
     'ionic',
     'ngCordova.plugins.toast',
     'ngCordova.plugins.file',
@@ -6,7 +6,7 @@ var appServices = angular.module('MobileAPP.services', [
     'ngCordova.plugins.fileOpener2'
 ]);
 
-appServices.service('WebApiService', ['$http', '$ionicPopup', '$timeout', 
+appService.service('WebApiService', ['$http', '$ionicPopup', '$timeout', 
     function ($http, $ionicPopup, $timeout) {
         function parseResponseStatus (status) {
             if (!status) return { isSuccess: true };
@@ -168,7 +168,7 @@ appServices.service('WebApiService', ['$http', '$ionicPopup', '$timeout',
         };
     }]);
 
-appServices.service('DownloadFileService', ['$http', '$timeout', '$ionicLoading', '$ionicPopup', '$cordovaToast', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2',
+appService.service('DownloadFileService', ['$http', '$timeout', '$ionicLoading', '$ionicPopup', '$cordovaToast', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2',
     function ($http, $timeout, $ionicLoading, $ionicPopup, $cordovaToast, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2) {
         this.Download = function(fileName, fileType, onPlatformError, onCheckError, onDownloadError){
             $ionicLoading.show({
