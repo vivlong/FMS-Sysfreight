@@ -19,17 +19,20 @@ app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$io
             if (window.cordova && window.cordova.plugins.Keyboard) {
 				blnMobilePlatform = true;
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-                // Add JPush
-                window.plugins.jPushPlugin.init();
-                //window.plugins.jPushPlugin.setDebugMode(true);
-                window.plugins.jPushPlugin.setLatestNotificationNum(5);
-                //window.plugins.jPushPlugin.openNotificationInAndroidCallback = function(data);
-                //window.plugins.jPushPlugin.receiveMessageInAndroidCallback = function(data);
-                //
+                /*
+                if(window.plugins.jPushPlugin){
+                    // Add JPush
+                    window.plugins.jPushPlugin.init();
+                    //window.plugins.jPushPlugin.setDebugMode(true);
+                    window.plugins.jPushPlugin.setLatestNotificationNum(5);
+                    //window.plugins.jPushPlugin.openNotificationInAndroidCallback = function(data);
+                    //window.plugins.jPushPlugin.receiveMessageInAndroidCallback = function(data);
+                }
+                */
                 var data = 'BaseUrl=' + strBaseUrl + '##WebServiceURL=' + strWebServiceURL + '##WebSiteURL=' + strWebSiteURL;
                 var path = cordova.file.externalRootDirectory;
-                var directory = "FreightApp";
-                var file = directory + "/Config.txt";
+                var directory = strAppRootPath;
+                var file = directory + "/" + strAppConfigFileName;
                 $cordovaFile.createDir(path, directory, false)
                     .then(function (success) {
                         $cordovaFile.writeFile(path, file, data, true)
@@ -38,12 +41,14 @@ app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$io
                                 if (strBaseUrl.length > 0) {
                                     strBaseUrl = "/" + strBaseUrl;
                                 }
-                                if (strWebServiceURL.length > 0) {
-                                    strWebServiceURL = "http://" + strWebServiceURL;
-                                }
-                                if (strWebSiteURL.length > 0) {
-                                    strWebSiteURL = "http://" + strWebSiteURL;
-                                }
+                                strWebServiceURL = onStrToURL(strWebServiceURL);
+                                //if (strWebServiceURL.length > 0) {
+                                //    strWebServiceURL = "http://" + strWebServiceURL;
+                                //}
+                                strWebSiteURL = onStrToURL(strWebSiteURL);
+                                //if (strWebSiteURL.length > 0) {
+                                //    strWebSiteURL = "http://" + strWebSiteURL;
+                                //}
                             }, function (error) {
                                 $cordovaToast.showShortBottom(error);
                             });
@@ -70,12 +75,14 @@ app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$io
                                         if (strBaseUrl.length > 0) {
                                             strBaseUrl = "/" + strBaseUrl;
                                         }
-                                        if (strWebServiceURL.length > 0) {
-                                            strWebServiceURL = "http://" + strWebServiceURL;
-                                        }
-                                        if (strWebSiteURL.length > 0) {
-                                            strWebSiteURL = "http://" + strWebSiteURL;
-                                        }
+                                        strWebServiceURL = onStrToURL(strWebServiceURL);
+                                        //if (strWebServiceURL.length > 0) {
+                                        //    strWebServiceURL = "http://" + strWebServiceURL;
+                                        //}
+                                        strWebSiteURL = onStrToURL(strWebSiteURL);
+                                        //if (strWebSiteURL.length > 0) {
+                                        //    strWebSiteURL = "http://" + strWebSiteURL;
+                                        //}
                                     }, function (error) {
                                         $cordovaToast.showShortBottom(error);
                                     });
@@ -87,12 +94,14 @@ app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$io
                                         if (strBaseUrl.length > 0) {
                                             strBaseUrl = "/" + strBaseUrl;
                                         }
-                                        if (strWebServiceURL.length > 0) {
-                                            strWebServiceURL = "http://" + strWebServiceURL;
-                                        }
-                                        if (strWebSiteURL.length > 0) {
-                                            strWebSiteURL = "http://" + strWebSiteURL;
-                                        }
+                                        strWebServiceURL = onStrToURL(strWebServiceURL);
+                                        //if (strWebServiceURL.length > 0) {
+                                        //    strWebServiceURL = "http://" + strWebServiceURL;
+                                        //}
+                                        strWebSiteURL = onStrToURL(strWebSiteURL);
+                                        //if (strWebSiteURL.length > 0) {
+                                        //    strWebSiteURL = "http://" + strWebSiteURL;
+                                        //}
                                     }, function (error) {
                                         $cordovaToast.showShortBottom(error);
                                     });
@@ -102,12 +111,8 @@ app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$io
                 if (strBaseUrl.length > 0) {
                     strBaseUrl = "/" + strBaseUrl;
                 }
-                if (strWebServiceURL.length > 0) {
-                    strWebServiceURL = "http://" + strWebServiceURL;
-                }
-                if (strWebSiteURL.length > 0) {
-                    strWebSiteURL = "http://" + strWebSiteURL;
-                }
+                strWebServiceURL = onStrToURL(strWebServiceURL);
+                strWebSiteURL = onStrToURL(strWebSiteURL);
             }
             if (window.StatusBar) {
                 // org.apache.cordova.statusbar required
@@ -127,10 +132,18 @@ app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$io
                         $rootScope.backButtonPressedOnceToExit = false;
                     }, 2000);
                 }
-            //} else if ($state.includes('setting')) {
-            //    $state.go('login', { 'CanCheckUpdate': 'Y' }, { reload: true });
-            //} else if ($state.includes('update')) {
-            //    $state.go('login', { 'CanCheckUpdate': 'N' }, { reload: true });
+            } else if ($state.includes('setting')) {
+                if ($ionicHistory.backView()) {
+                    $ionicHistory.goBack();
+                }else{
+                    $state.go('login', { 'CanCheckUpdate': 'Y' }, { reload: true });
+                }
+            } else if ($state.includes('update')) {
+                if ($ionicHistory.backView()) {
+                    $ionicHistory.goBack();
+                }else{
+                    $state.go('login', { 'CanCheckUpdate': 'N' }, { reload: true });
+                }
             } else if ($state.includes('contacts' || $state.includes('paymentApproval') || $state.includes('vesselSchedule') || $state.includes('shipmentStatus') || $state.includes('invoice') || $state.includes('bl') || $state.includes('awb'))) {
                 $state.go('main', { }, { });
             } else if ($ionicHistory.backView()) {

@@ -7,6 +7,20 @@ var strAppRootPath = "FreightApp";
 var strAppConfigFileName = "Config.txt";
 var blnMobilePlatform = false;
 
+var onGetRegistradionID = function (data) {
+    try {
+        console.log("JPushPlugin:registrationID is " + data)
+    }
+    catch (exception) {
+        console.log(exception);
+    }
+};
+var onStrToURL = function(strURL){
+    if (strURL.length > 0) {
+        strURL = "http://" + strURL;
+    }
+    return strURL;
+};
 Date.prototype.Format = function (fmt) {
     var Month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     var o = {
@@ -31,12 +45,4 @@ Date.prototype.Format = function (fmt) {
         }
     }
     return fmt;
-}
-var onGetRegistradionID = function (data) {
-    try {
-        console.log("JPushPlugin:registrationID is " + data)
-    }
-    catch (exception) {
-        console.log(exception);
-    }
-}
+};

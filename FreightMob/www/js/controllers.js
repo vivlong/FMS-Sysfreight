@@ -183,10 +183,7 @@ appControllers.controller('SettingCtrl',
             };
             $scope.saveSetting = function () {
                 if ($scope.Setting.WebServiceURL.length > 0) {
-                    strWebServiceURL = $scope.Setting.WebServiceURL;
-                    if (strWebServiceURL.length > 0) {
-                        strWebServiceURL = "http://" + strWebServiceURL;
-                    }
+                    strWebServiceURL = onStrToURL($scope.Setting.WebServiceURL);
                 } else { $scope.Setting.WebServiceURL = strWebServiceURL }
                 if ($scope.Setting.BaseUrl.length > 0) {
                     strBaseUrl = $scope.Setting.BaseUrl;
@@ -195,10 +192,7 @@ appControllers.controller('SettingCtrl',
                     }
                 } else { $scope.Setting.BaseUrl = strBaseUrl }
                 if ($scope.Setting.WebSiteUrl.length > 0) {
-                    strWebSiteURL = $scope.Setting.WebSiteUrl;
-                    if (strWebSiteURL.length > 0) {
-                        strWebSiteURL = "http://" + strWebSiteURL;
-                    }
+                    strWebSiteURL = onStrToURL($scope.Setting.WebSiteUrl);
                 } else { $scope.Setting.WebSiteUrl = strWebSiteURL }
                 var data = 'BaseUrl=' + $scope.Setting.BaseUrl + '##WebServiceURL=' + $scope.Setting.WebServiceURL + '##WebSiteURL=' + strWebSiteURL;
                 var path = cordova.file.externalRootDirectory;
