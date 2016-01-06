@@ -2,6 +2,38 @@
   "name": "FreightMob",
   "version": "1.0.0",
   "description": "Freight Mob APP",
-  "dependencies": {
-  }
+  "dependencies": {},
+  "devDependencies": {
+    "bower": "^1.7.0",
+    "shelljs": "^0.5.3"
+  },
+  "cordovaPlugins": [
+    "cordova-plugin-app-version",
+    "cordova-plugin-battery-status",
+    "cordova-plugin-camera",
+    "cordova-plugin-console",
+    "cordova-plugin-contacts",
+    "cordova-plugin-crosswalk-webview",
+    "cordova-plugin-datepicker",
+    "cordova-plugin-device",
+    "cordova-plugin-dialogs",
+    "cordova-plugin-file",
+    "cordova-plugin-file-transfer",
+    "cordova-plugin-file-opener2",
+    "cordova-plugin-geolocation",
+    "cordova-plugin-globalization",
+    "cordova-plugin-media",
+    "cordova-plugin-media-capture",
+    "cordova-plugin-network-information",
+    "cordova-plugin-splashscreen",
+    "cordova-plugin-statusbar",
+    "cordova-plugin-vibration",
+    "cordova-plugin-whitelist",
+    "cordova-plugin-x-toast",
+    "ionic-plugin-keyboard",
+    "https://github.com/phonegap/phonegap-plugin-barcodescanner.git",
+    "cordova-plugin-device-motion",
+    "cordova-plugin-device-orientation",
+    "cordova-plugin-flashlight"
+  ]
 }
