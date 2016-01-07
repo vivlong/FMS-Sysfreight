@@ -49,14 +49,14 @@
                     <p>B/L No&nbsp;&nbsp;&nbsp;:&nbsp;<span ng-bind="Jmjm1.AwbBlNo"></span></p>
 					<p>OBL No&nbsp;&nbsp;:&nbsp;<span ng-bind="Jmjm1.MAwbOblNo"></span></p>
 					<p>Ref No&nbsp;&nbsp;&nbsp;:&nbsp;<span ng-bind="Jmjm1.CustomerRefNo"></span></p>
-					<p ng-show="Jmjm1.ModuleCode === 'SE'"><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;&nbsp;ATA&nbsp;-&nbsp;<span ng-bind="Jmjm1.CityCode"></span>&nbsp;:&nbsp;<span ng-bind="ShowDate(Jmjm1.ATA)"></span></p>
+					<p ng-show="Jmjm1.ModuleCode === 'SE'"><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;&nbsp;ATA&nbsp;<span ng-bind="Jmjm1.CityCode"></span>&nbsp;:&nbsp;<span ng-bind="ShowDate(Jmjm1.ATA)"></span></p>
                     <p><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;&nbsp;ETD&nbsp;:&nbsp;<span ng-bind="ShowDate(Jmjm1.ETD)"></span></p>
 					<p><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;&nbsp;ETA&nbsp;:&nbsp;<span ng-bind="ShowDate(Jmjm1.ETA)"></span></p>
                     <p>
 						<i class="iconfont icon-accountcity"></i>&nbsp;&nbsp;POL&nbsp;:&nbsp;
 						<span ng-show="Jmjm1.ModuleCode === 'SE' || Jmjm1.ModuleCode === 'SI'" ng-bind="Jmjm1.PortOfLoadingName"></span>
 						<span ng-show="Jmjm1.ModuleCode != 'SE' && Jmjm1.ModuleCode != 'SI'" ng-bind="Jmjm1.OriginName"></span>
-					</p>                    
+					</p>
                     <p>
 						<i class="iconfont icon-accountcity"></i>&nbsp;&nbsp;POD&nbsp;:&nbsp;
 						<span ng-show="Jmjm1.ModuleCode === 'SE' || Jmjm1.ModuleCode === 'SI'" ng-bind="Jmjm1.PortOfDischargeName"></span>
@@ -69,6 +69,6 @@
 					<p>Volume&nbsp;:&nbsp;<span ng-bind="Jmjm1.Volume | number:4"></span>&nbsp;m3</p>
                 </ion-item>
             </div>
-        </div>        
+        </div>
 	</ion-content>
-</ion-view>	
+</ion-view>
