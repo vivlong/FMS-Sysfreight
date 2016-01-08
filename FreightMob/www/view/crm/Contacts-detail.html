@@ -7,6 +7,9 @@
 		<div class="buttons">
 			<button class="button button-icon button-clear ion-android-create" ng-click="GoToDetailEdit()"></button>
 		</div>
+        <div class="buttons">
+            <button class="button button-small button-icon button-clear ion-android-person-add" ng-click="GoToAdd()"></button>
+        </div>
 	</ion-header-bar>
 	<ion-tabs class="tabs-top tabs-background-positive tabs-color-light tabs-icon-left">
 		<ion-tab title="Customer" icon-on="ion-ios-world" icon-off="ion-ios-world-outline">
@@ -71,7 +74,7 @@
 							<i class="icon iconfont ion-android-map"></i>&nbsp;&nbsp;Map
 						</button>
 					</div>
-				</div>      
+				</div>
 			</ion-scroll>
 		</ion-tab>
 		<ion-tab title="Contacts" icon-on="ion-ios-people" icon-off="ion-ios-people-outline">
@@ -154,7 +157,7 @@
 						<p>
 							Others&nbsp;&nbsp;:&nbsp;&nbsp;<span ng-bind="rcbp3Detail.Others"></span>
 						</p>
-					</div>					
+					</div>
 				</div>
 			</ion-content>
 			<ion-footer-bar align-title="center" class="bar-positive">

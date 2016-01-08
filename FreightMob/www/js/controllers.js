@@ -349,9 +349,6 @@ appControllers.controller('ContactsCtrl',
             $scope.GoToList = function () {
                 $state.go('contactsList', { 'BusinessPartyName': $scope.Rcbp.BusinessPartyName }, { reload: true });
             };
-            $scope.GoToAdd = function () {
-                $state.go('contactsDetailAdd', { 'TrxNo':'New', 'BusinessPartyName': 'New' }, { reload: true });
-            };
             $('#iBusinessPartyName').on('keydown', function (e) {
                 if (e.which === 9 || e.which === 13) {
                     $scope.GoToList();
@@ -374,9 +371,6 @@ appControllers.controller('ContactsListCtrl',
             };
             $scope.GoToDetail = function (Rcbp1) {
                 $state.go('contactsDetail', { 'TrxNo': Rcbp1.TrxNo, 'BusinessPartyName': $stateParams.BusinessPartyName }, { reload: true });
-            };
-            $scope.GoToAdd = function () {
-                $state.go('contactsDetailAdd', { 'TrxNo': 'New', 'BusinessPartyName': $stateParams.BusinessPartyName }, { reload: true });
             };
             $scope.loadMore = function() {
                 var strUri = "/api/freight/rcbp1/sps?RecordCount=" + RecordCount;
@@ -440,6 +434,9 @@ appControllers.controller('ContactsDetailCtrl',
             };
             $scope.GoToDetailEdit = function () {
                 $state.go('contactsDetailEdit', { 'TrxNo': $scope.rcbpDetail.TrxNo, 'BusinessPartyName': $stateParams.BusinessPartyName }, { reload: true });
+            };
+            $scope.GoToAdd = function () {
+                $state.go('contactsDetailAdd', { 'TrxNo': 'New', 'BusinessPartyName': $stateParams.BusinessPartyName }, { reload: true });
             };
             $scope.blnContainNameCard = function (rcbp3) {
                 if (typeof (rcbp3) == "undefined") return false;
