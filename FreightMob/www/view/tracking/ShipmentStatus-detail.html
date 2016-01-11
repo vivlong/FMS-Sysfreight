@@ -44,29 +44,72 @@
         <div class="card" ng-repeat="Jmjm1 in Jmjm1s">
             <div class="list">
                 <ion-item nav-clear menu-close class="item">
-                    <h2>Job No&nbsp;:&nbsp;<span ng-bind="Jmjm1.JobNo"></span></h2>
-                    <h2 ng-show="funcShowLabel('ContainerNo')">Container No&nbsp;:&nbsp;<span ng-bind="Jmjm1.ContainerNo"></span></h2>
-                    <p>B/L No&nbsp;&nbsp;&nbsp;:&nbsp;<span ng-bind="Jmjm1.AwbBlNo"></span></p>
-					<p>OBL No&nbsp;&nbsp;:&nbsp;<span ng-bind="Jmjm1.MAwbOblNo"></span></p>
-					<p>Ref No&nbsp;&nbsp;&nbsp;:&nbsp;<span ng-bind="Jmjm1.CustomerRefNo"></span></p>
-					<p ng-show="Jmjm1.ModuleCode === 'SE'"><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;&nbsp;ATA&nbsp;<span ng-bind="Jmjm1.CityCode"></span>&nbsp;:&nbsp;<span ng-bind="ShowDate(Jmjm1.ATA)"></span></p>
-                    <p><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;&nbsp;ETD&nbsp;:&nbsp;<span ng-bind="ShowDate(Jmjm1.ETD)"></span></p>
-					<p><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;&nbsp;ETA&nbsp;:&nbsp;<span ng-bind="ShowDate(Jmjm1.ETA)"></span></p>
-                    <p>
-						<i class="iconfont icon-accountcity"></i>&nbsp;&nbsp;POL&nbsp;:&nbsp;
-						<span ng-show="Jmjm1.ModuleCode === 'SE' || Jmjm1.ModuleCode === 'SI'" ng-bind="Jmjm1.PortOfLoadingName"></span>
-						<span ng-show="Jmjm1.ModuleCode != 'SE' && Jmjm1.ModuleCode != 'SI'" ng-bind="Jmjm1.OriginName"></span>
-					</p>
-                    <p>
-						<i class="iconfont icon-accountcity"></i>&nbsp;&nbsp;POD&nbsp;:&nbsp;
-						<span ng-show="Jmjm1.ModuleCode === 'SE' || Jmjm1.ModuleCode === 'SI'" ng-bind="Jmjm1.PortOfDischargeName"></span>
-						<span ng-show="Jmjm1.ModuleCode != 'SE' && Jmjm1.ModuleCode != 'SI'" ng-bind="Jmjm1.DestName"></span>
-					</p>
-                    <p>Vessel&nbsp;:&nbsp;<span ng-bind="Jmjm1.VesselName"></span>&nbsp;V.&nbsp;<span ng-bind="Jmjm1.VoyageNo"></span></p>
-                    <p>Commodity&nbsp;:&nbsp;<span ng-bind="Jmjm1.CommodityDescription"></span></p>
-                    <p>Pcs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;<span ng-bind="Jmjm1.Pcs | number:0"></span>&nbsp;<span ng-bind="Jmjm1.UomDescription"></span></p>
-					<p>Weight&nbsp;&nbsp;:&nbsp;<span ng-bind="Jmjm1.GrossWeight | number:4"></span>&nbsp;KGS</p>
-					<p>Volume&nbsp;:&nbsp;<span ng-bind="Jmjm1.Volume | number:4"></span>&nbsp;m3</p>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p>Job No</p></div>
+                      <div class="col col-75 nopadding">:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.JobNo"></span></div>
+                    </div>
+                    <div class="row nopadding" ng-show="funcShowLabel('ContainerNo')">
+                      <div class="col col-33 nopadding"><p>Container No</p></div>
+                      <div class="col col-67 nopadding">:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.ContainerNo"></span></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p>B/L No</p></div>
+                      <div class="col col-75 nopadding">:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.AwbBlNo"></span></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p>OBL No</p></div>
+                      <div class="col col-75 nopadding">:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.MawbOBLNo"></span></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p>Ref No</p></div>
+                      <div class="col col-75 nopadding">:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.ReferenceNo"></span></div>
+                    </div>
+                    <div class="row nopadding" ng-show="Jmjm1.ModuleCode === 'SE'">
+                      <div class="col col-33 nopadding"><p><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;&nbsp;ATA&nbsp;<span ng-bind="Jmjm1.CityCode"></span></p></div>
+                      <div class="col col-67 nopadding">:&nbsp;&nbsp;<span class="h4" ng-bind="ShowDate(Jmjm1.ATA)"></span></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;&nbsp;ETD</p></div>
+                      <div class="col col-75 nopadding">:&nbsp;&nbsp;<span class="h4" ng-bind="ShowDate(Jmjm1.ETD)"></span></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;&nbsp;ETA</p></div>
+                      <div class="col col-75 nopadding">:&nbsp;&nbsp;<span class="h4" ng-bind="ShowDate(Jmjm1.ETA)"></span></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p><i class="iconfont icon-accountcity"></i>&nbsp;&nbsp;POL</p></div>
+                      <div class="col col-75 nopadding">:&nbsp;&nbsp;
+                          <span class="h4" ng-show="Jmjm1.ModuleCode === 'SE' || Jmjm1.ModuleCode === 'SI'" ng-bind="Jmjm1.PortOfLoadingName"></span>
+                          <span class="h4" ng-show="Jmjm1.ModuleCode != 'SE' && Jmjm1.ModuleCode != 'SI'" ng-bind="Jmjm1.OriginName"></span>
+                      </div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p><i class="iconfont icon-accountcity"></i>&nbsp;&nbsp;POD</p></div>
+                      <div class="col col-75 nopadding">:&nbsp;&nbsp;
+                          <span class="h4" ng-show="Jmjm1.ModuleCode === 'SE' || Jmjm1.ModuleCode === 'SI'" ng-bind="Jmjm1.PortOfDischargeName"></span>
+                          <span class="h4" ng-show="Jmjm1.ModuleCode != 'SE' && Jmjm1.ModuleCode != 'SI'" ng-bind="Jmjm1.DestName"></span>
+                      </div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p>Vessel</p></div>
+                      <div class="col col-75 nopadding">:&nbsp;&nbsp;<span class="h4"><span ng-bind="Jmjm1.VesselName"></span>&nbsp;V.&nbsp;<span ng-bind="Jmjm1.VoyageNo"></span></span></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col col-33 nopadding"><p>Commodity</p></div>
+                      <div class="col col-67 nopadding">:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.CommodityDescription"></span></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p>Pcs</p></div>
+                      <div class="col col-75 nopadding">:&nbsp;&nbsp;<span class="h4"><span ng-bind="Jmjm1.Pcs | number:0"></span>&nbsp;<span ng-bind="Jmjm1.UomDescription"></span></span></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p>Weight</p></div>
+                      <div class="col col-75 nopadding">:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.GrossWeight | number:4"></span>&nbsp;KGS</div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p>Volume</p></div>
+                      <div class="col col-75 nopadding">:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.Volume | number:4"></span>&nbsp;m3</div>
+                    </div>
                 </ion-item>
             </div>
         </div>

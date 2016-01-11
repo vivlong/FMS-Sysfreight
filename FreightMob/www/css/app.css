@@ -26,7 +26,7 @@ html {
   top: 0; left: 0; bottom: 0; right: 0;
 }
 .Absolute-Center.is-Responsive {
-  width: 90%; 
+  width: 90%;
   height: 60%;
   min-width: 200px;
   max-width: 400px;
@@ -36,7 +36,7 @@ html {
   text-align: center;
   vertical-align:middle;
 }
-.Absolute-Center.is-Image img { 
+.Absolute-Center.is-Image img {
   width: 100%;
   height: auto;
 }
@@ -46,7 +46,7 @@ html {
 .mainList a {
 	text-decoration: none;
 }
-.comments { 
+.comments {
 	width:100%;
 	overflow:auto;
 }
@@ -69,7 +69,7 @@ html {
 
 .pull-right {
   float: right; }
-  
+
 .loader {
   position: relative;
   margin: 0px auto;
@@ -90,7 +90,7 @@ html {
   -webkit-animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
   animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
   stroke-linecap: round; }
- 
+
 @-webkit-keyframes rotate {
   100% {
     -webkit-transform: rotate(360deg);
@@ -143,16 +143,16 @@ html {
   80%, 90% {
     stroke: #ffa700; } }
 
-	
+
 @media screen and (max-width: 1199px) { /*<1200的设备*/
 	.mainImg {
 		width: 16%;
-	}	
+	}
 }
 @media screen and (max-width: 991px) { /*<992的设备*/
 	.mainImg {
 		width: 32%;
-	}	
+	}
 }
 @media screen and (max-width: 767px) { /*<768的设备*/
 	.mainImg {
@@ -269,7 +269,14 @@ html {
 .nav-info {
 	background-color: #387ef5;
 	height: 12em;
-	
+
 }
 .nav-menu {
+}
+
+.nopadding {
+    padding: 1px;
+}
+.nopadding.row+.row {
+    margin-top: 0px;
 }
