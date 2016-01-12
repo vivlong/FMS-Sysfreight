@@ -5,8 +5,8 @@
 		</div>
 		<h1 class="title">Customer Detail</h1>
         <div class="buttons" >
-            <button ng-show="!rcbpDetail.AddRcbp3" class="button button-small button-icon button-clear ion-android-create" ng-click="GoToDetailEdit()"></button>
-            <button ng-show="rcbpDetail.AddRcbp3" class="button button-small button-icon button-clear ion-android-person-add" ng-click="GoToAdd()"></button>
+            <button ng-show="!rcbpDetail.AddRcbp3" class="button button-icon button-small button-clear ion-android-create" ng-click="GoToDetailEdit()"></button>
+            <button ng-show="rcbpDetail.AddRcbp3" class="button button-icon button-small button-clear ion-android-person-add" ng-click="GoToAdd()"></button>
         </div>
 	</ion-header-bar>
 	<ion-tabs class="tabs-top tabs-background-positive tabs-color-light tabs-icon-left">
@@ -19,20 +19,17 @@
 					</div>
 					<div class="item item-body">
 						<div class="list">
-							<div class="item">
-								<i class="iconfont icon-address2"></i>&nbsp;&nbsp;
+							<div class="item" style="border-width: 0px;">
+								<i class="iconfont ion-android-map"></i>&nbsp;&nbsp;&nbsp;&nbsp;
 								<span ng-bind="rcbpDetail.Address1"></span>
 							</div>
-							<div class="item">
-								<i class="iconfont icon-address2"></i>&nbsp;&nbsp;
+							<div class="item" style="border-width: 0px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								<span ng-bind="rcbpDetail.Address2"></span>
 							</div>
-							<div class="item">
-								<i class="iconfont icon-address2"></i>&nbsp;&nbsp;
+							<div class="item" style="border-width: 0px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								<span ng-bind="rcbpDetail.Address3"></span>
 							</div>
-							<div class="item">
-								<i class="iconfont icon-address2"></i>&nbsp;&nbsp;
+							<div class="item" style="border-width: 0px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								<span ng-bind="rcbpDetail.Address4"></span>
 							</div>
 							<div class="item">
@@ -61,7 +58,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="button-bar">
+					<!--div class="button-bar">
 						<button class="button">
 							<i class="icon iconfont ion-android-call"></i>&nbsp;&nbsp;Call
 						</button>
@@ -71,17 +68,24 @@
 						<button class="button">
 							<i class="icon iconfont ion-android-map"></i>&nbsp;&nbsp;Map
 						</button>
-					</div>
+					</div-->
 				</div>
 			</ion-scroll>
 		</ion-tab>
 		<ion-tab title="Contacts" icon-on="ion-ios-people" icon-off="ion-ios-people-outline" on-select="TabClick(2)">
 			<ion-scroll style="padding-top:93px;">
 				<ion-list>
-					<ion-item ng-repeat="rcbp3 in rcbp3s" class="item-remove-animate item-icon-right" ng-click="openModal(rcbp3)">
-						<p style="font-size:0.8em;"><i class="iconfont icon-name"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.ContactName" style="font-size:1.2em;"></span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="iconfont icon-title1"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Title" style="font-size:1.2em;"></span></p>
-						<p style="font-size:0.8em;"><i class="iconfont icon-phone2"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Handphone" style="font-size:1.2em;"></span></p>
-						<p style="font-size:0.8em;"><i class="iconfont icon-email"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Email" style="font-size:1.2em;"></span></p>
+					<ion-item ng-repeat="rcbp3 in rcbp3s" class="item-remove-animate item-icon-right contactsList" ng-click="openModal(rcbp3)">
+						<p><i class="iconfont icon-name"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.ContactName" style="font-size:1.2em;"></span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="iconfont icon-title1"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Title" style="font-size:1.2em;"></span></p>
+                        <p ng-show="rcbp3.Telephone != ''"><i class="iconfont icon-phone3"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Telephone" style="font-size:1.2em;"></span></p>
+						<p ng-show="rcbp3.Fax != ''"><i class="iconfont icon-fax1"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Fax" style="font-size:1.2em;"></span></p>
+						<p ng-show="rcbp3.Handphone != ''"><i class="iconfont icon-phone2"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Handphone" style="font-size:1.2em;"></span></p>
+						<p ng-show="rcbp3.Email != ''"><i class="iconfont icon-email"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Email" style="font-size:1.2em;"></span></p>
+                        <p ng-show="rcbp3.Facebook != ''"><i class="iconfont icon-facebook"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Facebook" style="font-size:1.2em;"></span></p>
+						<p ng-show="rcbp3.MSN != ''"><i class="iconfont icon-msn"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.MSN" style="font-size:1.2em;"></span></p>
+						<p ng-show="rcbp3.Skype != ''"><i class="iconfont icon-skype"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Skype" style="font-size:1.2em;"></span></p>
+						<p ng-show="rcbp3.Twitter != ''"><i class="iconfont icon-twitter"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Twitter" style="font-size:1.2em;"></span></p>
+						<p ng-show="rcbp3.QQ != ''"><i class="iconfont icon-qq"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.QQ" style="font-size:1.2em;"></span></p>
 					</ion-item>
 				</ion-list>
 			</ion-scroll>

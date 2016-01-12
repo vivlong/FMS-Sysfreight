@@ -294,3 +294,7 @@ html {
 .nopadding.row+.row {
     margin-top: 0px;
 }
+
+.contactsList p {
+    font-size:0.8em;
+}
