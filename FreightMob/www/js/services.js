@@ -187,7 +187,7 @@ appService.service('DownloadFileService', ['$http', '$timeout', '$ionicLoading',
                 var trustHosts = true;
                 var options = {};
                 if (!blnError) {
-                    $cordovaFileTransfer.download(url, targetPath, options, trustHosts).then(function (result) {
+                    $cordovaFileTransfer.download(url, targetPath, trustHosts, options).then(function (result) {
                         $ionicLoading.hide();
                         $cordovaFileOpener2.open(targetPath, fileType
                         ).then(function () {
