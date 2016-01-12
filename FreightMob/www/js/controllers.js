@@ -127,8 +127,7 @@ appControllers.controller('LoginCtrl',
                     return;
                 }
                 $ionicLoading.show();
-                var jsonData = { "UserId": $scope.logininfo.strUserName, "Password": hex_md5($scope.logininfo.strPassword) };
-                var strUri = "/api/freight/login";
+                var strUri = '/api/freight/login/check?UserId=' + $scope.logininfo.strUserName + '&Md5Stamp=' + hex_md5($scope.logininfo.strPassword);
                 var onSuccess = function (response) {
                     $ionicLoading.hide();
                     sessionStorage.clear();
@@ -142,7 +141,10 @@ appControllers.controller('LoginCtrl',
                 var onError = function () {
                     $ionicLoading.hide();
                 };
-                WebApiService.Post(strUri, jsonData, onSuccess, onError);
+                var onFinally = function () {
+                    $ionicLoading.hide();
+                };
+                WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
             };
             if ($stateParams.CanCheckUpdate === 'Y') {
                 var url = strWebSiteURL + '/update.json';
