@@ -4,15 +4,13 @@
 			<button class="button button-icon button-clear ion-navicon" ng-click="returnList()"></button>
 		</div>
 		<h1 class="title">Customer Detail</h1>
-		<div class="buttons">
-			<button class="button button-icon button-clear ion-android-create" ng-click="GoToDetailEdit()"></button>
-		</div>
-        <div class="buttons">
-            <button class="button button-small button-icon button-clear ion-android-person-add" ng-click="GoToAdd()"></button>
+        <div class="buttons" >
+            <button ng-show="!rcbpDetail.AddRcbp3" class="button button-small button-icon button-clear ion-android-create" ng-click="GoToDetailEdit()"></button>
+            <button ng-show="rcbpDetail.AddRcbp3" class="button button-small button-icon button-clear ion-android-person-add" ng-click="GoToAdd()"></button>
         </div>
 	</ion-header-bar>
 	<ion-tabs class="tabs-top tabs-background-positive tabs-color-light tabs-icon-left">
-		<ion-tab title="Customer" icon-on="ion-ios-world" icon-off="ion-ios-world-outline">
+		<ion-tab title="Customer" icon-on="ion-ios-world" icon-off="ion-ios-world-outline" on-select="TabClick(1)">
 			<ion-scroll style="padding-top:93px;">
 				<div class="card">
 					<div class="item item-avatar" style="min-height: 62px;">
@@ -77,7 +75,7 @@
 				</div>
 			</ion-scroll>
 		</ion-tab>
-		<ion-tab title="Contacts" icon-on="ion-ios-people" icon-off="ion-ios-people-outline">
+		<ion-tab title="Contacts" icon-on="ion-ios-people" icon-off="ion-ios-people-outline" on-select="TabClick(2)">
 			<ion-scroll style="padding-top:93px;">
 				<ion-list>
 					<ion-item ng-repeat="rcbp3 in rcbp3s" class="item-remove-animate item-icon-right" ng-click="openModal(rcbp3)">

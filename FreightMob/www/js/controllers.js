@@ -428,17 +428,25 @@ appControllers.controller('ContactsDetailCtrl',
         ['$scope', '$stateParams', '$state', '$timeout', '$ionicHistory', '$ionicLoading', '$ionicPopup', '$ionicModal', 'DateTimeService', 'WebApiService',
         function ($scope, $stateParams, $state, $timeout, $ionicHistory, $ionicLoading, $ionicPopup, $ionicModal, DateTimeService, WebApiService) {
             $scope.rcbpDetail = {
-                TrxNo: $stateParams.TrxNo
+                TrxNo: $stateParams.TrxNo,
+                AddRcbp3: false
             };
             $scope.rcbp3Detail = {};
             $scope.returnList = function () {
                 $state.go('contactsList', { 'BusinessPartyName': $stateParams.BusinessPartyName }, {});
             };
+            $scope.TabClick = function (TabIndex) {
+                if(TabIndex === 1){
+                    $scope.rcbpDetail.AddRcbp3 = false;
+                }else{
+                    $scope.rcbpDetail.AddRcbp3 = true;
+                }
+            };
             $scope.GoToDetailEdit = function () {
                 $state.go('contactsDetailEdit', { 'TrxNo': $scope.rcbpDetail.TrxNo, 'BusinessPartyName': $stateParams.BusinessPartyName }, { reload: true });
             };
             $scope.GoToAdd = function () {
-                $state.go('contactsDetailAdd', { 'TrxNo': 'New', 'BusinessPartyName': $stateParams.BusinessPartyName }, { reload: true });
+                $state.go('contactsDetailAdd', { 'TrxNo': $scope.rcbpDetail.TrxNo, 'BusinessPartyName': $stateParams.BusinessPartyName }, { reload: true });
             };
             $scope.blnContainNameCard = function (rcbp3) {
                 if (typeof (rcbp3) == "undefined") return false;
@@ -562,14 +570,8 @@ appControllers.controller('ContactsDetailAddCtrl',
         function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, WebApiService) {
             var TrxNo = $stateParams.TrxNo;
             var BusinessPartyName = $stateParams.BusinessPartyName;
-            $scope.returnTo = function () {
-                if(BusinessPartyName != 'New'){
-                    $state.go('contactsList', { 'BusinessPartyName': BusinessPartyName }, {});
-                }else{
-                    $state.go('contacts', {}, {});
-                }
-            };
-            $scope.returnAddRcbp1 = function(){
+            $scope.returnDetail = function () {
+                $state.go('contactsDetail', { 'TrxNo': TrxNo,'BusinessPartyName': BusinessPartyName }, { reload: true });
             };
         }]);
 
