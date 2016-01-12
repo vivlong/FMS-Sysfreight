@@ -275,7 +275,7 @@ html {
 }
 
 .nopadding {
-    padding: 1px;
+    padding: 2px;
 }
 .nopadding.row+.row {
     margin-top: 0px;
