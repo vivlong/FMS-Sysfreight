@@ -16,7 +16,7 @@ var onGetRegistradionID = function (data) {
     }
 };
 var onStrToURL = function(strURL){
-    if (strURL.length > 0) {
+    if (strURL.length > 0 && strURL.indexOf('http://') < 0 && strURL.indexOf('HTTP://') < 0) {
         strURL = "http://" + strURL;
     }
     return strURL;

@@ -34,6 +34,11 @@ appService.service('WebApiService', ['$http', '$ionicPopup', '$timeout',
             return result;
         }
         this.Post = function (requestUrl, requestData, onSuccess, onError) {
+            if (strBaseUrl.length > 0 && strBaseUrl.indexOf('/') < 1 ) {
+                strBaseUrl = "/" + strBaseUrl;
+            }
+            strWebServiceURL = onStrToURL(strWebServiceURL);
+            strWebSiteURL = onStrToURL(strWebSiteURL);
             var strSignature = hex_md5(strBaseUrl + requestUrl + strSecretKey.replace(/-/ig, ""));
             var url = strWebServiceURL + strBaseUrl + requestUrl;
             var config = {
@@ -79,6 +84,11 @@ appService.service('WebApiService', ['$http', '$ionicPopup', '$timeout',
             });
         };
         this.Get = function (requestUrl, onSuccess, onError, onFinally) {
+            if (strBaseUrl.length > 0 && strBaseUrl.indexOf('/') < 1 ) {
+                strBaseUrl = "/" + strBaseUrl;
+            }
+            strWebServiceURL = onStrToURL(strWebServiceURL);
+            strWebSiteURL = onStrToURL(strWebSiteURL);
             var strSignature = hex_md5(strBaseUrl + requestUrl + "?format=json" + strSecretKey.replace(/-/ig, ""));
             $http({
                 method: "GET",
@@ -123,6 +133,11 @@ appService.service('WebApiService', ['$http', '$ionicPopup', '$timeout',
             });
         };
         this.GetParam = function (requestUrl, onSuccess, onError, onFinally) {
+            if (strBaseUrl.length > 0 && strBaseUrl.indexOf('/') < 1 ) {
+                strBaseUrl = "/" + strBaseUrl;
+            }
+            strWebServiceURL = onStrToURL(strWebServiceURL);
+            strWebSiteURL = onStrToURL(strWebSiteURL);
             var strSignature = hex_md5(strBaseUrl + requestUrl + "&format=json" + strSecretKey.replace(/-/ig, ""));
             $http({
                 method: "GET",
