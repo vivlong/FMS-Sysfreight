@@ -43,7 +43,7 @@
 	<ion-content class="has-header" ng-show="Detail.FilterName != 'OrderNo'">
         <div class="card" ng-repeat="Jmjm1 in Jmjm1s">
             <div class="list">
-                <ion-item nav-clear menu-close class="item">
+                <ion-item nav-clear menu-close class="item" ng-show="Detail.FilterName != 'AwbBlNo'">
                     <div class="row nopadding">
                       <div class="col nopadding"><p>Job No</p></div>
                       <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.JobNo"></span></p></div>
@@ -109,6 +109,74 @@
                     <div class="row nopadding">
                       <div class="col nopadding"><p>Volume</p></div>
                       <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.Volume | number:4"></span>&nbsp;m3</p></div>
+                    </div>
+                </ion-item>
+                <ion-item nav-clear menu-close class="item" ng-show="Detail.FilterName === 'AwbBlNo'">
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p>Job No</p></div>
+                      <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.JobNo"></span></p></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p>Reference No</p></div>
+                      <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.ReferenceNo"></span></p></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p>AWB No</p></div>
+                      <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.AwbBlNo"></span></p></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p>MAWB No</p></div>
+                      <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.MAwbBlNo"></span></p></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p>Origin</p></div>
+                      <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.MAwbBlNo"></span></p></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p>Final Destination</p></div>
+                      <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.MAwbBlNo"></span></p></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;&nbsp;First Flight To</p></div>
+                      <div class="col col-75 nopadding"><p>
+                          :&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.MAwbBlNo"></span><span class="h4" ng-bind="ShowDate(Jmjm1.ETD)"></span>
+                      </p></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;&nbsp;Second Flight To</p></div>
+                      <div class="col col-75 nopadding"><p>
+                          :&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.MAwbBlNo"></span><span class="h4" ng-bind="ShowDate(Jmjm1.ETD)">
+                      </p></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;&nbsp;Third Flight To</p></div>
+                      <div class="col col-75 nopadding"><p>
+                          :&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.MAwbBlNo"></span><span class="h4" ng-bind="ShowDate(Jmjm1.ETD)">
+                      </p></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p><i class="icon iconfont ion-calendar"></i>&nbsp;&nbsp;&nbsp;Arrival Date</p></div>
+                      <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="ShowDate(Jmjm1.ETD)"></span></p></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col col-33 nopadding"><p>Commodity</p></div>
+                      <div class="col col-67 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.CommodityDescription"></span></p></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p>Pcs</p></div>
+                      <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h4"><span ng-bind="Jmjm1.Pcs | number:0"></span>&nbsp;<span ng-bind="Jmjm1.UomDescription"></span></span></p></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p>Weight</p></div>
+                      <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.GrossWeight | number:4"></span>&nbsp;KGS</p></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p>Volume</p></div>
+                      <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.Volume | number:4"></span>&nbsp;m3</p></div>
+                    </div>
+                    <div class="row nopadding">
+                      <div class="col nopadding"><p>Charge Weight</p></div>
+                      <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Jmjm1.GrossWeight | number:4"></span>&nbsp;KGS</p></div>
                     </div>
                 </ion-item>
             </div>
