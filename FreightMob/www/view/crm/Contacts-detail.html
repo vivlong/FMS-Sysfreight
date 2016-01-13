@@ -6,7 +6,7 @@
 		<h1 class="title">Customer Detail</h1>
         <div class="buttons" >
             <button ng-show="!rcbpDetail.AddRcbp3" class="button button-icon button-small button-clear ion-android-create" ng-click="GoToDetailEdit()"></button>
-            <button ng-show="rcbpDetail.AddRcbp3" class="button button-icon button-small button-clear ion-android-person-add" ng-click="GoToAdd()"></button>
+            <button ng-show="rcbpDetail.AddRcbp3" class="button button-icon button-small button-clear ion-android-person-add" ng-click="GoToContactAdd()"></button>
         </div>
 	</ion-header-bar>
 	<ion-tabs class="tabs-top tabs-background-positive tabs-color-light tabs-icon-left">
@@ -74,7 +74,7 @@
 		</ion-tab>
 		<ion-tab title="Contacts" icon-on="ion-ios-people" icon-off="ion-ios-people-outline" on-select="TabClick(2)">
 			<ion-scroll style="padding-top:93px;">
-				<ion-list>
+				<ion-list can-swipe="true">
 					<ion-item ng-repeat="rcbp3 in rcbp3s" class="item-remove-animate item-icon-right contactsList" ng-click="openModal(rcbp3)">
 						<p><i class="iconfont icon-name"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.ContactName" style="font-size:1.2em;"></span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="iconfont icon-title1"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Title" style="font-size:1.2em;"></span></p>
                         <p ng-show="rcbp3.Telephone != ''"><i class="iconfont icon-phone3"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Telephone" style="font-size:1.2em;"></span></p>
@@ -86,6 +86,8 @@
 						<p ng-show="rcbp3.Skype != ''"><i class="iconfont icon-skype"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Skype" style="font-size:1.2em;"></span></p>
 						<p ng-show="rcbp3.Twitter != ''"><i class="iconfont icon-twitter"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Twitter" style="font-size:1.2em;"></span></p>
 						<p ng-show="rcbp3.QQ != ''"><i class="iconfont icon-qq"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.QQ" style="font-size:1.2em;"></span></p>
+                        <ion-option-button class="button-calm" ng-click="GoToContactEdit(rcbp3)">&nbsp;&nbsp;Edit&nbsp;&nbsp;</ion-option-button>
+                        <ion-option-button class="button-assertive" ng-click="rcbp3s.splice($index, 1)">&nbsp;Delete&nbsp;</ion-option-button>
 					</ion-item>
 				</ion-list>
 			</ion-scroll>

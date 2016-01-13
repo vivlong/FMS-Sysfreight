@@ -445,7 +445,10 @@ appControllers.controller('ContactsDetailCtrl',
             $scope.GoToDetailEdit = function () {
                 $state.go('contactsDetailEdit', { 'TrxNo': $scope.rcbpDetail.TrxNo, 'BusinessPartyName': $stateParams.BusinessPartyName }, { reload: true });
             };
-            $scope.GoToAdd = function () {
+            $scope.GoToContactEdit = function (rcbp3) {
+                $state.go('contactsDetailEdit', { 'TrxNo': $scope.rcbpDetail.TrxNo, 'BusinessPartyName': $stateParams.BusinessPartyName }, { reload: true });
+            };
+            $scope.GoToContactAdd = function () {
                 $state.go('contactsDetailAdd', { 'TrxNo': $scope.rcbpDetail.TrxNo, 'BusinessPartyName': $stateParams.BusinessPartyName }, { reload: true });
             };
             $scope.blnContainNameCard = function (rcbp3) {
