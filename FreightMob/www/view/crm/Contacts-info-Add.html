@@ -6,21 +6,70 @@
 		<h1 class="title">Contact - Add New</h1>
 	</ion-header-bar>
     <ion-content class="has-header">
-		<div class="list card">
-			<div class="item item-body">
-				<ion-md-input id="iBusinessPartyName" placeholder="Business Party Name" highlight-color="balanced" type="text" ng-model="rcbpDetail.BusinessPartyName"></ion-md-input>
-				<ion-md-input id="iAddress1" placeholder="<i class='iconfont icon-address2'></i>&nbsp;&nbsp;Address 1" highlight-color="balanced" type="text" ng-model="rcbpDetail.Address1"></ion-md-input>
-				<ion-md-input id="iAddress2" placeholder="<i class='iconfont icon-address2'></i>&nbsp;&nbsp;Address 2" highlight-color="balanced" type="text" ng-model="rcbpDetail.Address2"></ion-md-input>
-				<ion-md-input id="iAddress3" placeholder="<i class='iconfont icon-address2'></i>&nbsp;&nbsp;Address 3" highlight-color="balanced" type="text" ng-model="rcbpDetail.Address3"></ion-md-input>
-				<ion-md-input id="iAddress4" placeholder="<i class='iconfont icon-address2'></i>&nbsp;&nbsp;Address 4" highlight-color="balanced" type="text" ng-model="rcbpDetail.Address4"></ion-md-input>
-				<ion-md-input id="iCityCode" placeholder="<i class='iconfont icon-accountcity'></i>&nbsp;&nbsp;City" highlight-color="balanced" type="text" ng-model="rcbpDetail.CityCode"></ion-md-input>
-				<ion-md-input id="iCountryCode" placeholder="<i class='iconfont icon-accountcity'></i>&nbsp;&nbsp;Country" highlight-color="balanced" type="text" ng-model="rcbpDetail.CountryCode"></ion-md-input>
-				<ion-md-input id="iTelephone" placeholder="<i class='iconfont icon-phone3'></i>&nbsp;&nbsp;Telephone" highlight-color="balanced" type="text" ng-model="rcbpDetail.Telephone"></ion-md-input>
-				<ion-md-input id="iFax" placeholder="<i class='iconfont icon-fax1'></i>&nbsp;&nbsp;Telephone" highlight-color="balanced" type="text" ng-model="rcbpDetail.Fax"></ion-md-input>
-				<ion-md-input id="iEmail" placeholder="<i class='iconfont icon-email'></i>&nbsp;&nbsp;Email" highlight-color="balanced" type="text" ng-model="rcbpDetail.Email"></ion-md-input>
-				<ion-md-input id="iWebSite" placeholder="<i class='iconfont icon-website1'></i>&nbsp;&nbsp;WebSite" highlight-color="balanced" type="text" ng-model="rcbpDetail.WebSite"></ion-md-input>
-			</div>
-		</div>
+        <div class="list card">
+            <div class="item">
+                <p>
+                    <i class="iconfont icon-name"></i>&nbsp;&nbsp;
+                    <span ng-bind="rcbp3Detail.ContactName"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <i class="iconfont icon-title1"></i>&nbsp;&nbsp;
+                    <span ng-bind="rcbp3Detail.Title"></span>
+                </p>
+                <p>
+                    <i class="iconfont icon-phone3"></i>&nbsp;&nbsp;
+                    <span ng-bind="rcbp3Detail.Telephone"></span>
+                </p>
+                <p>
+                    <i class="iconfont icon-fax1"></i>&nbsp;&nbsp;
+                    <span ng-bind="rcbp3Detail.Fax"></span>
+                </p>
+                <p>
+                    <i class="iconfont icon-phone2"></i>&nbsp;&nbsp;
+                    <span ng-bind="rcbp3Detail.Handphone"></span>
+                </p>
+                <p>
+                    <i class="iconfont icon-email"></i>&nbsp;&nbsp;
+                    <span ng-bind="rcbp3Detail.Email"></span>
+                </p>
+            </div>
+            <div class="item item-body">
+                <img class="full-image" ng-show="blnContainNameCard(rcbp3Detail)" ng-src="data:image/png;base64,{{rcbp3Detail.NameCard}}"/>
+                <p>
+                    <i class="iconfont icon-birthdaycake"></i>&nbsp;&nbsp;
+                    <span ng-bind="ShowDate(rcbp3Detail.Birthday)"></span>
+                </p>
+                <p>
+                    <i class="iconfont icon-like"></i>&nbsp;&nbsp;
+                    <span ng-bind="rcbp3Detail.Like"></span>
+                </p>
+                <p>
+                    <i class="iconfont icon-dislike"></i>&nbsp;&nbsp;
+                    <span ng-bind="rcbp3Detail.Dislike"></span>
+                </p>
+                <p>
+                    <i class="iconfont icon-facebook"></i>&nbsp;&nbsp;
+                    <span ng-bind="rcbp3Detail.Facebook"></span>
+                </p>
+                <p>
+                    <i class="iconfont icon-msn"></i>&nbsp;&nbsp;
+                    <span ng-bind="rcbp3Detail.MSN"></span>
+                </p>
+                <p>
+                    <i class="iconfont icon-skype"></i>&nbsp;&nbsp;
+                    <span ng-bind="rcbp3Detail.Skype"></span>
+                </p>
+                <p>
+                    <i class="iconfont icon-twitter"></i>&nbsp;&nbsp;
+                    <span ng-bind="rcbp3Detail.Twitter"></span>
+                </p>
+                <p>
+                    <i class="iconfont icon-qq"></i>&nbsp;&nbsp;
+                    <span ng-bind="rcbp3Detail.QQ"></span>
+                </p>
+                <p>
+                    Others&nbsp;&nbsp;:&nbsp;&nbsp;<span ng-bind="rcbp3Detail.Others"></span>
+                </p>
+            </div>
+        </div>
     </ion-content>
 	<ion-footer-bar align-title="center" class="bar-positive">
 		<div class="buttons">
