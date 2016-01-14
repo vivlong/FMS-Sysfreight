@@ -54,6 +54,7 @@ appFactory.factory('ContactsParam' , function(){
     	ListContacts.CanLoadedMoreData = true;
         DetialContacts.BusinessPartyNameLike  = '';
         DetialContacts.TrxNo  = '';
+        DetialContacts.CanAddInfos  = false;
     };
     Contacts.GetList = function(){
     	return ListContacts;

@@ -407,10 +407,12 @@ appControllers.controller('ContactsDetailCtrl',
         function ($scope, $stateParams, $state, $timeout, $ionicHistory, $ionicLoading, $ionicPopup, $ionicModal, DateTimeService, WebApiService, ContactsParam) {
             $scope.ContactsDetail = ContactsParam.GetDetial();
             if($scope.ContactsDetail.TrxNo === ''){
-                $scope.ContactsDetail.BusinessPartyNameLike = $stateParams.BusinessPartyNameLike;
                 $scope.ContactsDetail.TrxNo = $stateParams.TrxNo;
-                $scope.ContactsDetail.CanAddInfos = false;
             }
+            if($scope.ContactsDetail.BusinessPartyNameLike === ''){
+                $scope.ContactsDetail.BusinessPartyNameLike = $stateParams.BusinessPartyNameLike;
+            }
+            $scope.ContactsDetail.CanAddInfos = false;
             $scope.rcbpDetail = {};
             $scope.rcbp3Detail = {};
             $scope.returnList = function () {
@@ -428,13 +430,22 @@ appControllers.controller('ContactsDetailCtrl',
                 }
             };
             $scope.GoToDetailEdit = function () {
-                $state.go('contactsDetailEdit', { 'TrxNo': $scope.rcbpDetail.TrxNo, 'BusinessPartyName': $stateParams.BusinessPartyName }, { reload: true });
+                $state.go('contactsDetailEdit', { 'TrxNo': $scope.ContactsDetail.TrxNo }, { reload: true });
             };
             $scope.GoToContactEdit = function (rcbp3) {
-                $state.go('contactsDetailEdit', { 'TrxNo': $scope.rcbpDetail.TrxNo, 'BusinessPartyName': $stateParams.BusinessPartyName }, { reload: true });
+                $state.go('contactsInfoEdit', { 'BusinessPartyCode': rcbp3.BusinessPartyCode, 'LineItemNo': rcbp3.LineItemNo }, { reload: true });
+            };
+            $scope.GoToContactDel = function (index,rcbp3) {
+                var strUri = "/api/freight/rcbp3/delete?BusinessPartyCode=" + rcbp3.BusinessPartyCode + "&LineItemNo=" + rcbp3.LineItemNo;
+                var onSuccess = function (response) {
+                    if(response.data.results > 0){
+                        $scope.rcbp3s.splice(index, 1);
+                    }
+                };
+                WebApiService.GetParam(strUri, onSuccess, null, null);
             };
             $scope.GoToContactAdd = function () {
-                $state.go('contactsDetailAdd', { 'TrxNo': $scope.rcbpDetail.TrxNo, 'BusinessPartyName': $stateParams.BusinessPartyName }, { reload: true });
+                $state.go('contactsInfoAdd', { 'TrxNo': $scope.rcbpDetail.TrxNo, 'BusinessPartyName': $stateParams.BusinessPartyName }, { reload: true });
             };
             $scope.blnContainNameCard = function (rcbp3) {
                 if (typeof (rcbp3) == "undefined") return false;
@@ -504,7 +515,7 @@ appControllers.controller('ContactsDetailEditCtrl',
             };
             $scope.rcbp3Detail = {};
             $scope.returnDetail = function () {
-                $state.go('contactsDetail', { 'TrxNo': $scope.rcbpDetail.TrxNo,'BusinessPartyName': $stateParams.BusinessPartyName }, { reload: true });
+                $state.go('contactsDetail', { 'TrxNo': $scope.rcbpDetail.TrxNo }, { reload: true });
             };
             var GetRcbp3s = function (BusinessPartyCode) {
                 $ionicLoading.show();
@@ -566,10 +577,10 @@ appControllers.controller('ContactsInfoAddCtrl',
 appControllers.controller('ContactsInfoEditCtrl',
         ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService',
         function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, WebApiService) {
-            var TrxNo = $stateParams.TrxNo;
+            var BusinessPartyCode = $stateParams.BusinessPartyCode;
             var LineItemNo = $stateParams.LineItemNo;
             $scope.returnDetail = function () {
-                $state.go('contactsDetail', { 'TrxNo': TrxNo,'BusinessPartyName': BusinessPartyName }, { reload: true });
+                $state.go('contactsDetail', {}, { reload: true });
             };
         }]);
 
