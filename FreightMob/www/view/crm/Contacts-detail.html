@@ -5,8 +5,8 @@
 		</div>
 		<h1 class="title">Customer Detail</h1>
         <div class="buttons" >
-            <button ng-show="!rcbpDetail.AddRcbp3" class="button button-icon button-small button-clear ion-android-create" ng-click="GoToDetailEdit()"></button>
-            <button ng-show="rcbpDetail.AddRcbp3" class="button button-icon button-small button-clear ion-android-person-add" ng-click="GoToContactAdd()"></button>
+            <button ng-show="!ContactsDetail.CanAddInfos" class="button button-icon button-small button-clear ion-android-create" ng-click="GoToDetailEdit()"></button>
+            <button ng-show="ContactsDetail.CanAddInfos" class="button button-icon button-small button-clear ion-android-person-add" ng-click="GoToContactAdd()"></button>
         </div>
 	</ion-header-bar>
 	<ion-tabs class="tabs-top tabs-background-positive tabs-color-light tabs-icon-left">

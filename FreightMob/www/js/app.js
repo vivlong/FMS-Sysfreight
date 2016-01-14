@@ -205,13 +205,13 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
                 controller: 'ContactsCtrl'
             })
 			.state('contactsList', {
-                url: '/contacts/list/:BusinessPartyName',
+                url: '/contacts/list/:BusinessPartyNameLike',
                 cache: 'false',
                 templateUrl: 'view/crm/Contacts-list.html',
                 controller: 'ContactsListCtrl'
             })
             .state('contactsDetail', {
-                url: '/contacts/detail/:TrxNo/:BusinessPartyName',
+                url: '/contacts/detail/:TrxNo/:BusinessPartyNameLike',
                 templateUrl: 'view/crm/Contacts-detail.html',
                 controller: 'ContactsDetailCtrl'
             })
@@ -221,11 +221,17 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
                 templateUrl: 'view/crm/Contacts-detail-Edit.html',
                 controller: 'ContactsDetailEditCtrl'
             })
-            .state('contactsDetailAdd', {
-                url: '/contacts/detail/Add/:TrxNo/:BusinessPartyName',
+            .state('contactsInfoAdd', {
+                url: '/contacts/info/Add/:TrxNo/:LineItemNo',
                 cache: 'false',
-                templateUrl: 'view/crm/Contacts-detail-Add.html',
-                controller: 'ContactsDetailAddCtrl'
+                templateUrl: 'view/crm/Contacts-info-Add.html',
+                controller: 'ContactsInfoAddCtrl'
+            })
+            .state('contactsInfoEdit', {
+                url: '/contacts/info/Edit/:TrxNo/:LineItemNo',
+                cache: 'false',
+                templateUrl: 'view/crm/Contacts-info-Edit.html',
+                controller: 'ContactsInfoEditCtrl'
             })
             .state('paymentApproval', {
                 url: '/paymentApproval',

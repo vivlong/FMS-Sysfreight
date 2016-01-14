@@ -37,3 +37,38 @@ appFactory.factory('ShipmentStatusFilter' , function(){
     };
     return Filter;
 });
+
+appFactory.factory('ContactsParam' , function(){
+	var Contacts = {};
+    var ListContacts = {
+		BusinessPartyNameLike: '',
+        CanLoadedMoreData:true
+    };
+	var DetialContacts = {
+		BusinessPartyNameLike: '',
+        TrxNo:'',
+        CanAddInfos:false
+    };
+    Contacts.Init = function(){
+    	ListContacts.BusinessPartyNameLike    = '';
+    	ListContacts.CanLoadedMoreData = true;
+        DetialContacts.BusinessPartyNameLike  = '';
+        DetialContacts.TrxNo  = '';
+    };
+    Contacts.GetList = function(){
+    	return ListContacts;
+    };
+    Contacts.SetList = function(Name){
+    	ListContacts.BusinessPartyNameLike  = Name;
+    	return ListContacts;
+    };
+    Contacts.GetDetial = function(){
+    	return DetialContacts;
+    };
+    Contacts.SetDetial = function(Name, Value){
+        DetialContacts.BusinessPartyNameLike = Name;
+        DetialContacts.TrxNo = Value;
+    	return DetialContacts;
+    };
+    return Contacts;
+});
