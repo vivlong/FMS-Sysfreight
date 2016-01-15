@@ -34,7 +34,7 @@ appService.service('WebApiService', ['$http', '$ionicPopup', '$timeout',
             return result;
         }
         this.Post = function (requestUrl, requestData, onSuccess, onError) {
-            if (strBaseUrl.length > 0 && strBaseUrl.indexOf('/') < 1 ) {
+            if (strBaseUrl.length > 0 && strBaseUrl.indexOf('/') < 0 ) {
                 strBaseUrl = "/" + strBaseUrl;
             }
             strWebServiceURL = onStrToURL(strWebServiceURL);
@@ -83,8 +83,59 @@ appService.service('WebApiService', ['$http', '$ionicPopup', '$timeout',
               catch (e) { }
             });
         };
+        this.Put = function (requestUrl, requestData, onSuccess, onError) {
+            if (strBaseUrl.length > 0 && strBaseUrl.indexOf('/') < 0 ) {
+                strBaseUrl = "/" + strBaseUrl;
+            }
+            strWebServiceURL = onStrToURL(strWebServiceURL);
+            strWebSiteURL = onStrToURL(strWebSiteURL);
+            var strSignature = hex_md5(strBaseUrl + requestUrl + strSecretKey.replace(/-/ig, ""));
+            $http({
+                url: strWebServiceURL + strBaseUrl + requestUrl,
+                method:'PUT',
+                data: requestData,
+                withCredentials: false,
+                headers: {
+                  'content-type': 'application/json',
+                  'cache-control': 'no-cache'
+                  //'Signature': strSignature
+                }
+            }).success(function (response) {
+              if (!response) {
+                  if (onSuccess) onSuccess(null);
+                  return;
+              }
+              var status = parseResponseStatus(response);
+              if (status.isSuccess) {
+                  if (onSuccess) onSuccess(response);
+              }
+              else {
+                  if (onError) onError(response);
+                  var alertPopup = $ionicPopup.alert({
+                      title: response.meta.message,
+                      subTitle: response.meta.errors.message,
+                      okType: 'button-assertive'
+                  });
+                  $timeout(function () {
+                      alertPopup.close();
+                  }, 2500);
+              }
+            }).error(function (response) {
+              try {
+                  if (onError) onError(response);
+                  var alertPopup = $ionicPopup.alert({
+                      title: 'Connect to WebService failed.',
+                      okType: 'button-assertive'
+                  });
+                  $timeout(function () {
+                      alertPopup.close();
+                  }, 2500);
+              }
+              catch (e) { }
+            });
+        };
         this.Get = function (requestUrl, onSuccess, onError, onFinally) {
-            if (strBaseUrl.length > 0 && strBaseUrl.indexOf('/') < 1 ) {
+            if (strBaseUrl.length > 0 && strBaseUrl.indexOf('/') < 0 ) {
                 strBaseUrl = "/" + strBaseUrl;
             }
             strWebServiceURL = onStrToURL(strWebServiceURL);
@@ -133,7 +184,7 @@ appService.service('WebApiService', ['$http', '$ionicPopup', '$timeout',
             });
         };
         this.GetParam = function (requestUrl, onSuccess, onError, onFinally) {
-            if (strBaseUrl.length > 0 && strBaseUrl.indexOf('/') < 1 ) {
+            if (strBaseUrl.length > 0 && strBaseUrl.indexOf('/') < 0 ) {
                 strBaseUrl = "/" + strBaseUrl;
             }
             strWebServiceURL = onStrToURL(strWebServiceURL);

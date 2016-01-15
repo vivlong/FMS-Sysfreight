@@ -600,7 +600,7 @@ appControllers.controller('ContactsInfoEditCtrl',
             $scope.returnUpdateRcbp3 = function () {
                 $ionicLoading.show();
                 var jsonData = { "rcbp3": $scope.rcbp3Detail };
-                var strUri = "/api/freight/rcbp3";
+                var strUri = "/api/freight/rcbp3/update";
                 var onSuccess = function (response) {
                     $scope.returnDetail();
                         $ionicLoading.hide();
