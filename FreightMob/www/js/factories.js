@@ -42,12 +42,12 @@ appFactory.factory('CONTACTS_PARAM' , function(){
 	var CONTACTS_PARAM = {};
     var ListContacts = {
 		BusinessPartyNameLike: '',
-        CanLoadedMoreData:true
+        CanLoadedMoreData: true
     };
 	var DetialContacts = {
 		BusinessPartyNameLike: '',
         TrxNo:'',
-        CanAddInfos:false
+        CanAddInfos: false
     };
     CONTACTS_PARAM.Init = function(){
     	ListContacts.BusinessPartyNameLike    = '';
