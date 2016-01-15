@@ -444,8 +444,8 @@ appControllers.controller('ContactsDetailCtrl',
                 };
                 WebApiService.GetParam(strUri, onSuccess, null, null);
             };
-            $scope.GoToContactAdd = function () {
-                $state.go('contactsInfoAdd', { 'TrxNo': $scope.rcbpDetail.TrxNo, 'BusinessPartyName': $stateParams.BusinessPartyName }, { reload: true });
+            $scope.GoToContactAdd = function (rcbp3) {
+                $state.go('contactsInfoAdd', { 'BusinessPartyCode': $scope.rcbpDetail.BusinessPartyCode, 'LineItemNo': rcbp3.length + 1 }, { reload: true });
             };
             $scope.blnContainNameCard = function (rcbp3) {
                 if (typeof (rcbp3) == "undefined") return false;
@@ -549,15 +549,46 @@ appControllers.controller('ContactsDetailEditCtrl',
 appControllers.controller('ContactsInfoAddCtrl',
         ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService', 'CONTACTS_PARAM',
         function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, WebApiService, CONTACTS_PARAM) {
-            var BusinessPartyCode = $stateParams.BusinessPartyCode;
+            $scope.rcbp3Detail = {
+                BusinessPartyCode : $stateParams.BusinessPartyCode,
+                LineItemNo : $stateParams.LineItemNo,
+                ContactName : '',
+                Department : '',
+                Dislike : '',
+                Email : '',
+                Facebook : '',
+                Fax : '',
+                Handphone : '',
+                Like : '',
+                MSN : '',
+                Others : '',
+                QQ : '',
+                Skype : '',
+                Telephone : '',
+                Title : '',
+                Twitter : ''
+            };
             $scope.returnDetail = function () {
                 $scope.ContactsDetail = CONTACTS_PARAM.GetDetial();
                 $state.go('contactsDetail', { 'TrxNo':$scope.ContactsDetail.TrxNo, 'BusinessPartyNameLike':$scope.ContactsDetail.BusinessPartyNameLike}, { reload: true });
             };
+            $scope.returnInsertRcbp3 = function () {
+                $ionicLoading.show();
+                var jsonData = { "rcbp3": $scope.rcbp3Detail };
+                var strUri = "/api/freight/rcbp3";
+                var onSuccess = function (response) {
+                    $ionicLoading.hide();
+                    $scope.returnDetail();
+                };
+                var onError = function () {
+                    $ionicLoading.hide();
+                };
+                WebApiService.Post(strUri, jsonData, onSuccess, onError);
+            };
         }]);
 
 appControllers.controller('ContactsInfoEditCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService', 'CONTACTS_PARAM'
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService', 'CONTACTS_PARAM',
         function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, WebApiService, CONTACTS_PARAM) {
             $scope.rcbp3Detail = {};
             var BusinessPartyCode = $stateParams.BusinessPartyCode;

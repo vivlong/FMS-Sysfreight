@@ -229,7 +229,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
                 controller: 'ContactsInfoEditCtrl'
             })
             .state('contactsInfoAdd', {
-                url: '/contacts/info/Add/:TrxNo/:LineItemNo',
+                url: '/contacts/info/Add/:BusinessPartyCode/:LineItemNo',
                 cache: 'false',
                 templateUrl: 'view/crm/Contacts-info-Add.html',
                 controller: 'ContactsInfoAddCtrl'
