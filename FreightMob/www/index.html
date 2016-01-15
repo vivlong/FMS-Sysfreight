@@ -23,7 +23,7 @@
         <script src="js/factories.js"></script>
     </head>
     <body ng-app="MobileAPP">
-        <ion-side-menus enable-menu-with-back-views="true">
+        <ion-side-menus enable-menu-with-back-views="false">
             <ion-side-menu-content drag-content="true">
                 <ion-nav-view>
                 </ion-nav-view>
@@ -34,7 +34,7 @@
                     </div>
                     <div class="nav-menu">
                         <ion-list>
-                            <ion-item nav-clear>
+                            <!--ion-item nav-clear>
                                 <i class="icon iconfont ion-android-star"></i>&nbsp;&nbsp;
                             </ion-item>
                             <ion-item nav-clear>
@@ -42,16 +42,16 @@
                             </ion-item>
                             <ion-item nav-clear>
                                 <i class="icon iconfont ion-android-options"></i>&nbsp;&nbsp;
-                            </ion-item>
+                            </ion-item-->
                             <ion-item nav-clear menu-close ng-click="GoToSetting()">
                                 <i class="icon iconfont ion-android-settings"></i>&nbsp;&nbsp;Server Config
                             </ion-item>
                             <ion-item nav-clear menu-close ng-click="GoToUpdate()">
                                 <i class="icon iconfont ion-android-sync"></i>&nbsp;&nbsp;Check Update
                             </ion-item>
-                            <ion-item nav-clear menu-close ng-click="GoToLogin()">
+                            <!--ion-item nav-clear menu-close ng-click="GoToLogin()">
                                 <i class="icon iconfont ion-android-exit"></i>&nbsp;&nbsp;Log Out
-                            </ion-item>
+                            </ion-item-->
                         </ion-list>
                     </div>
                 </ion-pane>
