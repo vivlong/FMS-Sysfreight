@@ -212,6 +212,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
             })
             .state('contactsDetail', {
                 url: '/contacts/detail/:TrxNo/:BusinessPartyNameLike',
+                cache: 'false',
                 templateUrl: 'view/crm/Contacts-detail.html',
                 controller: 'ContactsDetailCtrl'
             })

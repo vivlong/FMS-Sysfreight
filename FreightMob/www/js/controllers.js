@@ -551,18 +551,20 @@ appControllers.controller('ContactsInfoAddCtrl',
         function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, WebApiService, CONTACTS_PARAM) {
             var BusinessPartyCode = $stateParams.BusinessPartyCode;
             $scope.returnDetail = function () {
-                $state.go('contactsDetail', {}, { reload: true });
+                $scope.ContactsDetail = CONTACTS_PARAM.GetDetial();
+                $state.go('contactsDetail', { 'TrxNo':$scope.ContactsDetail.TrxNo, 'BusinessPartyNameLike':$scope.ContactsDetail.BusinessPartyNameLike}, { reload: true });
             };
         }]);
 
 appControllers.controller('ContactsInfoEditCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService',
-        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, WebApiService) {
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService', 'CONTACTS_PARAM'
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, WebApiService, CONTACTS_PARAM) {
             $scope.rcbp3Detail = {};
             var BusinessPartyCode = $stateParams.BusinessPartyCode;
             var LineItemNo = $stateParams.LineItemNo;
             $scope.returnDetail = function () {
-                $state.go('contactsDetail', {}, { reload: true });
+                $scope.ContactsDetail = CONTACTS_PARAM.GetDetial();
+                $state.go('contactsDetail', { 'TrxNo':$scope.ContactsDetail.TrxNo, 'BusinessPartyNameLike':$scope.ContactsDetail.BusinessPartyNameLike}, { reload: true });
             };
             $scope.returnUpdateRcbp3 = function () {
                 $ionicLoading.show();
