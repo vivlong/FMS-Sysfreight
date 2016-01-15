@@ -517,31 +517,13 @@ appControllers.controller('ContactsDetailEditCtrl',
             $scope.returnDetail = function () {
                 $state.go('contactsDetail', { 'TrxNo': $scope.rcbpDetail.TrxNo }, { reload: true });
             };
-            var GetRcbp3s = function (BusinessPartyCode) {
-                $ionicLoading.show();
-                var strUri = "/api/freight/rcbp3?BusinessPartyCode=" + BusinessPartyCode;
-                var onSuccess = function (response) {
-                    $scope.rcbp3s = response.data.results;
-                    $ionicLoading.hide();
-                };
-                var onError = function (response) {
-                    $ionicLoading.hide();
-                };
-                var onFinally = function (response) {
-                    $ionicLoading.hide();
-                };
-                WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
-            };
             var GetRcbp1Detail = function (TrxNo) {
                 $ionicLoading.show();
-                var strUri = "/api/freight/rcbp1/trxNo/" + TrxNo;
+                var strUri = "/api/freight/rcbp1/trxno/" + TrxNo;
                 var onSuccess = function (response) {
                     $scope.rcbpDetail = response.data.results[0];
-                    $ionicLoading.hide();
-                    GetRcbp3s($scope.rcbpDetail.BusinessPartyCode);
                 };
                 var onError = function (response) {
-                    $ionicLoading.hide();
                 };
                 var onFinally = function (response) {
                     $ionicLoading.hide();
@@ -576,11 +558,39 @@ appControllers.controller('ContactsInfoAddCtrl',
 appControllers.controller('ContactsInfoEditCtrl',
         ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService',
         function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, WebApiService) {
+            $scope.rcbp3Detail = {};
             var BusinessPartyCode = $stateParams.BusinessPartyCode;
             var LineItemNo = $stateParams.LineItemNo;
             $scope.returnDetail = function () {
                 $state.go('contactsDetail', {}, { reload: true });
             };
+            $scope.returnUpdateRcbp3 = function () {
+                $ionicLoading.show();
+                var jsonData = { "rcbp3": $scope.rcbp3Detail };
+                var strUri = "/api/freight/rcbp3";
+                var onSuccess = function (response) {
+                    $scope.returnDetail();
+                        $ionicLoading.hide();
+                };
+                var onError = function () {
+                    $ionicLoading.hide();
+                };
+                WebApiService.Post(strUri, jsonData, onSuccess, onError);
+            };
+            var GetRcbp3s = function () {
+                $ionicLoading.show();
+                var strUri = '/api/freight/rcbp3?BusinessPartyCode=' + BusinessPartyCode + '&LineItemNo=' + LineItemNo;
+                var onSuccess = function (response) {
+                    $scope.rcbp3Detail = response.data.results[0];
+                };
+                var onError = function (response) {
+                };
+                var onFinally = function (response) {
+                    $ionicLoading.hide();
+                };
+                WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
+            };
+            GetRcbp3s();
         }]);
 
 appControllers.controller('PaymentApprovalCtrl',
