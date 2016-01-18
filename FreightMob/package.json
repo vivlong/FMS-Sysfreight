@@ -33,6 +33,7 @@
     "ionic-plugin-keyboard",
     "https://github.com/phonegap/phonegap-plugin-barcodescanner.git",
     "cordova-plugin-device-motion",
-    "cordova-plugin-device-orientation"
+    "cordova-plugin-device-orientation",
+    "cordova-sms-plugin"
   ]
 }

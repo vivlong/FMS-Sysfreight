@@ -7,6 +7,7 @@
     <author email="vivlong@163.com" href="http://www.28story.com">James Liao</author>
     <content src="index.html" />
     <access origin="*" />
+	<access origin="tel:*" launch-external="yes" />
     <preference name="Fullscreen" value="false" />
     <preference name="SplashScreen" value="none" />
     <preference name="SplashScreenDelay" value="10000" />
