@@ -34,6 +34,8 @@
     "https://github.com/phonegap/phonegap-plugin-barcodescanner.git",
     "cordova-plugin-device-motion",
     "cordova-plugin-device-orientation",
-    "cordova-sms-plugin"
+    "cordova-sms-plugin",
+    "cordova-plugin-actionsheet",
+    "cordova-plugin-inappbrowser"
   ]
 }
