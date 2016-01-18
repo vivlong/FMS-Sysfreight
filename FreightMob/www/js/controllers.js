@@ -9,6 +9,7 @@ var appControllers = angular.module('MobileAPP.controllers', [
     'ngCordova.plugins.fileOpener2',
     'ngCordova.plugins.datePicker',
     'ngCordova.plugins.barcodeScanner',
+    'ngCordova.plugins.sms',
     'MobileAPP.directives',
     'MobileAPP.services',
     'MobileAPP.factories'
@@ -403,8 +404,10 @@ appControllers.controller('ContactsListCtrl',
         }]);
 
 appControllers.controller('ContactsDetailCtrl',
-        ['$scope', '$stateParams', '$state', '$timeout', '$ionicHistory', '$ionicLoading', '$ionicPopup', '$ionicModal', 'DateTimeService', 'WebApiService', 'CONTACTS_PARAM',
-        function ($scope, $stateParams, $state, $timeout, $ionicHistory, $ionicLoading, $ionicPopup, $ionicModal, DateTimeService, WebApiService, CONTACTS_PARAM) {
+        ['$scope', '$stateParams', '$state', '$timeout', '$ionicHistory', '$ionicLoading', '$ionicPopup', '$ionicModal',
+         '$ionicActionSheet', '$cordovaToast', '$cordovaSms', 'DateTimeService', 'WebApiService', 'CONTACTS_PARAM',
+        function ($scope, $stateParams, $state, $timeout, $ionicHistory, $ionicLoading, $ionicPopup, $ionicModal,
+             $ionicActionSheet, $cordovaToast, $cordovaSms, DateTimeService, WebApiService, CONTACTS_PARAM) {
             $scope.ContactsDetail = CONTACTS_PARAM.GetDetial();
             if($scope.ContactsDetail.TrxNo === ''){
                 $scope.ContactsDetail.TrxNo = $stateParams.TrxNo;
@@ -428,6 +431,38 @@ appControllers.controller('ContactsDetailCtrl',
                 }else{
                     $scope.ContactsDetail.CanAddInfos = true;
                 }
+            };
+            $scope.ClickPhoneNumber = function(num) {
+                var hideSheet = $ionicActionSheet.show({
+                    buttons: [
+                        { text: 'Call' },
+                        { text: 'Send SMS' }
+                    ],
+                    titleText: num,
+                    cancelText: 'Cancel',
+                    buttonClicked: function(index) {
+                        if(index === 1){
+                            var options = {
+                                replaceLineBreaks: false, // true to replace \n by a new line, false by default
+                                android: {
+                                    intent: 'INTENT'  // send SMS with the native android SMS messaging
+                                    //intent: '' // send SMS without open any other app
+                                }
+                            };
+                            $cordovaSms.send(num, 'SMS content', options)
+                            .then(function() {
+                                $cordovaToast.showShortBottom('Message sent successfully');
+                            }, function(error) {
+                                $cordovaToast.showShortBottom('Message Failed:' + error);
+                            });
+                        }else{
+                             $window.location.href = "tel:" + num;
+                        }
+                    }
+                });
+                $timeout(function() {
+                    hideSheet();
+                }, 5000);
             };
             $scope.GoToDetailEdit = function () {
                 $state.go('contactsDetailEdit', { 'TrxNo': $scope.ContactsDetail.TrxNo }, { reload: true });
