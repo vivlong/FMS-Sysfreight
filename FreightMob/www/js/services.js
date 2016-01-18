@@ -3,7 +3,8 @@ var appService = angular.module('MobileAPP.services', [
     'ngCordova.plugins.toast',
     'ngCordova.plugins.file',
     'ngCordova.plugins.fileTransfer',
-    'ngCordova.plugins.fileOpener2'
+    'ngCordova.plugins.fileOpener2',
+    'ngCordova.plugins.inAppBrowser'
 ]);
 
 appService.service('WebApiService', ['$http', '$ionicPopup', '$timeout',
@@ -308,6 +309,29 @@ appService.service('DateTimeService', [
                 return newDate.Format('dd-NNN-yyyy HH:mm');
             } else {
                 return '';
+            }
+        };
+    }]);
+
+appService.service('OpenUrlService', ['$cordovaInAppBrowser',
+    function ($cordovaInAppBrowser) {
+        this.Open = function (url) {
+            if(blnMobilePlatform){
+                var options = {
+                    location: 'yes',
+                    clearcache: 'yes',
+                    toolbar: 'no'
+                };
+                $cordovaInAppBrowser.open(url, '_system', options)
+                .then(function(event) {
+                // success
+                })
+                .catch(function(event) {
+                // error
+                    $cordovaInAppBrowser.close();
+                });
+            }else{
+                window.open(url);
             }
         };
     }]);
