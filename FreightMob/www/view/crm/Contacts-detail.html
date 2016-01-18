@@ -42,7 +42,9 @@
 							</div>
 							<div class="item">
 								<i class="iconfont icon-phone3"></i>&nbsp;&nbsp;
-								<span ng-bind="rcbpDetail.Telephone" ng-click="ClickPhoneNumber(rcbpDetail.Telephone)"></span>
+								<span ng-bind="rcbpDetail.Telephone"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        						<a ng-href="tel:{{rcbpDetail.Telephone}}" style="text-decoration: none;"><i class="icon iconfont ion-android-call"></i>&nbsp;Call</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a ng-click="ClickSendSMS(rcbpDetail.Telephone)"><i class="icon iconfont ion-android-textsms"></i>&nbsp;SMS</a>
 							</div>
 							<div class="item">
 								<i class="iconfont icon-fax1"></i>&nbsp;&nbsp;
@@ -54,7 +56,7 @@
 							</div>
 							<div class="item">
 								<i class="iconfont icon-website1"></i>&nbsp;&nbsp;
-								<a ng-href="{{rcbpDetail.WebSite}}" target="_blank"><span ng-bind="rcbpDetail.WebSite"></span></a>
+								<a ng-click="ClickWebUrl(rcbpDetail.WebSite)"><span ng-bind="rcbpDetail.WebSite"></span></a>
 							</div>
 						</div>
 					</div>
