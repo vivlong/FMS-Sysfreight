@@ -240,6 +240,12 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
                 templateUrl: 'view/productivity/PaymentApproval.html',
                 controller: 'PaymentApprovalCtrl'
             })
+            .state('paymentApprovalList', {
+                url: '/paymentApproval/list',
+                cache: 'false',
+                templateUrl: 'view/productivity/PaymentApproval-list.html',
+                controller: 'PaymentApprovalListCtrl'
+            })
             .state('vesselSchedule', {
                 url: '/vesselSchedule',
                 //cache: 'false',

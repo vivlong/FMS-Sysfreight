@@ -251,7 +251,7 @@ appControllers.controller('MainCtrl',
                 $state.go('contacts', {}, { reload: true });
             };
             $scope.GoToPa = function () {
-                //$state.go('paymentApproval', {}, { reload: true });
+                $state.go('paymentApproval', {}, { reload: true });
             };
             $scope.GoToVS = function () {
                 $state.go('vesselSchedule', {}, { reload: true });
@@ -681,6 +681,17 @@ appControllers.controller('ContactsInfoEditCtrl',
         }]);
 
 appControllers.controller('PaymentApprovalCtrl',
+        ['$scope', '$state',
+        function ($scope, $state) {
+            $scope.returnMain = function () {
+                $state.go('main', {}, {});
+            };
+            $scope.GoToList = function (FilterName) {
+                $state.go('paymentApprovalList', {}, {});
+            };
+        }]);
+
+appControllers.controller('PaymentApprovalListCtrl',
         ['$scope', '$state', '$timeout', '$ionicHistory', '$ionicLoading', '$ionicPopup', 'DateTimeService', 'WebApiService',
         function ($scope, $state, $timeout, $ionicHistory, $ionicLoading, $ionicPopup, DateTimeService, WebApiService) {
             $scope.plcp1 = {};
@@ -718,14 +729,14 @@ appControllers.controller('PaymentApprovalCtrl',
             };
             var getPlcp1 = function (VoucherNo, VendorName, StatusCode) {
                 $ionicLoading.show();
-                var strUri = "/api/freight/plcp1";
+                var strUri = "/api/freight/plcp1?";
                 if (VoucherNo != null && VoucherNo.length > 0) {
-                    strUri = strUri + "/VoucherNo/" + VoucherNo;
+                    strUri = strUri + 'VoucherNo=' + VoucherNo + '&';
                 }else if (VendorName != null && VendorName.length > 0) {
-                    strUri = strUri + "/VendorName/" + VendorName;
+                    strUri = strUri + 'VendorName=' + VendorName + '&';
                 }
                 if (StatusCode != null && StatusCode.length > 0) {
-                    strUri = strUri + "/" + StatusCode;
+                    strUri = strUri + "StatusCode=" + StatusCode;
                 }
                 var onSuccess = function (response) {
                     $scope.Plcp1s = response.data.results;
@@ -735,7 +746,7 @@ appControllers.controller('PaymentApprovalCtrl',
                 var onFinally = function (response) {
                     $ionicLoading.hide();
                 };
-                WebApiService.Get(strUri, onSuccess, onFinally);
+                WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
             };
             getPlcp1(null, null, $scope.plcpStatus.text);
         }]);

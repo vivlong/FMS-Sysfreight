@@ -1,0 +1,35 @@
+﻿<ion-view title="Detail">
+	<ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
+		<div class="buttons">
+			<button class="button button-icon button-clear ion-navicon" ng-click="returnSearch()"></button>
+		</div>
+		<h1 class="title">Payment Approval</h1>
+        <div class="buttons">
+            <ion-toggle ng-model="plcpStatus.checked" ng-change="plcpStatusChange()">
+                <span ng-bind="plcpStatus.text"></span>
+            </ion-toggle>
+		</div>
+	</ion-header-bar>
+    <ion-content class="has-header">
+        <ion-list class="animate-blinds">
+            <ion-item nav-clear menu-close class="item ink" ng-repeat="plcp1 in Plcp1s">
+                <ion-checkbox ng-model="plcp1.isSelected" class="ink">
+                    <h2><span ng-bind="plcp1.VoucherNo"></span></h2>
+                    <p>
+                        <i class="iconfont icon-title"></i>&nbsp;&nbsp;
+                        <span ng-bind="plcp1.VendorName"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <i class="iconfont icon-amount"></i>&nbsp;&nbsp;
+                        <span ng-bind="plcp1.InvoiceAmt"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <i class="iconfont icon-date"></i>&nbsp;&nbsp;
+                        <span ng-bind="funcShowDatetime(plcp1.InvoiceDate)"></span>
+                    </p>
+                </ion-checkbox>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+    <ion-footer-bar class="button-bar" style="height:7%;">
+        <lable class="checkbox ink" style="right:-5px;"><span>Select All</span>&nbsp;<ui-select-all items="Plcp1s" prop="isSelected" class="pull-right"></ui-select-all></lable>
+        <button class="button button-flat button-positive ink" style="max-width:33%;right:-10px;" ng-click="showApproval()">Approval</button>
+        <button class="button button-flat button-positive ink" style="position:relative;max-width:33%;top:0;bottom:0;right:-15px;" ng-click="returnSearch()">Cancel</button>
+    </ion-footer-bar>
+</ion-view>
