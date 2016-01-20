@@ -681,22 +681,69 @@ appControllers.controller('ContactsInfoEditCtrl',
         }]);
 
 appControllers.controller('PaymentApprovalCtrl',
-        ['$scope', '$state',
-        function ($scope, $state) {
+        ['$scope', '$state', '$ionicLoading', '$ionicPopup', 'WebApiService',
+        function ($scope, $state, $ionicLoading, $ionicPopup, WebApiService) {
+            $scope.PA = {
+                VoucherNo: '',
+                VendorName: ''
+            };
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
-            $scope.GoToList = function (FilterName) {
-                $state.go('paymentApprovalList', {}, {});
+            var getSearchResult = function (FilterName, FilterValue) {
+                $ionicLoading.show();
+                var strUri = "";
+                var onSuccess = null;
+                var onError = function (response) {
+                };
+                var onFinally = function (response) {
+                    $ionicLoading.hide();
+                };
+                var onNoRecords = function () {
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'No Records Found.',
+                        okType: 'button-assertive'
+                    });
+                    $timeout(function () {
+                        alertPopup.close();
+                    }, 2500);
+                };
+                strUri = '/api/freight/tracking/count?FilterName=' + FilterName + '&FilterValue=' + FilterValue;
+                onSuccess = function (response) {
+                    $ionicLoading.hide();
+                    if (response.data.results >= 1) {
+                        $state.go('paymentApprovalList', { 'FilterName':FilterName, 'FilterValue':FilterValue }, {reload: true});
+                    } else {
+                        onNoRecords();
+                    }
+                };
+                //WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
             };
+            $scope.GoToList = function (TypeName) {
+                var FilterName = '';
+                var FilterValue = '';
+                if (TypeName === 'Voucher No') { FilterValue = $scope.PA.VoucherNo; FilterName = 'VoucherNo'}
+                else if (TypeName === 'Vendor Name') { FilterValue = $scope.PA.VendorName; FilterName = 'VendorName'}
+                getSearchResult(FilterName, FilterValue);
+            };
+            $('#iVoucherNo').on('keydown', function (e) {
+                if (e.which === 9 || e.which === 13) {
+                    $scope.GoToDetail('VoucherNo');
+                }
+            });
+            $('#iVendorName').on('keydown', function (e) {
+                if (e.which === 9 || e.which === 13) {
+                    $scope.GoToDetail('VendorName');
+                }
+            });
         }]);
 
 appControllers.controller('PaymentApprovalListCtrl',
         ['$scope', '$state', '$timeout', '$ionicHistory', '$ionicLoading', '$ionicPopup', 'DateTimeService', 'WebApiService',
         function ($scope, $state, $timeout, $ionicHistory, $ionicLoading, $ionicPopup, DateTimeService, WebApiService) {
             $scope.plcp1 = {};
-            $scope.returnMain = function () {
-                $state.go('main', {}, {});
+            $scope.returnSearch = function () {
+                $state.go('paymentApproval', {}, {});
             };
             $scope.showApproval = function () {
                 var alertPopup = $ionicPopup.alert({

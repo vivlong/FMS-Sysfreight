@@ -236,12 +236,11 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
             })
             .state('paymentApproval', {
                 url: '/paymentApproval',
-                cache: 'false',
                 templateUrl: 'view/productivity/PaymentApproval.html',
                 controller: 'PaymentApprovalCtrl'
             })
             .state('paymentApprovalList', {
-                url: '/paymentApproval/list',
+                url: '/paymentApproval/list/:FilterName/:FilterValue',
                 cache: 'false',
                 templateUrl: 'view/productivity/PaymentApproval-list.html',
                 controller: 'PaymentApprovalListCtrl'
