@@ -690,58 +690,36 @@ appControllers.controller('PaymentApprovalCtrl',
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
-            var getSearchResult = function (FilterName, FilterValue) {
-                $ionicLoading.show();
-                var strUri = "";
-                var onSuccess = null;
-                var onError = function (response) {
-                };
-                var onFinally = function (response) {
-                    $ionicLoading.hide();
-                };
-                var onNoRecords = function () {
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'No Records Found.',
-                        okType: 'button-assertive'
-                    });
-                    $timeout(function () {
-                        alertPopup.close();
-                    }, 2500);
-                };
-                strUri = '/api/freight/tracking/count?FilterName=' + FilterName + '&FilterValue=' + FilterValue;
-                onSuccess = function (response) {
-                    $ionicLoading.hide();
-                    if (response.data.results >= 1) {
-                        $state.go('paymentApprovalList', { 'FilterName':FilterName, 'FilterValue':FilterValue }, {reload: true});
-                    } else {
-                        onNoRecords();
-                    }
-                };
-                //WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
-            };
             $scope.GoToList = function (TypeName) {
                 var FilterName = '';
                 var FilterValue = '';
                 if (TypeName === 'Voucher No') { FilterValue = $scope.PA.VoucherNo; FilterName = 'VoucherNo'}
                 else if (TypeName === 'Vendor Name') { FilterValue = $scope.PA.VendorName; FilterName = 'VendorName'}
-                getSearchResult(FilterName, FilterValue);
+                $state.go('paymentApprovalList', { 'FilterName':FilterName, 'FilterValue':FilterValue }, {reload: true});
             };
             $('#iVoucherNo').on('keydown', function (e) {
                 if (e.which === 9 || e.which === 13) {
-                    $scope.GoToDetail('VoucherNo');
+                    $scope.GoToList('VoucherNo');
                 }
             });
             $('#iVendorName').on('keydown', function (e) {
                 if (e.which === 9 || e.which === 13) {
-                    $scope.GoToDetail('VendorName');
+                    $scope.GoToList('VendorName');
                 }
             });
         }]);
 
 appControllers.controller('PaymentApprovalListCtrl',
-        ['$scope', '$state', '$timeout', '$ionicHistory', '$ionicLoading', '$ionicPopup', 'DateTimeService', 'WebApiService',
-        function ($scope, $state, $timeout, $ionicHistory, $ionicLoading, $ionicPopup, DateTimeService, WebApiService) {
-            $scope.plcp1 = {};
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicHistory', '$ionicLoading', '$ionicPopup', 'DateTimeService', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicHistory, $ionicLoading, $ionicPopup, DateTimeService, WebApiService) {
+            var RecordCount = 0;
+            var dataResults = new Array();
+            $scope.Filter = {
+                FilterName:         $stateParams.FilterName,
+                FilterValue:        $stateParams.FilterValue,
+                CanLoadedMoreData:  true
+            };
+            $scope.plcpStatus = { text: "USE", checked: false };
             $scope.returnSearch = function () {
                 $state.go('paymentApproval', {}, {});
             };
@@ -754,48 +732,46 @@ appControllers.controller('PaymentApprovalListCtrl',
                     alertPopup.close();
                 }, 2500);
             };
-            $scope.plcpStatus = { text: "USE", checked: false };
             $scope.plcpStatusChange = function () {
                 if ($scope.plcpStatus.checked) {
                     $scope.plcpStatus.text = "APP";
                 } else {
                     $scope.plcpStatus.text = "USE";
                 }
-                //
-                getPlcp1(null, null, $scope.plcpStatus.text);
+                RecordCount = 0;
+                dataResults = new Array();
+                $scope.Plcp1s = dataResults;
+                $scope.loadMore();
             };
-            $scope.refreshRcbp1 = function (BusinessPartyName) {
-                var strUri = "/api/freight/rcbp1?BusinessPartyName=" + BusinessPartyName;
-                var onSuccess = function (response) {
-                    $scope.Rcbp1s = response.data.results;
-                };
-                WebApiService.GetParam(strUri, onSuccess);
+            $scope.funcShowDate = function (utc) {
+                return DateTimeService.ShowDate(utc);
             };
-            $scope.funcShowDatetime = function (utc) {
-                return DateTimeService.ShowDatetime(utc);
-            };
-            var getPlcp1 = function (VoucherNo, VendorName, StatusCode) {
-                $ionicLoading.show();
-                var strUri = "/api/freight/plcp1?";
-                if (VoucherNo != null && VoucherNo.length > 0) {
-                    strUri = strUri + 'VoucherNo=' + VoucherNo + '&';
-                }else if (VendorName != null && VendorName.length > 0) {
-                    strUri = strUri + 'VendorName=' + VendorName + '&';
-                }
-                if (StatusCode != null && StatusCode.length > 0) {
-                    strUri = strUri + "StatusCode=" + StatusCode;
+            $scope.loadMore = function() {
+                var strUri = "/api/freight/plcp1/sps?RecordCount=" + RecordCount + "&StatusCode=" + $scope.plcpStatus.text
+                if ($scope.Filter.FilterName != null && $scope.Filter.FilterName.length > 0) {
+                    if($scope.Filter.FilterName === "VoucherNo"){
+                        strUri = strUri + "&VoucherNo=" + $scope.Filter.FilterValue;
+                    }else{
+                        strUri = strUri + "&VendorName=" + $scope.Filter.FilterValue;
+                    }
                 }
                 var onSuccess = function (response) {
-                    $scope.Plcp1s = response.data.results;
+                    if(response.data.results.length > 0){
+                        dataResults = dataResults.concat(response.data.results);
+                        $scope.Plcp1s = dataResults;
+                        RecordCount = RecordCount + 20;
+                        $scope.Filter.CanLoadedMoreData = true;
+                    }else{
+                        $scope.Filter.CanLoadedMoreData = false;
+                    }
                 };
                 var onError = function (response) {
                 };
                 var onFinally = function (response) {
-                    $ionicLoading.hide();
+                    $scope.$broadcast('scroll.infiniteScrollComplete');
                 };
                 WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
             };
-            getPlcp1(null, null, $scope.plcpStatus.text);
         }]);
 
 appControllers.controller('VesselScheduleCtrl',
