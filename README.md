@@ -5,4 +5,7 @@ A Mobile APP For SysFreight Project
 JDK
 Android SDK
 Apache Cordova
-Ionic Framework
+Ionic Framework  
+  
+
+[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
