@@ -699,12 +699,12 @@ appControllers.controller('PaymentApprovalCtrl',
             };
             $('#iVoucherNo').on('keydown', function (e) {
                 if (e.which === 9 || e.which === 13) {
-                    $scope.GoToList('VoucherNo');
+                    $scope.GoToList('Voucher No');
                 }
             });
             $('#iVendorName').on('keydown', function (e) {
                 if (e.which === 9 || e.which === 13) {
-                    $scope.GoToList('VendorName');
+                    $scope.GoToList('Vendor Name');
                 }
             });
         }]);
@@ -717,11 +717,15 @@ appControllers.controller('PaymentApprovalListCtrl',
             $scope.Filter = {
                 FilterName:         $stateParams.FilterName,
                 FilterValue:        $stateParams.FilterValue,
-                CanLoadedMoreData:  true
+                CanLoadedMoreData:  true,
+                IsSelectAll:          false
             };
             $scope.plcpStatus = { text: "USE", checked: false };
             $scope.returnSearch = function () {
                 $state.go('paymentApproval', {}, {});
+            };
+            $scope.funcShowDate = function (utc) {
+                return DateTimeService.ShowDate(utc);
             };
             $scope.showApproval = function () {
                 var alertPopup = $ionicPopup.alert({
@@ -740,15 +744,23 @@ appControllers.controller('PaymentApprovalListCtrl',
                 }
                 RecordCount = 0;
                 dataResults = new Array();
+                $scope.Filter.CanLoadedMoreData = true;
                 $scope.Plcp1s = dataResults;
                 $scope.loadMore();
             };
-            $scope.funcShowDate = function (utc) {
-                return DateTimeService.ShowDate(utc);
+            $scope.ClickSelectAll = function() {
+                if($scope.Plcp1s != null && $scope.Plcp1s.length > 0){
+                    $scope.Filter.IsSelectAll = !$scope.Filter.IsSelectAll;
+                    if($scope.Filter.IsSelectAll){
+                        $scope.Plcp1s.forEach( function(plcp1) { plcp1.IsSelected = true; })
+                    }else{
+                        $scope.Plcp1s.forEach( function(plcp1) { plcp1.IsSelected = false; })
+                    }
+                }
             };
             $scope.loadMore = function() {
                 var strUri = "/api/freight/plcp1/sps?RecordCount=" + RecordCount + "&StatusCode=" + $scope.plcpStatus.text
-                if ($scope.Filter.FilterName != null && $scope.Filter.FilterName.length > 0) {
+                if ($scope.Filter.FilterValue != null && $scope.Filter.FilterValue.length > 0) {
                     if($scope.Filter.FilterName === "VoucherNo"){
                         strUri = strUri + "&VoucherNo=" + $scope.Filter.FilterValue;
                     }else{

@@ -3,7 +3,7 @@
 		<div class="buttons">
 			<button class="button button-icon button-clear ion-navicon" ng-click="returnSearch()"></button>
 		</div>
-		<h1 class="title"><span ng-bind="Filter.FilterValue"></span></h1>
+		<h1 class="title">Payment Approval</h1>
         <div class="buttons">
             <ion-toggle ng-model="plcpStatus.checked" toggle-class="toggle-calm" ng-change="plcpStatusChange()" style="color:#fff;margin:-8px;border-width:0px;background-color:transparent;">
                 <span ng-bind="plcpStatus.text"></span>
@@ -13,7 +13,7 @@
     <ion-content class="has-header">
         <div class="list">
             <ion-item class="item" ng-repeat="plcp1 in Plcp1s">
-                <ion-checkbox ng-model="plcp1.isSelected">
+                <ion-checkbox ng-model="plcp1.IsSelected">
                     <h2><span ng-bind="plcp1.VoucherNo"></span></h2>
                     <p>
                         <i class="iconfont icon-title"></i>&nbsp;
@@ -30,7 +30,7 @@
     </ion-content>
     <ion-footer-bar class="bar-positive">
         <div class="row" style="padding: 0px;">
-            <button class="col button button-clear">
+            <button class="col button button-clear" ng-click="ClickSelectAll()">
                 <i class="icon ion-android-checkmark-circle"></i>&nbsp;&nbsp;Select All
             </button>
             <button class="col button button-clear" ng-click="showApproval()">
