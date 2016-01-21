@@ -302,26 +302,6 @@ appControllers.controller('SalesmanActivityCtrl',
                     x: 'left',
                     data: ['DA', 'EDM', 'ADs', 'VedioADs', 'SE']
                 },
-                toolbox: {
-                    show: false,
-                    feature: {
-                        magicType: {
-                            show: true,
-                            type: ['pie', 'funnel'],
-                            option: {
-                                funnel: {
-                                    x: '25%',
-                                    width: '50%',
-                                    funnelAlign: 'left',
-                                    max: 1548
-                                }
-                            }
-                        },
-                        restore: { show: true },
-                        saveAsImage: { show: true }
-                    }
-                },
-                calculable: true,
                 series: [
                     {
                         name: 'Access Source',
@@ -334,7 +314,14 @@ appControllers.controller('SalesmanActivityCtrl',
                             { value: 234, name: 'ADs' },
                             { value: 135, name: 'VedioADs' },
                             { value: 1548, name: 'SE' }
-                        ]
+                        ],
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
                     }
                 ]
             };
