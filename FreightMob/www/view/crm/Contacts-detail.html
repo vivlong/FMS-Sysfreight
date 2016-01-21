@@ -12,8 +12,8 @@
 	<ion-tabs class="tabs-top tabs-background-positive tabs-color-light tabs-icon-left">
 		<ion-tab title="Customer" icon-on="ion-ios-world" icon-off="ion-ios-world-outline" on-select="TabClick(1)">
 			<ion-scroll style="padding-top:93px;">
-				<div class="card">
-					<div class="item item-avatar" style="min-height: 62px;">
+				<div class="card customerDetail">
+					<div class="item item-avatar" style="min-height: 68px;">
 						<img src="./img/unknown.png">
 						<h2><span ng-bind="rcbpDetail.BusinessPartyName"></span></h2>
 					</div>
@@ -111,7 +111,7 @@
 						</p>
 						<p>
 							<i class="iconfont icon-phone3"></i>&nbsp;&nbsp;
-							<span ng-bind="rcbp3Detail.Telephone"></span>
+                            <a ng-href="tel:{{rcbp3Detail.Telephone}}" style="text-decoration: none;"><span ng-bind="rcbp3Detail.Telephone"></span></a>
 						</p>
 						<p>
 							<i class="iconfont icon-fax1"></i>&nbsp;&nbsp;
@@ -120,6 +120,7 @@
 						<p>
 							<i class="iconfont icon-phone2"></i>&nbsp;&nbsp;
 							<span ng-bind="rcbp3Detail.Handphone"></span>
+                            <a ng-href="tel:{{rcbp3Detail.Telephone}}" style="text-decoration: none;"><span ng-bind="rcbp3Detail.Telephone"></span></a>
 						</p>
 						<p>
 							<i class="iconfont icon-email"></i>&nbsp;&nbsp;

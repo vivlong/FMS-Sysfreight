@@ -298,3 +298,10 @@ html {
 .contactsList p {
     font-size:0.8em;
 }
+
+.customerDetail .item-body {
+    padding: 8px;
+}
+.customerDetail .item-body .item {
+     padding: 8px;
+}
