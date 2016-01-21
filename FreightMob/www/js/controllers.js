@@ -728,13 +728,44 @@ appControllers.controller('PaymentApprovalListCtrl',
                 return DateTimeService.ShowDate(utc);
             };
             $scope.showApproval = function () {
-                var alertPopup = $ionicPopup.alert({
-                    title: "Approval Success!",
-                    okType: 'button-calm'
-                });
-                $timeout(function () {
-                    alertPopup.close();
-                }, 2500);
+                var blnSelect = false;
+                for(var index in $scope.Plcp1s){
+                    if($scope.Plcp1s[index].IsSelected){
+                        blnSelect = true;
+                        break;
+                    }
+                }
+                if(blnSelect){
+                    $ionicLoading.show();
+                    var jsonData = { "plcp1s": $scope.Plcp1s };
+                    var strUri = "/api/freight/plcp1";
+                    var onSuccess = function (response) {
+                        $ionicLoading.hide();
+                        var alertPopup = $ionicPopup.alert({
+                            title: "Approval Success!",
+                            okType: 'button-calm'
+                        });
+                        $timeout(function () {
+                            alertPopup.close();
+                        }, 2500);
+                        for(i=0;i<=$scope.Plcp1s.length -1;i++){
+                            if($scope.Plcp1s[i].StatusCode === 'APP'){
+                                $scope.Plcp1s.splice(i, 1);
+                            }
+                        }
+                    };
+                    var onError = function () {
+                        $ionicLoading.hide();
+                        var alertPopup = $ionicPopup.alert({
+                            title: "Approval Faild",
+                            okType: 'button-assertive'
+                        });
+                        $timeout(function () {
+                            alertPopup.close();
+                        }, 2500);
+                    };
+                    WebApiService.Post(strUri, jsonData, onSuccess, onError);
+                }
             };
             $scope.plcpStatusChange = function () {
                 if ($scope.plcpStatus.checked) {
@@ -748,13 +779,20 @@ appControllers.controller('PaymentApprovalListCtrl',
                 $scope.Plcp1s = dataResults;
                 $scope.loadMore();
             };
+            $scope.ClickSelect = function(Plcp1) {
+                if(Plcp1.IsSelected){
+                    Plcp1.StatusCode = 'APP';
+                } else {
+                    Plcp1.StatusCode = 'USE';
+                }
+            };
             $scope.ClickSelectAll = function() {
                 if($scope.Plcp1s != null && $scope.Plcp1s.length > 0){
                     $scope.Filter.IsSelectAll = !$scope.Filter.IsSelectAll;
                     if($scope.Filter.IsSelectAll){
-                        $scope.Plcp1s.forEach( function(plcp1) { plcp1.IsSelected = true; })
+                        $scope.Plcp1s.forEach( function(plcp1) { plcp1.IsSelected = true;plcp1.StatusCode = 'APP'; });
                     }else{
-                        $scope.Plcp1s.forEach( function(plcp1) { plcp1.IsSelected = false; })
+                        $scope.Plcp1s.forEach( function(plcp1) { plcp1.IsSelected = false;plcp1.StatusCode = 'USE' });
                     }
                 }
             };

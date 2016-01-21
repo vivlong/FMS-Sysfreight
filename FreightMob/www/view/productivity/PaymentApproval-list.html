@@ -13,7 +13,7 @@
     <ion-content class="has-header">
         <div class="list">
             <ion-item class="item" ng-repeat="plcp1 in Plcp1s">
-                <ion-checkbox ng-model="plcp1.IsSelected">
+                <ion-checkbox ng-model="plcp1.IsSelected" ng-change="ClickSelect(plcp1)">
                     <h2><span ng-bind="plcp1.VoucherNo"></span></h2>
                     <p>
                         <i class="iconfont icon-title"></i>&nbsp;
@@ -37,7 +37,7 @@
                 <i class="icon ion-android-done"></i>&nbsp;&nbsp;Approval
             </button>
             <button class="col button button-clear" ng-click="returnSearch()">
-                <i class="icon ion-android-close"></i>&nbsp;&nbsp;Cancel
+                <i class="icon ion-arrow-return-right"></i>&nbsp;&nbsp;Return
             </button>
         </div>
 	</ion-footer-bar>
