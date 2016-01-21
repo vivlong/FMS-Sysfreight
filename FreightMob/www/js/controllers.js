@@ -1177,14 +1177,49 @@ appControllers.controller('SOACtrl',
         }]);
 
 appControllers.controller('MemoCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', 'WebApiService',
-        function ($scope, $state, $stateParams, $timeout, $ionicPopup, WebApiService) {
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, WebApiService) {
+            $scope.Saus1 = {
+                UserID: sessionStorage.getItem("UserId"),
+                Memo :  ''
+            };
+            if($scope.Saus1.UserID === null){ $scope.Saus1.UserID='s'; }
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
-            $scope.Memo = {
-                MemoInfo : 'Hello this is sysmagic mobile support'
+            $scope.returnUpdateMemo = function(){
+                $ionicLoading.show();
+                var jsonData = { "saus1": $scope.Saus1 };
+                var strUri = "/api/freight/saus1/memo";
+                var onSuccess = function (response) {
+                    $ionicLoading.hide();
+                    var alertPopup = $ionicPopup.alert({
+                        title: "Save Success!",
+                        okType: 'button-calm'
+                    });
+                    $timeout(function () {
+                        alertPopup.close();
+                    }, 2500);
+                };
+                var onError = function () {
+                    $ionicLoading.hide();
+                };
+                WebApiService.Post(strUri, jsonData, onSuccess, onError);
             };
+            var GetSaus1 = function (uid) {
+                $ionicLoading.show();
+                var strUri = "/api/freight/saus1/memo?userID=" + uid;
+                var onSuccess = function (response) {
+                    $scope.Saus1.Memo = response.data.results;
+                };
+                var onError = function (response) {
+                };
+                var onFinally = function (response) {
+                    $ionicLoading.hide();
+                };
+                WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
+            };
+            GetSaus1($scope.Saus1.UserID);
         }]);
 
 appControllers.controller('ReminderCtrl',
