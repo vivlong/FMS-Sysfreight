@@ -280,52 +280,87 @@ appControllers.controller('MainCtrl',
         }]);
 
 appControllers.controller('SalesmanActivityCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', '$cordovaDialogs', 'WebApiService',
-        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, $cordovaDialogs, WebApiService) {
+        ['$scope', '$state', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService',
+        function ($scope, $state, $timeout, $ionicLoading, $ionicPopup, WebApiService) {
+            $scope.Rcsm1 = {
+                SalesmanNameLike: ''
+            };
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
-            // initial echarts
-            var myChart = echarts.init(document.getElementById('echartsPie'));
-            var option = {
-                title: {
-                    text: 'Salesman',
-                    subtext: 'Access Source',
-                    x: 'center'
-                },
-                tooltip: {
-                    trigger: 'item',
-                    formatter: "{a} <br/>{b} : {c} ({d}%)"
-                },
-                legend: {
-                    orient: 'vertical',
-                    x: 'left',
-                    data: ['DA', 'EDM', 'ADs', 'VedioADs', 'SE']
-                },
-                series: [
-                    {
-                        name: 'Access Source',
-                        type: 'pie',
-                        radius: '55%',
-                        center: ['50%', '60%'],
-                        data: [
-                            { value: 335, name: 'DA' },
-                            { value: 310, name: 'EDM' },
-                            { value: 234, name: 'ADs' },
-                            { value: 135, name: 'VedioADs' },
-                            { value: 1548, name: 'SE' }
-                        ],
-                        itemStyle: {
-                            emphasis: {
-                                shadowBlur: 10,
-                                shadowOffsetX: 0,
-                                shadowColor: 'rgba(0, 0, 0, 0.5)'
-                            }
-                        }
+            $scope.GoToList = function () {
+                $ionicLoading.show();
+                var onError = function (response) {
+                };
+                var onFinally = function (response) {
+                    $ionicLoading.hide();
+                };
+                var onNoRecords = function () {
+                    var alertPopup = $ionicPopup.alert({
+                            title: 'No Records Found.',
+                            okType: 'button-assertive'
+                    });
+                    $timeout(function () {
+                        alertPopup.close();
+                    }, 2500);
+                };
+                var strUri = '/api/freight/smsa1/count?SalesmanName=' + $scope.Rcsm1.SalesmanNameLike;
+                var onSuccess = onSuccess = function (response) {
+                    $ionicLoading.hide();
+                    if (response.data.results > 0) {
+                        $state.go('salesmanActivityList', { 'SalesmanNameLike': $scope.Rcsm1.SalesmanNameLike }, { reload: true });
+                    } else {
+                        onNoRecords();
                     }
-                ]
+                };
+                WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
             };
-            myChart.setOption(option);
+            $('#iSalesmanName').on('keydown', function (e) {
+                if (e.which === 9 || e.which === 13) {
+                    $scope.GoToList();
+                }
+            });
+            $('#iSalesmanName').focus();
+        }]);
+
+appControllers.controller('SalesmanActivityListCtrl',
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', '$ionicScrollDelegate', '$cordovaDialogs', 'WebApiService', 'CONTACTS_PARAM',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, $ionicScrollDelegate, $cordovaDialogs, WebApiService, CONTACTS_PARAM) {
+            var RecordCount = 0;
+            var dataResults = new Array();
+            $scope.List = {
+                SalesmanNameLike:   $stateParams.SalesmanNameLike,
+                CanLoadedMoreData:  true
+            };
+            $scope.returnSearch = function () {
+                $state.go('salesmanActivity', {}, {});
+            };
+            $scope.GoToDetail = function (Smsa1) {
+                //$state.go('salesmanActivityDetail', { 'TrxNo': Smsa1.TrxNo, 'SalesmanNameLike': $stateParams.SalesmanNameLike }, { reload: true });
+            };
+            $scope.loadMore = function() {
+                var strUri = "/api/freight/smsa1/sps?RecordCount=" + RecordCount;
+                if ($scope.List.SalesmanNameLike != null && $scope.List.SalesmanNameLike.length > 0) {
+                    strUri = strUri + "&SalesmanName=" + $scope.List.SalesmanNameLike;
+                }
+                var onSuccess = function (response) {
+                    if(response.data.results.length > 0){
+                        dataResults = dataResults.concat(response.data.results);
+                        $scope.Smsa1s = dataResults;
+                        RecordCount = RecordCount + 20;
+                        $scope.List.CanLoadedMoreData = true;
+                    }else{
+                        RecordCount = 0;
+                        $scope.List.CanLoadedMoreData = false;
+                    }
+                };
+                var onError = function (response) {
+                };
+                var onFinally = function (response) {
+                    $scope.$broadcast('scroll.infiniteScrollComplete');
+                };
+                WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
+            };
         }]);
 
 appControllers.controller('ContactsCtrl',

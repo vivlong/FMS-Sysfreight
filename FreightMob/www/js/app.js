@@ -198,6 +198,11 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
                 templateUrl: 'view/crm/SalesmanActivity.html',
                 controller: 'SalesmanActivityCtrl'
             })
+            .state('salesmanActivityList', {
+                url: '/salesmanActivity/list/:SalesmanNameLike',
+                templateUrl: 'view/crm/SalesmanActivity-list.html',
+                controller: 'SalesmanActivityListCtrl'
+            })
             .state('contacts', {
                 url: '/contacts',
                 cache: 'false',
