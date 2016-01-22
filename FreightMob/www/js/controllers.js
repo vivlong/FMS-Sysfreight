@@ -899,8 +899,6 @@ appControllers.controller('ShipmentStatusCtrl',
             };
             var getSearchResult = function (FilterName, FilterValue) {
                 $ionicLoading.show();
-                var strUri = "";
-                var onSuccess = null;
                 var onError = function (response) {
                 };
                 var onFinally = function (response) {
@@ -915,8 +913,8 @@ appControllers.controller('ShipmentStatusCtrl',
                         alertPopup.close();
                     }, 2500);
                 };
-                strUri = '/api/freight/tracking/count?FilterName=' + FilterName + '&FilterValue=' + FilterValue;
-                onSuccess = function (response) {
+                var strUri = '/api/freight/tracking/count?FilterName=' + FilterName + '&FilterValue=' + FilterValue;
+                var onSuccess = onSuccess = function (response) {
                     $ionicLoading.hide();
                     if (response.data.results > 1) {
                         SHIPMENTSTATUS_PARAM.SetList(FilterName, FilterValue);
@@ -947,8 +945,8 @@ appControllers.controller('ShipmentStatusCtrl',
                 var FilterValue = '';
                 if (TypeName === 'Container No') { FilterValue = $scope.Tracking.ContainerNo; FilterName = 'ContainerNo'}
                 else if (TypeName === 'Job No') { FilterValue = $scope.Tracking.JobNo; FilterName = 'JobNo'}
-                else if (TypeName === 'BL No') { FilterValue = $scope.Tracking.BLNo; FilterName = 'AwbBlNo'}
-                else if (TypeName === 'AWB No') { FilterValue = $scope.Tracking.AWBNo; FilterName = 'AwbBlNo'}
+                else if (TypeName === 'BL No') { FilterValue = $scope.Tracking.BLNo; FilterName = 'BlNo'}
+                else if (TypeName === 'AWB No') { FilterValue = $scope.Tracking.AWBNo; FilterName = 'AwbNo'}
                 else if (TypeName === 'Order No') { FilterValue = $scope.Tracking.OrderNo; FilterName = 'OrderNo'}
                 else if (TypeName === 'Reference No') { FilterValue = $scope.Tracking.ReferenceNo; FilterName = 'CustomerRefNo'}
                 if (FilterValue.length > 0) {
