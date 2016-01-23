@@ -363,6 +363,14 @@ appControllers.controller('SalesmanActivityListCtrl',
             };
         }]);
 
+appControllers.controller('SalesmanActivityDetailCtrl',
+        ['$scope', '$state', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService',
+        function ($scope, $state, $timeout, $ionicLoading, $ionicPopup, WebApiService) {
+            $scope.returnList= function () {
+                $state.go('main', {}, {});
+            };
+        }]);
+
 appControllers.controller('ContactsCtrl',
         ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', '$cordovaDialogs', 'WebApiService', 'CONTACTS_PARAM',
         function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, $cordovaDialogs, WebApiService, CONTACTS_PARAM) {
