@@ -9,7 +9,8 @@
         <div class="list">
             <ion-item class="item item-avatar" ng-repeat="Smsa1 in Smsa1s" ng-click="GoToDetail(Smsa1)">
                 <img src="./img/unknown.png">
-                <h2><span ng-bind="Smsa1.CustomerName"></span></h2>
+                <h2><span ng-bind="Smsa1.SalesmanName"></span></h2>
+                <p><span ng-bind="Smsa1.CustomerName"></span></p>
                 <p><i class="iconfont icon-phone3"></i>&nbsp;&nbsp;<span ng-bind="Smsa1.Telephone"></span></p>
 				<p><i class="iconfont icon-fax1"></i>&nbsp;&nbsp;<span ng-bind="Smsa1.Fax"></span></p>
 				<p><i class="iconfont icon-name"></i>&nbsp;&nbsp;<span ng-bind="Smsa1.ContactName"></span></p>
