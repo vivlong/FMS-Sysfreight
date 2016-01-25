@@ -204,7 +204,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
                 controller: 'SalesmanActivityListCtrl'
             })
             .state('salesmanActivityDetail', {
-                url: '/salesmanActivity/detail/:SalesmanNameLike',
+                url: '/salesmanActivity/detail/:SalesmanNameLike/:TrxNo',
                 templateUrl: 'view/crm/SalesmanActivity-detail.html',
                 controller: 'SalesmanActivityDetailCtrl'
             })

@@ -4,61 +4,52 @@
 			<button class="button button-icon button-clear ion-navicon" ng-click="returnList()"></button>
 		</div>
 		<h1 class="title">Activity Log</h1>
-        <div class="buttons" >
-            <button class="button button-icon button-small button-clear ion-android-create" ng-click="GoToDetailEdit()"></button>
-        </div>
 	</ion-header-bar>
     <ion-content class="has-header">
-        <div class="card" ng-repeat="Smsa2 in Smsa2s">
-            <div class="item item-avatar" style="min-height: 68px;">
-                <img src="./img/unknown.png">
-                <h2><span ng-bind="Smsa2.BusinessPartyName"></span></h2>
-            </div>
-            <div class="item item-body">
-                <div class="list customerDetail">
-                    <ion-item nav-clear menu-close class="item">
-                        <div class="row nopadding">
-                            <div class="col nopadding"><p>Date</p></div>
-                            <div class="col col-80 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Smsa2.DateTime"></span></p></div>
-                        </div>
-                        <div class="row nopadding">
-                            <div class="col nopadding"><p>Customer</p></div>
-                            <div class="col col-80 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Smsa2.CustomerName"></span></p></div>
-                        </div>
-                        <div class="row nopadding">
-                            <div class="col nopadding"><p>Description</p></div>
-                            <div class="col col-80 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Smsa2.Description"></span></p></div>
-                        </div>
-                        <div class="row nopadding">
-                            <div class="col nopadding"><p>QuotationNo</p></div>
-                            <div class="col col-80 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Smsa2.QuotationNo"></span></p></div>
-                        </div>
-                        <div class="row nopadding">
-                            <div class="col nopadding"><p>Reference</p></div>
-                            <div class="col col-80 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Smsa2.Reference"></span></p></div>
-                        </div>
-                        <div class="row nopadding">
-                            <div class="col nopadding"><p>Status</p></div>
-                            <div class="col col-80 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Smsa2.Status"></span></p></div>
-                        </div>
-                        <div class="row nopadding">
-                            <div class="col nopadding"><p>Discussion</p></div>
-                            <div class="col col-80 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Smsa2.Discussion"></span></p></div>
-                        </div>
-                        <div class="row nopadding">
-                            <div class="col nopadding"><p>Conclusion</p></div>
-                            <div class="col col-80 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Smsa2.Conclusion"></span></p></div>
-                        </div>
-                        <div class="row nopadding">
-                            <div class="col nopadding"><p>Action</p></div>
-                            <div class="col col-80 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Smsa2.Action"></span></p></div>
-                        </div>
-                        <div class="row nopadding">
-                            <div class="col nopadding"><p>Remark</p></div>
-                            <div class="col col-80 nopadding"><p>:&nbsp;&nbsp;<span class="h4" ng-bind="Smsa2.Remark"></span></p></div>
-                        </div>
-                    </ion-item>
-                </div>
+        <div class="card activityDetail" ng-repeat="Smsa2 in Smsa2s">
+            <div class="list">
+                <ion-item nav-clear menu-close class="item">
+                    <div class="row nopadding">
+                        <div class="col nopadding"><p>Date</p></div>
+                        <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h5" ng-bind="ShowDate(Smsa2.DateTime)"></span></p></div>
+                    </div>
+                    <div class="row nopadding">
+                        <div class="col nopadding"><p>Customer</p></div>
+                        <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h5" ng-bind="Smsa2.CustomerName"></span></p></div>
+                    </div>
+                    <div class="row nopadding">
+                        <div class="col nopadding"><p>Description</p></div>
+                        <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h5" ng-bind="Smsa2.Description"></span></p></div>
+                    </div>
+                    <div class="row nopadding">
+                        <div class="col nopadding"><p>Quotation No</p></div>
+                        <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h5" ng-bind="Smsa2.QuotationNo"></span></p></div>
+                    </div>
+                    <div class="row nopadding">
+                        <div class="col nopadding"><p>Reference</p></div>
+                        <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h5" ng-bind="Smsa2.Reference"></span></p></div>
+                    </div>
+                    <div class="row nopadding">
+                        <div class="col nopadding"><p>Status</p></div>
+                        <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h5" ng-bind="Smsa2.Status"></span></p></div>
+                    </div>
+                    <div class="row nopadding">
+                        <div class="col nopadding"><p>Discussion</p></div>
+                        <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h5" ng-bind="Smsa2.Discussion"></span></p></div>
+                    </div>
+                    <div class="row nopadding">
+                        <div class="col nopadding"><p>Conclusion</p></div>
+                        <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h5" ng-bind="Smsa2.Conclusion"></span></p></div>
+                    </div>
+                    <div class="row nopadding">
+                        <div class="col nopadding"><p>Action</p></div>
+                        <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h5" ng-bind="Smsa2.Action"></span></p></div>
+                    </div>
+                    <div class="row nopadding">
+                        <div class="col nopadding"><p>Remark</p></div>
+                        <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h5" ng-bind="Smsa2.Remark"></span></p></div>
+                    </div>
+                </ion-item>
             </div>
         </div>
     </ion-content>

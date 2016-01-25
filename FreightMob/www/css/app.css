@@ -305,3 +305,10 @@ html {
 .customerDetail .item-body .item {
      padding: 8px;
 }
+
+.activityDetail .item-body {
+    padding: 1px;
+}
+.activityDetail .item-body .item {
+     padding: 1px;
+}

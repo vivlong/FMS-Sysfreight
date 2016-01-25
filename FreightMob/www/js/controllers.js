@@ -336,7 +336,7 @@ appControllers.controller('SalesmanActivityListCtrl',
                 $state.go('salesmanActivity', {}, {});
             };
             $scope.GoToDetail = function (Smsa1) {
-                //$state.go('salesmanActivityDetail', { 'TrxNo': Smsa1.TrxNo, 'SalesmanNameLike': $stateParams.SalesmanNameLike }, { reload: true });
+                $state.go('salesmanActivityDetail', { 'TrxNo': Smsa1.TrxNo, 'SalesmanNameLike': $stateParams.SalesmanNameLike }, { reload: true });
             };
             $scope.loadMore = function() {
                 var strUri = "/api/freight/smsa1/sps?RecordCount=" + RecordCount;
@@ -364,11 +364,33 @@ appControllers.controller('SalesmanActivityListCtrl',
         }]);
 
 appControllers.controller('SalesmanActivityDetailCtrl',
-        ['$scope', '$state', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService',
-        function ($scope, $state, $timeout, $ionicLoading, $ionicPopup, WebApiService) {
-            $scope.returnList= function () {
-                $state.go('main', {}, {});
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'DateTimeService', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, DateTimeService, WebApiService) {
+            $scope.Detail = {
+                SalesmanNameLike:   $stateParams.SalesmanNameLike,
+                TrxNo:              $stateParams.TrxNo
             };
+            $scope.returnList = function () {
+                $state.go('salesmanActivityList', { 'SalesmanNameLike':$scope.Detail.SalesmanNameLike }, { reload:true });
+            };
+            $scope.ShowDate= function (utc) {
+                return DateTimeService.ShowDate(utc);
+            };
+            var GetSmsa2Detail = function (TrxNo) {
+                $ionicLoading.show();
+                var strUri = "/api/freight/smsa2/read/" + TrxNo;
+                var onSuccess = function (response) {
+                    $scope.Smsa2s = response.data.results;
+                    $ionicLoading.hide();
+                };
+                var onError = function (response) {
+                };
+                var onFinally = function (response) {
+                    $ionicLoading.hide();
+                };
+                WebApiService.Get(strUri, onSuccess, onError, onFinally);
+            };
+            GetSmsa2Detail($scope.Detail.TrxNo);
         }]);
 
 appControllers.controller('ContactsCtrl',
