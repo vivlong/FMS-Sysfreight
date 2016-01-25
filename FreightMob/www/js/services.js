@@ -7,8 +7,8 @@ var appService = angular.module('MobileAPP.services', [
     'ngCordova.plugins.inAppBrowser'
 ]);
 
-appService.service('WebApiService', ['$http', '$ionicPopup', '$timeout',
-    function ($http, $ionicPopup, $timeout) {
+appService.service('WebApiService', ['$q', '$http', '$ionicPopup', '$timeout',
+    function ($q, $http, $ionicPopup, $timeout) {
         function parseResponseStatus (status) {
             if (!status) return { isSuccess: true };
             var result =
@@ -34,7 +34,8 @@ appService.service('WebApiService', ['$http', '$ionicPopup', '$timeout',
             */
             return result;
         }
-        this.Post = function (requestUrl, requestData, onSuccess, onError) {
+        this.Post = function (requestUrl, requestData) {
+            var deferred = $q.defer();
             if (strBaseUrl.length > 0 && strBaseUrl.indexOf('/') < 0 ) {
                 strBaseUrl = "/" + strBaseUrl;
             }
@@ -51,187 +52,57 @@ appService.service('WebApiService', ['$http', '$ionicPopup', '$timeout',
                 }
             };
             $http.post(url, requestData, config).success(function (response) {
-              if (!response) {
-                  if (onSuccess) onSuccess(null);
-                  return;
-              }
-              var status = parseResponseStatus(response);
-              if (status.isSuccess) {
-                  if (onSuccess) onSuccess(response);
-              }
-              else {
-                  if (onError) onError(response);
-                  var alertPopup = $ionicPopup.alert({
-                      title: response.meta.message,
-                      subTitle: response.meta.errors.message,
-                      okType: 'button-assertive'
-                  });
-                  $timeout(function () {
-                      alertPopup.close();
-                  }, 2500);
-              }
+                deferred.resolve(response.data.results);
             }).error(function (response) {
-              try {
-                  if (onError) onError(response);
-                  var alertPopup = $ionicPopup.alert({
-                      title: 'Connect to WebService failed.',
-                      okType: 'button-assertive'
-                  });
-                  $timeout(function () {
-                      alertPopup.close();
-                  }, 2500);
-              }
-              catch (e) { }
+                deferred.reject(response);
             });
+            return deferred.promise;
         };
-        this.Put = function (requestUrl, requestData, onSuccess, onError) {
-            if (strBaseUrl.length > 0 && strBaseUrl.indexOf('/') < 0 ) {
-                strBaseUrl = "/" + strBaseUrl;
-            }
-            strWebServiceURL = onStrToURL(strWebServiceURL);
-            strWebSiteURL = onStrToURL(strWebSiteURL);
-            var strSignature = hex_md5(strBaseUrl + requestUrl + strSecretKey.replace(/-/ig, ""));
-            $http({
-                url: strWebServiceURL + strBaseUrl + requestUrl,
-                method:'PUT',
-                data: requestData,
-                withCredentials: false,
-                headers: {
-                  'content-type': 'application/json',
-                  'cache-control': 'no-cache'
-                  //'Signature': strSignature
-                }
-            }).success(function (response) {
-              if (!response) {
-                  if (onSuccess) onSuccess(null);
-                  return;
-              }
-              var status = parseResponseStatus(response);
-              if (status.isSuccess) {
-                  if (onSuccess) onSuccess(response);
-              }
-              else {
-                  if (onError) onError(response);
-                  var alertPopup = $ionicPopup.alert({
-                      title: response.meta.message,
-                      subTitle: response.meta.errors.message,
-                      okType: 'button-assertive'
-                  });
-                  $timeout(function () {
-                      alertPopup.close();
-                  }, 2500);
-              }
-            }).error(function (response) {
-              try {
-                  if (onError) onError(response);
-                  var alertPopup = $ionicPopup.alert({
-                      title: 'Connect to WebService failed.',
-                      okType: 'button-assertive'
-                  });
-                  $timeout(function () {
-                      alertPopup.close();
-                  }, 2500);
-              }
-              catch (e) { }
-            });
-        };
-        this.Get = function (requestUrl, onSuccess, onError, onFinally) {
+        this.Get = function (requestUrl) {
+            var deferred = $q.defer();
             if (strBaseUrl.length > 0 && strBaseUrl.indexOf('/') < 0 ) {
                 strBaseUrl = "/" + strBaseUrl;
             }
             strWebServiceURL = onStrToURL(strWebServiceURL);
             strWebSiteURL = onStrToURL(strWebSiteURL);
             var strSignature = hex_md5(strBaseUrl + requestUrl + "?format=json" + strSecretKey.replace(/-/ig, ""));
+            var url = strWebServiceURL + strBaseUrl + requestUrl + "?format=json";
+            console.log(url);
             $http({
                 method: "GET",
-                url: strWebServiceURL + strBaseUrl + requestUrl + "?format=json"
+                url:    url
                 //headers: {
                 //    "Signature": strSignature
                 //}
             }).success(function (response) {
-                if (!response) {
-                    if (onSuccess) onSuccess(null);
-                    return;
-                }
-                var status = parseResponseStatus(response);
-                if (status.isSuccess) {
-                    if (onSuccess) onSuccess(response);
-                }
-                else {
-                    if (onError) onError(response);
-                    var alertPopup = $ionicPopup.alert({
-                        title: response.meta.message,
-                        subTitle: response.meta.errors.message,
-                        okType: 'button-assertive'
-                    });
-                    $timeout(function () {
-                        alertPopup.close();
-                    }, 2500);
-                }
+                deferred.resolve(response.data.results);
             }).error(function (response) {
-                try {
-                    if (onError) onError(response);
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'Connect to WebService failed.',
-                        okType: 'button-assertive'
-                    });
-                    $timeout(function () {
-                        alertPopup.close();
-                    }, 2500);
-                }
-                catch (e) { }
-            }).finally(function () {
-                if (onFinally) onFinally();
+                deferred.reject(response);
             });
+            return deferred.promise;
         };
-        this.GetParam = function (requestUrl, onSuccess, onError, onFinally) {
+        this.GetParam = function (requestUrl) {
+            var deferred = $q.defer();
             if (strBaseUrl.length > 0 && strBaseUrl.indexOf('/') < 0 ) {
                 strBaseUrl = "/" + strBaseUrl;
             }
             strWebServiceURL = onStrToURL(strWebServiceURL);
             strWebSiteURL = onStrToURL(strWebSiteURL);
             var strSignature = hex_md5(strBaseUrl + requestUrl + "&format=json" + strSecretKey.replace(/-/ig, ""));
+            var url = strWebServiceURL + strBaseUrl + requestUrl + "&format=json";
+            console.log(url);
             $http({
                 method: "GET",
-                url: strWebServiceURL + strBaseUrl + requestUrl + "&format=json"
+                url:    url
                 //headers: {
                 //    "Signature": strSignature
                 //}
             }).success(function (response) {
-                if (!response) {
-                    if (onSuccess) onSuccess(null);
-                    return;
-                }
-                var status = parseResponseStatus(response);
-                if (status.isSuccess) {
-                    if (onSuccess) onSuccess(response);
-                }
-                else {
-                    if (onError) onError(response);
-                    var alertPopup = $ionicPopup.alert({
-                        title: response.meta.message,
-                        subTitle: response.meta.errors.message,
-                        okType: 'button-assertive'
-                    });
-                    $timeout(function () {
-                        alertPopup.close();
-                    }, 2500);
-                }
+                deferred.resolve(response.data.results);
             }).error(function (response) {
-                try {
-                    if (onError) onError(response);
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'Connect to WebService failed.',
-                        okType: 'button-assertive'
-                    });
-                    $timeout(function () {
-                        alertPopup.close();
-                    }, 2500);
-                }
-                catch (e) { }
-            }).finally(function () {
-                if (onFinally) onFinally();
+                deferred.reject(response);
             });
+            return deferred.promise;
         };
     }]);
 

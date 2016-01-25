@@ -130,7 +130,7 @@ appControllers.controller('LoginCtrl',
                 }
                 $ionicLoading.show();
                 var strUri = '/api/freight/login/check?UserId=' + $scope.logininfo.strUserName + '&Md5Stamp=' + hex_md5($scope.logininfo.strPassword);
-                var onSuccess = function (response) {
+                WebApiService.GetParam(strUri).then(function success(result){
                     $ionicLoading.hide();
                     sessionStorage.clear();
                     sessionStorage.setItem("UserId", $scope.logininfo.strUserName);
@@ -139,14 +139,7 @@ appControllers.controller('LoginCtrl',
                         window.plugins.jPushPlugin.getRegistrationID(onGetRegistradionID);
                     }
                     $state.go('main', {}, { reload: true });
-                };
-                var onError = function () {
-                    $ionicLoading.hide();
-                };
-                var onFinally = function () {
-                    $ionicLoading.hide();
-                };
-                WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
+                });
             };
             if ($stateParams.CanCheckUpdate === 'Y') {
                 var url = strWebSiteURL + '/update.json';
@@ -290,30 +283,21 @@ appControllers.controller('SalesmanActivityCtrl',
             };
             $scope.GoToList = function () {
                 $ionicLoading.show();
-                var onError = function (response) {
-                };
-                var onFinally = function (response) {
-                    $ionicLoading.hide();
-                };
-                var onNoRecords = function () {
-                    var alertPopup = $ionicPopup.alert({
-                            title: 'No Records Found.',
-                            okType: 'button-assertive'
-                    });
-                    $timeout(function () {
-                        alertPopup.close();
-                    }, 2500);
-                };
                 var strUri = '/api/freight/smsa1/count?SalesmanName=' + $scope.Rcsm1.SalesmanNameLike;
-                var onSuccess = onSuccess = function (response) {
+                WebApiService.GetParam(strUri).then(function success(result){
                     $ionicLoading.hide();
-                    if (response.data.results > 0) {
+                    if (result > 0) {
                         $state.go('salesmanActivityList', { 'SalesmanNameLike': $scope.Rcsm1.SalesmanNameLike }, { reload: true });
                     } else {
-                        onNoRecords();
+                        var alertPopup = $ionicPopup.alert({
+                                title: 'No Records Found.',
+                                okType: 'button-assertive'
+                        });
+                        $timeout(function () {
+                            alertPopup.close();
+                        }, 2500);
                     }
-                };
-                WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
+                });
             };
             $('#iSalesmanName').on('keydown', function (e) {
                 if (e.which === 9 || e.which === 13) {
@@ -343,23 +327,18 @@ appControllers.controller('SalesmanActivityListCtrl',
                 if ($scope.List.SalesmanNameLike != null && $scope.List.SalesmanNameLike.length > 0) {
                     strUri = strUri + "&SalesmanName=" + $scope.List.SalesmanNameLike;
                 }
-                var onSuccess = function (response) {
-                    if(response.data.results.length > 0){
-                        dataResults = dataResults.concat(response.data.results);
+                WebApiService.GetParam(strUri).then(function success(result){
+                    if(result.length > 0){
+                        dataResults = dataResults.concat(result);
                         $scope.Smsa1s = dataResults;
-                        RecordCount = RecordCount + 20;
                         $scope.List.CanLoadedMoreData = true;
+                        RecordCount = RecordCount + 20;
                     }else{
-                        RecordCount = 0;
                         $scope.List.CanLoadedMoreData = false;
+                        RecordCount = 0;
                     }
-                };
-                var onError = function (response) {
-                };
-                var onFinally = function (response) {
                     $scope.$broadcast('scroll.infiniteScrollComplete');
-                };
-                WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
+                });
             };
         }]);
 
@@ -379,16 +358,10 @@ appControllers.controller('SalesmanActivityDetailCtrl',
             var GetSmsa2Detail = function (TrxNo) {
                 $ionicLoading.show();
                 var strUri = "/api/freight/smsa2/read/" + TrxNo;
-                var onSuccess = function (response) {
-                    $scope.Smsa2s = response.data.results;
+                WebApiService.Get(strUri).then(function success(result){
                     $ionicLoading.hide();
-                };
-                var onError = function (response) {
-                };
-                var onFinally = function (response) {
-                    $ionicLoading.hide();
-                };
-                WebApiService.Get(strUri, onSuccess, onError, onFinally);
+                    $scope.Smsa2s = result;
+                });
             };
             GetSmsa2Detail($scope.Detail.TrxNo);
         }]);
@@ -437,30 +410,26 @@ appControllers.controller('ContactsListCtrl',
                 if ($scope.ContactsList.BusinessPartyNameLike != null && $scope.ContactsList.BusinessPartyNameLike.length > 0) {
                     strUri = strUri + "&BusinessPartyName=" + $scope.ContactsList.BusinessPartyNameLike;
                 }
-                var onSuccess = function (response) {
-                    if(response.data.results.length > 0){
-                        dataResults = dataResults.concat(response.data.results);
+                WebApiService.GetParam(strUri).then(function success(result){
+                    if(result.length > 0){
+                        dataResults = dataResults.concat(result);
                         $scope.Rcbp1s = dataResults;
                         RecordCount = RecordCount + 20;
                         $scope.ContactsList.CanLoadedMoreData = true;
                     }else{
                         $scope.ContactsList.CanLoadedMoreData = false;
+                        RecordCount = 0;
                     }
-                };
-                var onError = function (response) {
-                };
-                var onFinally = function (response) {
                     $scope.$broadcast('scroll.infiniteScrollComplete');
-                };
-                WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
+                });
             };
         }]);
 
 appControllers.controller('ContactsDetailCtrl',
-        ['$scope', '$stateParams', '$state', '$timeout', '$ionicHistory', '$ionicLoading', '$ionicPopup', '$ionicModal',
+        ['$scope', '$stateParams', '$state', '$timeout', '$ionicHistory', '$ionicLoading', '$ionicPopup', '$ionicModal', '$ionicTabsDelegate',
          '$cordovaActionSheet', '$cordovaToast', '$cordovaSms', 'DateTimeService', 'WebApiService',
          'OpenUrlService', 'CONTACTS_PARAM',
-        function ($scope, $stateParams, $state, $timeout, $ionicHistory, $ionicLoading, $ionicPopup, $ionicModal,
+        function ($scope, $stateParams, $state, $timeout, $ionicHistory, $ionicLoading, $ionicPopup, $ionicModal, $ionicTabsDelegate,
              $cordovaActionSheet, $cordovaToast, $cordovaSms, DateTimeService, WebApiService,
              OpenUrlService, CONTACTS_PARAM) {
             $scope.ContactsDetail = CONTACTS_PARAM.GetDetial();
@@ -470,7 +439,9 @@ appControllers.controller('ContactsDetailCtrl',
             if($scope.ContactsDetail.BusinessPartyNameLike === ''){
                 $scope.ContactsDetail.BusinessPartyNameLike = $stateParams.BusinessPartyNameLike;
             }
-            $scope.ContactsDetail.CanAddInfos = false;
+            if($scope.ContactsDetail.TabIndex === ''){
+                $scope.ContactsDetail.TabIndex = 0;
+            }
             $scope.rcbpDetail = {};
             $scope.rcbp3Detail = {};
             $scope.returnList = function () {
@@ -480,12 +451,12 @@ appControllers.controller('ContactsDetailCtrl',
                 }
                 $state.go('contactsList', { 'BusinessPartyNameLike': $scope.ContactsList.BusinessPartyNameLike }, {});
             };
-            $scope.TabClick = function (TabIndex) {
-                if(TabIndex === 1){
-                    $scope.ContactsDetail.CanAddInfos = false;
-                }else{
-                    $scope.ContactsDetail.CanAddInfos = true;
-                }
+            $scope.TabClick = function (index) {
+                CONTACTS_PARAM.SetIndex(index);
+                $scope.ContactsDetail.TabIndex = index;
+                if(index === 1){
+                    GetRcbp3s($scope.rcbpDetail.BusinessPartyCode);
+                };
             };
             $scope.ClickWebUrl = function(url) {
                 OpenUrlService.Open(url);
@@ -538,17 +509,19 @@ appControllers.controller('ContactsDetailCtrl',
             $scope.GoToDetailEdit = function () {
                 $state.go('contactsDetailEdit', { 'TrxNo': $scope.ContactsDetail.TrxNo }, { reload: true });
             };
+            $scope.GoToContactInfo = function (rcbp3) {
+                $state.go('contactsInfo', { 'BusinessPartyCode': rcbp3.BusinessPartyCode, 'LineItemNo': rcbp3.LineItemNo }, { reload: true });
+            };
             $scope.GoToContactEdit = function (rcbp3) {
                 $state.go('contactsInfoEdit', { 'BusinessPartyCode': rcbp3.BusinessPartyCode, 'LineItemNo': rcbp3.LineItemNo }, { reload: true });
             };
             $scope.GoToContactDel = function (index,rcbp3) {
                 var strUri = "/api/freight/rcbp3/delete?BusinessPartyCode=" + rcbp3.BusinessPartyCode + "&LineItemNo=" + rcbp3.LineItemNo;
-                var onSuccess = function (response) {
-                    if(response.data.results > 0){
+                WebApiService.GetParam(strUri).then(function success(result){
+                    if(result > 0){
                         $scope.rcbp3s.splice(index, 1);
                     }
-                };
-                WebApiService.GetParam(strUri, onSuccess, null, null);
+                });
             };
             $scope.GoToContactAdd = function (rcbp3) {
                 $state.go('contactsInfoAdd', { 'BusinessPartyCode': $scope.rcbpDetail.BusinessPartyCode, 'LineItemNo': rcbp3.length + 1 }, { reload: true });
@@ -563,54 +536,23 @@ appControllers.controller('ContactsDetailCtrl',
             $scope.ShowDate= function (utc) {
                 return DateTimeService.ShowDate(utc);
             };
-            var onFinally = function (response) {
-                $ionicLoading.hide();
-            };
             var GetRcbp3s = function (BusinessPartyCode) {
-                $ionicLoading.show();
                 var strUri = "/api/freight/rcbp3?BusinessPartyCode=" + BusinessPartyCode;
-                var onSuccess = function (response) {
-                    $scope.rcbp3s = response.data.results;
-                };
-                var onError = function (response) {
-                };
-                var onFinally = function (response) {
-                    $ionicLoading.hide();
-                };
-                WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
+                WebApiService.GetParam(strUri).then(function success(result){
+                    $scope.rcbp3s = result;
+                });
             };
-            var GetRcbp1Detail = function (TrxNo) {
+            var GetRcbp1 = function (TrxNo) {
                 $ionicLoading.show();
-                var strUri = "/api/freight/rcbp1/trxNo/" + TrxNo;
-                var onSuccess = function (response) {
-                    $scope.rcbpDetail = response.data.results[0];
+                var strUri = "/api/freight/rcbp1/TrxNo/" + TrxNo;
+                WebApiService.Get(strUri).then(function success(result){
                     $ionicLoading.hide();
-                    GetRcbp3s($scope.rcbpDetail.BusinessPartyCode);
-                };
-                var onError = function (response) {
-                };
-                var onFinally = function (response) {
+                    $scope.rcbpDetail = result[0];
+                }, function error(error) {
                     $ionicLoading.hide();
-                };
-                WebApiService.Get(strUri, onSuccess, onError, onFinally);
+                });
             };
-            GetRcbp1Detail($scope.ContactsDetail.TrxNo);
-            $ionicModal.fromTemplateUrl('rcbp3Detail.html', {
-                scope: $scope,
-                animation: 'slide-in-up'
-            }).then(function (modal) {
-                $scope.modal = modal;
-            });
-            $scope.$on('$destroy', function () {
-                $scope.modal.remove();
-            });//Cleanup the modal when done with it!
-            $scope.openModal = function (rcbp3) {
-                $scope.rcbp3Detail = rcbp3;
-                $scope.modal.show();
-            };
-            $scope.closeModal = function () {
-                $scope.modal.hide();
-            };
+            GetRcbp1($scope.ContactsDetail.TrxNo);
         }]);
 
 appControllers.controller('ContactsDetailEditCtrl',
@@ -623,33 +565,45 @@ appControllers.controller('ContactsDetailEditCtrl',
             $scope.returnDetail = function () {
                 $state.go('contactsDetail', { 'TrxNo': $scope.rcbpDetail.TrxNo }, { reload: true });
             };
-            var GetRcbp1Detail = function (TrxNo) {
-                $ionicLoading.show();
-                var strUri = "/api/freight/rcbp1/trxno/" + TrxNo;
-                var onSuccess = function (response) {
-                    $scope.rcbpDetail = response.data.results[0];
-                };
-                var onError = function (response) {
-                };
-                var onFinally = function (response) {
-                    $ionicLoading.hide();
-                };
-                WebApiService.Get(strUri, onSuccess, onError, onFinally);
-            };
-            GetRcbp1Detail($scope.rcbpDetail.TrxNo);
             $scope.returnUpdateRcbp1 = function () {
                 $ionicLoading.show();
                 var jsonData = { "rcbp1": $scope.rcbpDetail };
                 var strUri = "/api/freight/rcbp1";
-                var onSuccess = function (response) {
+                WebApiService.Post(strUri, jsonData).then(function success(result){
                     $ionicLoading.hide();
                     $scope.returnDetail();
-                };
-                var onError = function () {
-                    $ionicLoading.hide();
-                };
-                WebApiService.Post(strUri, jsonData, onSuccess, onError);
+                });
             };
+            var GetRcbp1Detail = function (TrxNo) {
+                $ionicLoading.show();
+                var strUri = "/api/freight/rcbp1/trxno/" + TrxNo;
+                WebApiService.Get(strUri).then(function success(result){
+                    $ionicLoading.hide();
+                    $scope.rcbpDetail = result[0];
+                });
+            };
+            GetRcbp1Detail($scope.rcbpDetail.TrxNo);
+        }]);
+
+appControllers.controller('ContactsInfoCtrl',
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService', 'CONTACTS_PARAM',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, WebApiService, CONTACTS_PARAM) {
+            $scope.rcbp3Detail = {};
+            var BusinessPartyCode = $stateParams.BusinessPartyCode;
+            var LineItemNo = $stateParams.LineItemNo;
+            $scope.returnDetail = function () {
+                $scope.ContactsDetail = CONTACTS_PARAM.GetDetial();
+                $state.go('contactsDetail', { 'TrxNo':$scope.ContactsDetail.TrxNo, 'BusinessPartyNameLike':$scope.ContactsDetail.BusinessPartyNameLike}, { reload: true });
+            };
+            var GetRcbp3s = function () {
+                $ionicLoading.show();
+                var strUri = '/api/freight/rcbp3?BusinessPartyCode=' + BusinessPartyCode + '&LineItemNo=' + LineItemNo;
+                WebApiService.GetParam(strUri).then(function success(result){
+                    $ionicLoading.hide();
+                    $scope.rcbp3Detail = result[0];
+                });
+            };
+            GetRcbp3s();
         }]);
 
 appControllers.controller('ContactsInfoAddCtrl',
@@ -682,14 +636,10 @@ appControllers.controller('ContactsInfoAddCtrl',
                 $ionicLoading.show();
                 var jsonData = { "rcbp3": $scope.rcbp3Detail };
                 var strUri = "/api/freight/rcbp3";
-                var onSuccess = function (response) {
+                WebApiService.Post(strUri, jsonData).then(function success(result){
                     $ionicLoading.hide();
                     $scope.returnDetail();
-                };
-                var onError = function () {
-                    $ionicLoading.hide();
-                };
-                WebApiService.Post(strUri, jsonData, onSuccess, onError);
+                });
             };
         }]);
 
@@ -707,27 +657,18 @@ appControllers.controller('ContactsInfoEditCtrl',
                 $ionicLoading.show();
                 var jsonData = { "rcbp3": $scope.rcbp3Detail };
                 var strUri = "/api/freight/rcbp3/update";
-                var onSuccess = function (response) {
-                    $scope.returnDetail();
-                        $ionicLoading.hide();
-                };
-                var onError = function () {
+                WebApiService.Post(strUri, jsonData).then(function success(result){
                     $ionicLoading.hide();
-                };
-                WebApiService.Post(strUri, jsonData, onSuccess, onError);
+                    $scope.returnDetail();
+                });
             };
             var GetRcbp3s = function () {
                 $ionicLoading.show();
                 var strUri = '/api/freight/rcbp3?BusinessPartyCode=' + BusinessPartyCode + '&LineItemNo=' + LineItemNo;
-                var onSuccess = function (response) {
-                    $scope.rcbp3Detail = response.data.results[0];
-                };
-                var onError = function (response) {
-                };
-                var onFinally = function (response) {
+                WebApiService.GetParam(strUri).then(function success(result){
                     $ionicLoading.hide();
-                };
-                WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
+                    $scope.rcbp3Detail = result[0];
+                });
             };
             GetRcbp3s();
         }]);
@@ -791,7 +732,7 @@ appControllers.controller('PaymentApprovalListCtrl',
                     $ionicLoading.show();
                     var jsonData = { "plcp1s": $scope.Plcp1s };
                     var strUri = "/api/freight/plcp1";
-                    var onSuccess = function (response) {
+                    WebApiService.post(strUri, jsonData).then(function success(result){
                         $ionicLoading.hide();
                         var alertPopup = $ionicPopup.alert({
                             title: "Approval Success!",
@@ -805,8 +746,7 @@ appControllers.controller('PaymentApprovalListCtrl',
                                 $scope.Plcp1s.splice(i, 1);
                             }
                         }
-                    };
-                    var onError = function () {
+                    },function error(error){
                         $ionicLoading.hide();
                         var alertPopup = $ionicPopup.alert({
                             title: "Approval Faild",
@@ -815,8 +755,7 @@ appControllers.controller('PaymentApprovalListCtrl',
                         $timeout(function () {
                             alertPopup.close();
                         }, 2500);
-                    };
-                    WebApiService.Post(strUri, jsonData, onSuccess, onError);
+                    });
                 }
             };
             $scope.plcpStatusChange = function () {
@@ -857,22 +796,18 @@ appControllers.controller('PaymentApprovalListCtrl',
                         strUri = strUri + "&VendorName=" + $scope.Filter.FilterValue;
                     }
                 }
-                var onSuccess = function (response) {
-                    if(response.data.results.length > 0){
-                        dataResults = dataResults.concat(response.data.results);
+                WebApiService.GetParam(strUri).then(function success(result){
+                    if(result.length > 0){
+                        dataResults = dataResults.concat(result);
                         $scope.Plcp1s = dataResults;
-                        RecordCount = RecordCount + 20;
                         $scope.Filter.CanLoadedMoreData = true;
+                        RecordCount = RecordCount + 20;
                     }else{
                         $scope.Filter.CanLoadedMoreData = false;
+                        RecordCount = 0;
                     }
-                };
-                var onError = function (response) {
-                };
-                var onFinally = function (response) {
                     $scope.$broadcast('scroll.infiniteScrollComplete');
-                };
-                WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
+                });
             };
         }]);
 
@@ -895,21 +830,18 @@ appControllers.controller('VesselScheduleCtrl',
             });
             var getRcvy1 = function (PortOfDischargeName) {
                 $ionicLoading.show();
-                var onSuccess = function (response) {
-                    $ionicLoading.hide();
-                    $scope.PortOfDischargeNames = response.data.results;
-                };
-                var onError = function (response) {
-                };
-                var onFinally = function (response) {
-                    $ionicLoading.hide();
-                };
                 var strUri = "/api/freight/rcvy1";
                 if (PortOfDischargeName != null && PortOfDischargeName.length > 0) {
                     strUri = strUri + "?PortOfDischargeName=" + PortOfDischargeName;
-                    WebApiService.GetParam(strUri, onSuccess, onFinally);
+                    WebApiService.Get(strUri).then(function success(result){
+                        $ionicLoading.hide();
+                        $scope.PortOfDischargeNames = result;
+                    });
                 } else {
-                    WebApiService.Get(strUri, onSuccess, onFinally);
+                    WebApiService.Get(strUri).then(function success(result){
+                        $ionicLoading.hide();
+                        $scope.PortOfDischargeNames = result;
+                    });
                 }
             };
             getRcvy1(null);
@@ -932,17 +864,10 @@ appControllers.controller('VesselScheduleDetailCtrl',
             var getRcvy1 = function (PortOfDischargeName) {
                 $ionicLoading.show();
                 var strUri = "/api/freight/rcvy1/sps?PortOfDischargeName=" + PortOfDischargeName;
-                var onSuccess = function (response) {
+                WebApiService.GetParam(strUri).then(function success(result){
                     $ionicLoading.hide();
-                    $scope.Rcvy1s = response.data.results;
-                };
-                var onError = function (response) {
-                    $ionicLoading.hide();
-                };
-                var onFinally = function (response) {
-                    $ionicLoading.hide();
-                };
-                WebApiService.GetParam(strUri, onSuccess, onFinally);
+                    $scope.Rcvy1s = result;
+                });
             };
             getRcvy1($scope.Rcvy1Detail.PortOfDischargeName);
         }]);
@@ -964,46 +889,36 @@ appControllers.controller('ShipmentStatusCtrl',
             };
             var getSearchResult = function (FilterName, FilterValue) {
                 $ionicLoading.show();
-                var onError = function (response) {
-                };
-                var onFinally = function (response) {
-                    $ionicLoading.hide();
-                };
-                var onNoRecords = function () {
-                    var alertPopup = $ionicPopup.alert({
-                            title: 'No Records Found.',
-                            okType: 'button-assertive'
-                    });
-                    $timeout(function () {
-                        alertPopup.close();
-                    }, 2500);
-                };
                 var strUri = '/api/freight/tracking/count?FilterName=' + FilterName + '&FilterValue=' + FilterValue;
-                var onSuccess = onSuccess = function (response) {
+                WebApiService.GetParam(strUri).then(function success(result){
                     $ionicLoading.hide();
-                    if (response.data.results > 1) {
+                    if (result > 1) {
                         SHIPMENTSTATUS_PARAM.SetList(FilterName, FilterValue);
                         $state.go('shipmentStatusList', { 'FilterName':FilterName, 'FilterValue':FilterValue }, { reload: true });
-                    } else if (response.data.results === 1) {
+                    } else if (result === 1) {
                         $ionicLoading.show();
                         if (FilterName === 'OrderNo') {
                             SHIPMENTSTATUS_PARAM.SetDetial(FilterName, FilterValue, '4');
                             $state.go('shipmentStatusDetail', { 'FilterName':FilterName, 'FilterValue':FilterValue, 'ModuleCode':'4' }, { reload: true });
                         } else{
                             strUri = '/api/freight/tracking/sps?FilterName=' + FilterName + '&RecordCount=0&FilterValue=' + FilterValue;
-                            onSuccess = function (response) {
-                                if(response.data.results.length > 0){
-                                    SHIPMENTSTATUS_PARAM.SetDetial(FilterName, response.data.results[0].JobNo, response.data.results[0].ModuleCode);
-                                    $state.go('shipmentStatusDetail', { 'FilterName':FilterName, 'FilterValue':response.data.results[0].JobNo, 'ModuleCode':response.data.results[0].ModuleCode }, { reload: true });
+                            WebApiService.GetParam(strUri).then(function success(result){
+                                if(result.length > 0){
+                                    SHIPMENTSTATUS_PARAM.SetDetial(FilterName, result[0].JobNo, result[0].ModuleCode);
+                                    $state.go('shipmentStatusDetail', { 'FilterName':FilterName, 'FilterValue':result[0].JobNo, 'ModuleCode':result[0].ModuleCode }, { reload: true });
                                 }
-                            };
-                            WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
+                            });
                         }
                     } else {
-                        onNoRecords();
+                        var alertPopup = $ionicPopup.alert({
+                                title: 'No Records Found.',
+                                okType: 'button-assertive'
+                        });
+                        $timeout(function () {
+                            alertPopup.close();
+                        }, 2500);
                     }
-                };
-                WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
+                });
             };
             $scope.GoToDetail = function (TypeName) {
                 var FilterName = '';
@@ -1091,22 +1006,18 @@ appControllers.controller('ShipmentStatusListCtrl',
             };
             $scope.funcLoadMore = function() {
                 var strUri = '/api/freight/tracking/sps?FilterName=' + $scope.Filter.FilterName + '&RecordCount=' + RecordCount + '&FilterValue=' + $scope.Filter.FilterValue;
-                var onSuccess = function (response) {
-                    if(response.data.results.length > 0){
-                        dataResults = dataResults.concat(response.data.results);
+                WebApiService.GetParam(strUri).then(function success(result){
+                    if(result.length > 0){
+                        dataResults = dataResults.concat(result);
                         $scope.Jmjm1s = dataResults;
-                        RecordCount = RecordCount + 20;
                         $scope.List.moreDataCanBeLoaded = true;
+                        RecordCount = RecordCount + 20;
                     }else{
                         $scope.List.moreDataCanBeLoaded = false;
+                        RecordCount = 0;
                     }
-                };
-                var onError = function (response) {
-                };
-                var onFinally = function (response) {
                     $scope.$broadcast('scroll.infiniteScrollComplete');
-                };
-                WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
+                });
             };
         }]);
 
@@ -1148,20 +1059,20 @@ appControllers.controller('ShipmentStatusDetailCtrl',
                 var getOmtx1 = function (FilterName, FilterValue) {
                     $ionicLoading.show();
                     strUri = '/api/freight/tracking?FilterName=' + FilterName + '&FilterValue=' + FilterValue;
-                    onSuccess = function (response) {
-                        $scope.Omtx1s = response.data.results;
-                    };
-                    WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
+                    WebApiService.GetParam(strUri).then(function success(result){
+                        $ionicLoading.hide();
+                        $scope.Omtx1s = result;
+                    });
                 };
                 getOmtx1($scope.Detail.FilterName, $scope.Detail.FilterValue);
             }else{
                 var getJmjm1 = function (FilterName, FilterValue, ModuleCode) {
                     $ionicLoading.show();
                     strUri = '/api/freight/tracking?FilterName=' + FilterName + '&ModuleCode=' + ModuleCode + '&FilterValue=' + FilterValue;
-                    onSuccess = function (response) {
-                        $scope.Jmjm1s = response.data.results;
-                    };
-                    WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
+                    WebApiService.GetParam(strUri).then(function success(result){
+                        $ionicLoading.hide();
+                        $scope.Jmjm1s = result;
+                    });
                 };
                 getJmjm1($scope.Detail.FilterName, $scope.Detail.FilterValue, $scope.Detail.ModuleCode);
             }
@@ -1254,7 +1165,7 @@ appControllers.controller('MemoCtrl',
                 $ionicLoading.show();
                 var jsonData = { "saus1": $scope.Saus1 };
                 var strUri = "/api/freight/saus1/memo";
-                var onSuccess = function (response) {
+                WebApiService.Post(strUri, jsonData).then(function success(result){
                     $ionicLoading.hide();
                     var alertPopup = $ionicPopup.alert({
                         title: "Save Success!",
@@ -1263,24 +1174,15 @@ appControllers.controller('MemoCtrl',
                     $timeout(function () {
                         alertPopup.close();
                     }, 2500);
-                };
-                var onError = function () {
-                    $ionicLoading.hide();
-                };
-                WebApiService.Post(strUri, jsonData, onSuccess, onError);
+                });
             };
             var GetSaus1 = function (uid) {
                 $ionicLoading.show();
                 var strUri = "/api/freight/saus1/memo?userID=" + uid;
-                var onSuccess = function (response) {
-                    $scope.Saus1.Memo = response.data.results;
-                };
-                var onError = function (response) {
-                };
-                var onFinally = function (response) {
+                WebApiService.GetParam(strUri).then(function success(result){
                     $ionicLoading.hide();
-                };
-                WebApiService.GetParam(strUri, onSuccess, onError, onFinally);
+                    $scope.Saus1.Memo = result;
+                });
             };
             GetSaus1($scope.Saus1.UserID);
         }]);
