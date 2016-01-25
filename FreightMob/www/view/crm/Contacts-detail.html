@@ -5,12 +5,12 @@
 		</div>
 		<h1 class="title">Customer Detail</h1>
         <div class="buttons" >
-            <button ng-show="!ContactsDetail.CanAddInfos" class="button button-icon button-small button-clear ion-android-create" ng-click="GoToDetailEdit()"></button>
-            <button ng-show="ContactsDetail.CanAddInfos" class="button button-icon button-small button-clear ion-android-person-add" ng-click="GoToContactAdd(rcbp3s)"></button>
+            <button ng-show="ContactsDetail.TabIndex != 1" class="button button-icon button-small button-clear ion-android-create" ng-click="GoToDetailEdit()"></button>
+            <button ng-show="ContactsDetail.TabIndex == 1" class="button button-icon button-small button-clear ion-android-person-add" ng-click="GoToContactAdd(rcbp3s)"></button>
         </div>
 	</ion-header-bar>
 	<ion-tabs class="tabs-top tabs-background-positive tabs-color-light tabs-icon-left">
-		<ion-tab title="Customer" icon-on="ion-ios-world" icon-off="ion-ios-world-outline" on-select="TabClick(1)">
+		<ion-tab title="Customer" icon-on="ion-ios-world" icon-off="ion-ios-world-outline" on-select="TabClick(0)">
 			<ion-scroll style="padding-top:93px;">
 				<div class="card customerDetail">
 					<div class="item item-avatar" style="min-height: 68px;">
@@ -74,107 +74,29 @@
 				</div>
 			</ion-scroll>
 		</ion-tab>
-		<ion-tab title="Contacts" icon-on="ion-ios-people" icon-off="ion-ios-people-outline" on-select="TabClick(2)">
+		<ion-tab title="Contacts" icon-on="ion-ios-people" icon-off="ion-ios-people-outline" on-select="TabClick(1)">
 			<ion-scroll style="padding-top:93px;">
 				<ion-list can-swipe="true">
-					<ion-item ng-repeat="rcbp3 in rcbp3s" class="item-remove-animate item-icon-right contactsList" ng-click="openModal(rcbp3)">
-						<p><i class="iconfont icon-name"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.ContactName" style="font-size:1.2em;"></span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="iconfont icon-title1"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Title" style="font-size:1.2em;"></span></p>
-                        <p ng-show="rcbp3.Telephone != ''"><i class="iconfont icon-phone3"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Telephone" style="font-size:1.2em;"></span></p>
-						<p ng-show="rcbp3.Fax != ''"><i class="iconfont icon-fax1"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Fax" style="font-size:1.2em;"></span></p>
-						<p ng-show="rcbp3.Handphone != ''"><i class="iconfont icon-phone2"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Handphone" style="font-size:1.2em;"></span></p>
-						<p ng-show="rcbp3.Email != ''"><i class="iconfont icon-email"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Email" style="font-size:1.2em;"></span></p>
-                        <p ng-show="rcbp3.Facebook != ''"><i class="iconfont icon-facebook"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Facebook" style="font-size:1.2em;"></span></p>
-						<p ng-show="rcbp3.MSN != ''"><i class="iconfont icon-msn"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.MSN" style="font-size:1.2em;"></span></p>
-						<p ng-show="rcbp3.Skype != ''"><i class="iconfont icon-skype"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Skype" style="font-size:1.2em;"></span></p>
-						<p ng-show="rcbp3.Twitter != ''"><i class="iconfont icon-twitter"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Twitter" style="font-size:1.2em;"></span></p>
-						<p ng-show="rcbp3.QQ != ''"><i class="iconfont icon-qq"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.QQ" style="font-size:1.2em;"></span></p>
-                        <ion-option-button class="button-calm" ng-click="GoToContactEdit(rcbp3)">&nbsp;&nbsp;Edit&nbsp;&nbsp;</ion-option-button>
-                        <ion-option-button class="button-assertive" ng-click="GoToContactDel($index,rcbp3)">Delete</ion-option-button>
+					<ion-item ng-repeat="rcbp3 in rcbp3s" class="item-icon-right contactsList">
+                        <div ng-click="GoToContactInfo(rcbp3)">
+                            <p><i class="iconfont icon-name"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.ContactName" style="font-size:1.2em;"></span>&nbsp;&nbsp;&nbsp;&nbsp;<i class="iconfont icon-title1"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Title" style="font-size:1.2em;"></span></p>
+                            <p ng-show="rcbp3.Telephone != ''"><i class="iconfont icon-phone3"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Telephone" style="font-size:1.2em;"></span></p>
+    						<p ng-show="rcbp3.Fax != ''"><i class="iconfont icon-fax1"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Fax" style="font-size:1.2em;"></span></p>
+    						<p ng-show="rcbp3.Handphone != ''"><i class="iconfont icon-phone2"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Handphone" style="font-size:1.2em;"></span></p>
+    						<p ng-show="rcbp3.Email != ''"><i class="iconfont icon-email"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Email" style="font-size:1.2em;"></span></p>
+                            <p ng-show="rcbp3.Facebook != ''"><i class="iconfont icon-facebook"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Facebook" style="font-size:1.2em;"></span></p>
+    						<p ng-show="rcbp3.MSN != ''"><i class="iconfont icon-msn"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.MSN" style="font-size:1.2em;"></span></p>
+    						<p ng-show="rcbp3.Skype != ''"><i class="iconfont icon-skype"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Skype" style="font-size:1.2em;"></span></p>
+    						<p ng-show="rcbp3.Twitter != ''"><i class="iconfont icon-twitter"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.Twitter" style="font-size:1.2em;"></span></p>
+    						<p ng-show="rcbp3.QQ != ''"><i class="iconfont icon-qq"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.QQ" style="font-size:1.2em;"></span></p>
+                        </div>
+						<div>
+                            <i class="icon iconfont-assertive ion-android-delete"></i>
+                        </div>
+                        <ion-option-button class="button-assertive" ng-click="GoToContactDel($index,rcbp3)"><i class="icon ion-android-delete"></i></ion-option-button>
 					</ion-item>
 				</ion-list>
 			</ion-scroll>
 		</ion-tab>
 	</ion-tabs>
-	<script id="rcbp3Detail.html" type="text/ng-template">
-		<ion-modal-view>
-			<ion-header-bar class="bar-positive" align-title="center">
-				<div class="title">Contact Info</div>
-			</ion-header-bar>
-			<ion-content>
-				<div class="list card">
-					<div class="item">
-						<p>
-							<i class="iconfont icon-name"></i>&nbsp;&nbsp;
-							<span ng-bind="rcbp3Detail.ContactName"></span>&nbsp;&nbsp;&nbsp;&nbsp;
-							<i class="iconfont icon-title1"></i>&nbsp;&nbsp;
-							<span ng-bind="rcbp3Detail.Title"></span>
-						</p>
-						<p>
-							<i class="iconfont icon-phone3"></i>&nbsp;&nbsp;
-                            <a ng-href="tel:{{rcbp3Detail.Telephone}}" style="text-decoration: none;"><span ng-bind="rcbp3Detail.Telephone"></span></a>
-						</p>
-						<p>
-							<i class="iconfont icon-fax1"></i>&nbsp;&nbsp;
-							<span ng-bind="rcbp3Detail.Fax"></span>
-						</p>
-						<p>
-							<i class="iconfont icon-phone2"></i>&nbsp;&nbsp;
-							<span ng-bind="rcbp3Detail.Handphone"></span>
-                            <a ng-href="tel:{{rcbp3Detail.Telephone}}" style="text-decoration: none;"><span ng-bind="rcbp3Detail.Telephone"></span></a>
-						</p>
-						<p>
-							<i class="iconfont icon-email"></i>&nbsp;&nbsp;
-							<span ng-bind="rcbp3Detail.Email"></span>
-						</p>
-					</div>
-					<div class="item item-body">
-						<img class="full-image" ng-show="blnContainNameCard(rcbp3Detail)" ng-src="data:image/png;base64,{{rcbp3Detail.NameCard}}"/>
-						<p>
-							<i class="iconfont icon-birthdaycake"></i>&nbsp;&nbsp;
-							<span ng-bind="ShowDate(rcbp3Detail.Birthday)"></span>
-						</p>
-						<p>
-							<i class="iconfont icon-like"></i>&nbsp;&nbsp;
-							<span ng-bind="rcbp3Detail.Like"></span>
-						</p>
-						<p>
-							<i class="iconfont icon-dislike"></i>&nbsp;&nbsp;
-							<span ng-bind="rcbp3Detail.Dislike"></span>
-						</p>
-						<p>
-							<i class="iconfont icon-facebook"></i>&nbsp;&nbsp;
-							<span ng-bind="rcbp3Detail.Facebook"></span>
-						</p>
-						<p>
-							<i class="iconfont icon-msn"></i>&nbsp;&nbsp;
-							<span ng-bind="rcbp3Detail.MSN"></span>
-						</p>
-						<p>
-							<i class="iconfont icon-skype"></i>&nbsp;&nbsp;
-							<span ng-bind="rcbp3Detail.Skype"></span>
-						</p>
-						<p>
-							<i class="iconfont icon-twitter"></i>&nbsp;&nbsp;
-							<span ng-bind="rcbp3Detail.Twitter"></span>
-						</p>
-						<p>
-							<i class="iconfont icon-qq"></i>&nbsp;&nbsp;
-							<span ng-bind="rcbp3Detail.QQ"></span>
-						</p>
-						<p>
-							Others&nbsp;&nbsp;:&nbsp;&nbsp;<span ng-bind="rcbp3Detail.Others"></span>
-						</p>
-					</div>
-				</div>
-			</ion-content>
-			<ion-footer-bar align-title="center" class="bar-positive">
-				<h1 class="title"></h1>
-				<div class="buttons">
-					<button class="button" ng-click="closeModal()">
-						<i class="icon ion-arrow-return-right"></i>&nbsp;&nbsp;Return
-					</button>
-				</div>
-			</ion-footer-bar>
-		</ion-modal-view>
-	</script>
 </ion-view>
