@@ -195,16 +195,19 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
             })
             .state('salesmanActivity', {
                 url: '/salesmanActivity',
+                cache: 'false',
                 templateUrl: 'view/crm/SalesmanActivity.html',
                 controller: 'SalesmanActivityCtrl'
             })
             .state('salesmanActivityList', {
                 url: '/salesmanActivity/list/:SalesmanNameLike',
+                cache: 'false',
                 templateUrl: 'view/crm/SalesmanActivity-list.html',
                 controller: 'SalesmanActivityListCtrl'
             })
             .state('salesmanActivityDetail', {
                 url: '/salesmanActivity/detail/:SalesmanNameLike/:TrxNo',
+                cache: 'false',
                 templateUrl: 'view/crm/SalesmanActivity-detail.html',
                 controller: 'SalesmanActivityDetailCtrl'
             })
@@ -231,6 +234,12 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
                 cache: 'false',
                 templateUrl: 'view/crm/Contacts-detail-Edit.html',
                 controller: 'ContactsDetailEditCtrl'
+            })
+            .state('contactsInfo', {
+                url: '/contacts/info/:BusinessPartyCode/:LineItemNo',
+                cache: 'false',
+                templateUrl: 'view/crm/Contacts-info.html',
+                controller: 'ContactsInfoCtrl'
             })
             .state('contactsInfoEdit', {
                 url: '/contacts/info/Edit/:BusinessPartyCode/:LineItemNo',
