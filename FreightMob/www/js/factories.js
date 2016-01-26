@@ -1,4 +1,6 @@
-var appFactory = angular.module('MobileAPP.factories', []);
+var appFactory = angular.module('MobileAPP.factories', [
+    'MobileAPP.services'
+]);
 
 appFactory.factory('SHIPMENTSTATUS_PARAM' , function(){
 	var SHIPMENTSTATUS_PARAM = {};
@@ -38,38 +40,62 @@ appFactory.factory('SHIPMENTSTATUS_PARAM' , function(){
     return SHIPMENTSTATUS_PARAM;
 });
 
-appFactory.factory('CONTACTS_PARAM' , function(){
-	var CONTACTS_PARAM = {};
-    var ListContacts = {
-		BusinessPartyNameLike: '',
-        CanLoadedMoreData: true
+appFactory.factory('CONTACTS_ORM',function(){
+    var CONTACTS_ORM = {
+        CONTACTS_SEARCH : {
+            BusinessPartyNameLike:  '',
+            _set:   function(value) {
+                CONTACTS_ORM.CONTACTS_SEARCH.BusinessPartyNameLike = value;
+            }
+        },
+        CONTACTS_LIST : {
+            CanLoadedMoreData:      true,
+            Rcbp1s:                 {},
+            _set:   function(value) {
+                CONTACTS_ORM.CONTACTS_LIST.Rcbp1s = value;
+            }
+        },
+        CONTACTS_DETAIL : {
+            TrxNo:                  '',
+            TabIndex:               0,
+            Rcbp1:                  {},
+            _setId:     function(value) {
+                CONTACTS_ORM.CONTACTS_DETAIL.TrxNo = value;
+            },
+            _setTab:    function(value) {
+                CONTACTS_ORM.CONTACTS_DETAIL.TabIndex = value;
+            },
+            _setObj:    function(value) {
+                CONTACTS_ORM.CONTACTS_DETAIL.Rcbp1 = value;
+            }
+        },
+        CONTACTS_SUBLIST : {
+            BusinessPartyCode:      '',
+            Rcbp3s:                 {},
+            _setId:     function(value) {
+                CONTACTS_ORM.CONTACTS_SUBLIST.BusinessPartyCode = value;
+            },
+            _setObj:    function(value) {
+                CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s = value;
+            }
+        },
+        CONTACTS_SUBDETAIL : {
+            Rcbp3:                  {},
+            _setObj:    function(value) {
+                CONTACTS_ORM.CONTACTS_SUBDETAIL.Rcbp3 = value;
+            }
+        }
     };
-	var DetialContacts = {
-		BusinessPartyNameLike: '',
-        TrxNo:'',
-        CanAddInfos: false
+    CONTACTS_ORM.init = function() {
+        CONTACTS_ORM.CONTACTS_SEARCH.BusinessPartyNameLike =    '';
+        CONTACTS_ORM.CONTACTS_LIST.CanLoadedMoreData =          true;
+        CONTACTS_ORM.CONTACTS_LIST.Rcbp1s =                     {};
+        CONTACTS_ORM.CONTACTS_DETAIL.TrxNo =                    '';
+        CONTACTS_ORM.CONTACTS_DETAIL.TabIndex =                 0;
+        CONTACTS_ORM.CONTACTS_DETAIL.Rcbp1 =                    {};
+        CONTACTS_ORM.CONTACTS_SUBLIST.BusinessPartyCode =       '';
+        CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s =                  {};
+        CONTACTS_ORM.CONTACTS_SUBDETAIL.Rcbp3 =                  {};
     };
-    CONTACTS_PARAM.Init = function(){
-    	ListContacts.BusinessPartyNameLike    = '';
-    	ListContacts.CanLoadedMoreData = true;
-        DetialContacts.BusinessPartyNameLike  = '';
-        DetialContacts.TrxNo  = '';
-        DetialContacts.CanAddInfos  = false;
-    };
-    CONTACTS_PARAM.GetList = function(){
-    	return ListContacts;
-    };
-    CONTACTS_PARAM.SetList = function(Name){
-    	ListContacts.BusinessPartyNameLike  = Name;
-    	return ListContacts;
-    };
-    CONTACTS_PARAM.GetDetial = function(){
-    	return DetialContacts;
-    };
-    CONTACTS_PARAM.SetDetial = function(Name, Value){
-        DetialContacts.BusinessPartyNameLike = Name;
-        DetialContacts.TrxNo = Value;
-    	return DetialContacts;
-    };
-    return CONTACTS_PARAM;
+    return CONTACTS_ORM;
 });
