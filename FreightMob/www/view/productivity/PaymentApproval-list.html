@@ -5,23 +5,25 @@
 		</div>
 		<h1 class="title">Payment</h1>
         <div class="buttons">
-            <ion-toggle ng-model="plcpStatus.checked" toggle-class="toggle-calm" ng-change="plcpStatusChange()" style="color:#fff;margin:-8px;border-width:0px;background-color:transparent;">
-                <span ng-bind="plcpStatus.text"></span>
+            <ion-toggle ng-model="plviStatus.checked" toggle-class="toggle-calm" ng-change="plviStatusChange()" style="color:#fff;margin:-8px;border-width:0px;background-color:transparent;">
+                <span ng-bind="plviStatus.text"></span>
             </ion-toggle>
         </div>
 	</ion-header-bar>
     <ion-content class="has-header">
         <div class="list">
-            <ion-item class="item" ng-repeat="plcp1 in Plcp1s">
-                <ion-checkbox ng-model="plcp1.IsSelected" ng-change="ClickSelect(plcp1)">
-                    <h2><span ng-bind="plcp1.VoucherNo"></span></h2>
+            <ion-item class="item" ng-repeat="plvi1 in plvi1s">
+                <ion-checkbox ng-model="plvi1.IsSelected" ng-change="ClickSelect(plvi1)">
+                    <h2><span ng-bind="plvi1.VoucherNo"></span></h2>
                     <p>
                         <i class="iconfont icon-title"></i>&nbsp;
-                        <span ng-bind="plcp1.VendorName"></span>&nbsp;
+                        <span ng-bind="plvi1.VendorName"></span>
+                    </p>
+                    <p>
                         <i class="iconfont icon-amount"></i>&nbsp;
-                        <span ng-bind="plcp1.InvoiceAmt"></span>&nbsp;
+                        <span ng-bind="plvi1.InvoiceAmt"></span>&nbsp;&nbsp;&nbsp;&nbsp;
                         <i class="iconfont icon-date"></i>&nbsp;
-                        <span ng-bind="funcShowDate(plcp1.InvoiceDate)"></span>
+                        <span ng-bind="funcShowDate(plvi1.InvoiceDate)"></span>
                     </p>
                 </ion-checkbox>
             </ion-item>

@@ -271,8 +271,8 @@ appControllers.controller('MainCtrl',
         }]);
 
 appControllers.controller('SalesmanActivityCtrl',
-        ['$scope', '$state', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService',
-        function ($scope, $state, $timeout, $ionicLoading, $ionicPopup, WebApiService) {
+        ['$scope', '$state', '$timeout', '$ionicPopup', 'WebApiService',
+        function ($scope, $state, $timeout, $ionicPopup, WebApiService) {
             $scope.Rcsm1 = {
                 SalesmanNameLike: ''
             };
@@ -304,8 +304,8 @@ appControllers.controller('SalesmanActivityCtrl',
         }]);
 
 appControllers.controller('SalesmanActivityListCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', '$ionicScrollDelegate', '$cordovaDialogs', 'WebApiService', 'CONTACTS_PARAM',
-        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, $ionicScrollDelegate, $cordovaDialogs, WebApiService, CONTACTS_PARAM) {
+        ['$scope', '$state', '$stateParams', 'WebApiService',
+        function ($scope, $state, $stateParams, WebApiService) {
             var RecordCount = 0;
             var dataResults = new Array();
             $scope.List = {
@@ -684,7 +684,7 @@ appControllers.controller('PaymentApprovalListCtrl',
                 CanLoadedMoreData:  true,
                 IsSelectAll:          false
             };
-            $scope.plcpStatus = { text: "USE", checked: false };
+            $scope.plviStatus = { text: "USE", checked: false };
             $scope.returnSearch = function () {
                 $state.go('paymentApproval', {}, {});
             };
@@ -693,16 +693,16 @@ appControllers.controller('PaymentApprovalListCtrl',
             };
             $scope.showApproval = function () {
                 var blnSelect = false;
-                for(var index in $scope.Plcp1s){
-                    if($scope.Plcp1s[index].IsSelected){
+                for(var index in $scope.plvi1s){
+                    if($scope.plvi1s[index].IsSelected){
                         blnSelect = true;
                         break;
                     }
                 }
                 if(blnSelect){
-                    var jsonData = { "plcp1s": $scope.Plcp1s };
-                    var strUri = "/api/freight/plcp1";
-                    WebApiService.post(strUri, jsonData, true).then(function success(result){
+                    var jsonData = { "plvi1s": $scope.plvi1s };
+                    var strUri = "/api/freight/plvi1";
+                    WebApiService.Post(strUri, jsonData, true).then(function success(result){
                         var alertPopup = $ionicPopup.alert({
                             title: "Approval Success!",
                             okType: 'button-calm'
@@ -710,45 +710,50 @@ appControllers.controller('PaymentApprovalListCtrl',
                         $timeout(function () {
                             alertPopup.close();
                         }, 2500);
-                        for(i=0;i<=$scope.Plcp1s.length -1;i++){
-                            if($scope.Plcp1s[i].StatusCode === 'APP'){
-                                $scope.Plcp1s.splice(i, 1);
+                        for(i=0;i<=$scope.plvi1s.length -1;i++){
+                            if($scope.plvi1s[i].StatusCode === 'APP'){
+                                $scope.plvi1s.splice(i, 1);
                             }
                         }
+                    },function error(error){
+                        var alertPopup = $ionicPopup.alert({
+                            title: "Approval Faild!",
+                            okType: 'button-assertive'
+                        });
                     });
                 }
             };
-            $scope.plcpStatusChange = function () {
-                if ($scope.plcpStatus.checked) {
-                    $scope.plcpStatus.text = "APP";
+            $scope.plviStatusChange = function () {
+                if ($scope.plviStatus.checked) {
+                    $scope.plviStatus.text = "APP";
                 } else {
-                    $scope.plcpStatus.text = "USE";
+                    $scope.plviStatus.text = "USE";
                 }
                 RecordCount = 0;
                 dataResults = new Array();
                 $scope.Filter.CanLoadedMoreData = true;
-                $scope.Plcp1s = dataResults;
+                $scope.plvi1s = dataResults;
                 $scope.loadMore();
             };
-            $scope.ClickSelect = function(Plcp1) {
-                if(Plcp1.IsSelected){
-                    Plcp1.StatusCode = 'APP';
+            $scope.ClickSelect = function(Plvi1) {
+                if(Plvi1.IsSelected){
+                    Plvi1.StatusCode = 'APP';
                 } else {
-                    Plcp1.StatusCode = 'USE';
+                    Plvi1.StatusCode = 'USE';
                 }
             };
             $scope.ClickSelectAll = function() {
-                if($scope.Plcp1s != null && $scope.Plcp1s.length > 0){
+                if($scope.plvi1s != null && $scope.plvi1s.length > 0){
                     $scope.Filter.IsSelectAll = !$scope.Filter.IsSelectAll;
                     if($scope.Filter.IsSelectAll){
-                        $scope.Plcp1s.forEach( function(plcp1) { plcp1.IsSelected = true;plcp1.StatusCode = 'APP'; });
+                        $scope.plvi1s.forEach( function(plvi1) { plvi1.IsSelected = true; plvi1.StatusCode = 'APP'; });
                     }else{
-                        $scope.Plcp1s.forEach( function(plcp1) { plcp1.IsSelected = false;plcp1.StatusCode = 'USE' });
+                        $scope.plvi1s.forEach( function(plvi1) { plvi1.IsSelected = false; plvi1.StatusCode = 'USE' });
                     }
                 }
             };
             $scope.loadMore = function() {
-                var strUri = "/api/freight/plcp1/sps?RecordCount=" + RecordCount + "&StatusCode=" + $scope.plcpStatus.text
+                var strUri = "/api/freight/plvi1/sps?RecordCount=" + RecordCount + "&StatusCode=" + $scope.plviStatus.text
                 if ($scope.Filter.FilterValue != null && $scope.Filter.FilterValue.length > 0) {
                     if($scope.Filter.FilterName === "VoucherNo"){
                         strUri = strUri + "&VoucherNo=" + $scope.Filter.FilterValue;
@@ -759,7 +764,7 @@ appControllers.controller('PaymentApprovalListCtrl',
                 WebApiService.GetParam(strUri, false).then(function success(result){
                     if(result.length > 0){
                         dataResults = dataResults.concat(result);
-                        $scope.Plcp1s = dataResults;
+                        $scope.plvi1s = dataResults;
                         $scope.Filter.CanLoadedMoreData = true;
                         RecordCount = RecordCount + 20;
                     }else{
