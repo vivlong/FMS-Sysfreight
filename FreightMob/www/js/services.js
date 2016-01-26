@@ -7,34 +7,10 @@ var appService = angular.module('MobileAPP.services', [
     'ngCordova.plugins.inAppBrowser'
 ]);
 
-appService.service('WebApiService', ['$q', '$http', '$ionicPopup', '$timeout',
-    function ($q, $http, $ionicPopup, $timeout) {
-        function parseResponseStatus (status) {
-            if (!status) return { isSuccess: true };
-            var result =
-            {
-                isSuccess: status.meta.code === 200, // && status.meta.errors.code === 0,
-                errorCode: status.meta.errors.code,
-                message: status.meta.message,
-                data: status.data.results,
-                errorMessage: status.meta.errors.message//,
-                //fieldErrors: [],
-            };
-            /*
-            if (status.meta.errors.field) {
-                for (var i = 0, len = status.FieldErrors.length; i < len; i++) {
-                    var err = status.FieldErrors[i];
-                    var error = { errorCode: err.ErrorCode, fieldName: err.FieldName, errorMessage: err.ErrorMessage || '' };
-                    result.fieldErrors.push(error);
-                    if (error.fieldName) {
-                        result.fieldErrorMap[error.fieldName] = error;
-                    }
-                }
-            }
-            */
-            return result;
-        }
-        this.Post = function (requestUrl, requestData) {
+appService.service('WebApiService', ['$q', '$http', '$ionicLoading', '$ionicPopup', '$timeout',
+    function ($q, $http, $ionicLoading, $ionicPopup, $timeout) {
+        this.Post = function (requestUrl, requestData, blnShowLoad) {
+            if(blnShowLoad){$ionicLoading.show();}
             var deferred = $q.defer();
             if (strBaseUrl.length > 0 && strBaseUrl.indexOf('/') < 0 ) {
                 strBaseUrl = "/" + strBaseUrl;
@@ -52,13 +28,16 @@ appService.service('WebApiService', ['$q', '$http', '$ionicPopup', '$timeout',
                 }
             };
             $http.post(url, requestData, config).success(function (response) {
+                if(blnShowLoad){$ionicLoading.hide();}
                 deferred.resolve(response.data.results);
             }).error(function (response) {
+                if(blnShowLoad){$ionicLoading.hide();}
                 deferred.reject(response);
             });
             return deferred.promise;
         };
-        this.Get = function (requestUrl) {
+        this.Get = function (requestUrl, blnShowLoad) {
+            if(blnShowLoad){$ionicLoading.show();}
             var deferred = $q.defer();
             if (strBaseUrl.length > 0 && strBaseUrl.indexOf('/') < 0 ) {
                 strBaseUrl = "/" + strBaseUrl;
@@ -75,13 +54,16 @@ appService.service('WebApiService', ['$q', '$http', '$ionicPopup', '$timeout',
                 //    "Signature": strSignature
                 //}
             }).success(function (response) {
+                if(blnShowLoad){$ionicLoading.hide();}
                 deferred.resolve(response.data.results);
             }).error(function (response) {
+                if(blnShowLoad){$ionicLoading.hide();}
                 deferred.reject(response);
             });
             return deferred.promise;
         };
-        this.GetParam = function (requestUrl) {
+        this.GetParam = function (requestUrl, blnShowLoad) {
+            if(blnShowLoad){$ionicLoading.show();}
             var deferred = $q.defer();
             if (strBaseUrl.length > 0 && strBaseUrl.indexOf('/') < 0 ) {
                 strBaseUrl = "/" + strBaseUrl;
@@ -98,16 +80,22 @@ appService.service('WebApiService', ['$q', '$http', '$ionicPopup', '$timeout',
                 //    "Signature": strSignature
                 //}
             }).success(function (response) {
+                if(blnShowLoad){$ionicLoading.hide();}
                 deferred.resolve(response.data.results);
-            }).error(function (response) {
-                deferred.reject(response);
+            }).error(function (error) {
+                if(blnShowLoad){$ionicLoading.hide();}
+                var alertPopup = $ionicPopup.alert({
+                    title: error,
+                    okType: 'button-assertive'
+                });
+                deferred.reject(error);
             });
             return deferred.promise;
         };
     }]);
 
-appService.service('DownloadFileService', ['$http', '$timeout', '$ionicLoading', '$ionicPopup', '$cordovaToast', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2',
-    function ($http, $timeout, $ionicLoading, $ionicPopup, $cordovaToast, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2) {
+appService.service('DownloadFileService', ['$http', '$timeout', '$ionicLoading', '$cordovaToast', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2',
+    function ($http, $timeout, $ionicLoading, $cordovaToast, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2) {
         this.Download = function(fileName, fileType, onPlatformError, onCheckError, onDownloadError){
             $ionicLoading.show({
                 template: "Download  0%"
