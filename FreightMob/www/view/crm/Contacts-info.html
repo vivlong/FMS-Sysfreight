@@ -1,70 +1,76 @@
 ﻿<ion-view title="Contacts-Info">
     <ion-header-bar class="bar-positive" align-title="center">
+        <div class="buttons">
+			<button class="button button-icon button-clear ion-navicon" ng-click="returnDetail()"></button>
+		</div>
         <div class="title">Contact Info</div>
+        <div class="buttons" >
+            <button class="button button-icon button-small button-clear ion-android-create" ng-click="GoToContactEdit()"></button>
+        </div>
     </ion-header-bar>
     <ion-content>
         <div class="list card">
             <div class="item">
                 <p>
                     <i class="iconfont icon-name"></i>&nbsp;&nbsp;
-                    <span ng-bind="rcbp3Detail.ContactName"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span ng-bind="rcbp3.ContactName"></span>&nbsp;&nbsp;&nbsp;&nbsp;
                     <i class="iconfont icon-title1"></i>&nbsp;&nbsp;
-                    <span ng-bind="rcbp3Detail.Title"></span>
+                    <span ng-bind="rcbp3.Title"></span>
                 </p>
                 <p>
                     <i class="iconfont icon-phone3"></i>&nbsp;&nbsp;
-                    <a ng-href="tel:{{rcbp3Detail.Telephone}}" style="text-decoration: none;"><span ng-bind="rcbp3Detail.Telephone"></span></a>
+                    <a ng-href="tel:{{rcbp3.Telephone}}" style="text-decoration: none;"><span ng-bind="rcbp3.Telephone"></span></a>
                 </p>
                 <p>
                     <i class="iconfont icon-fax1"></i>&nbsp;&nbsp;
-                    <span ng-bind="rcbp3Detail.Fax"></span>
+                    <span ng-bind="rcbp3.Fax"></span>
                 </p>
                 <p>
                     <i class="iconfont icon-phone2"></i>&nbsp;&nbsp;
-                    <span ng-bind="rcbp3Detail.Handphone"></span>
-                    <a ng-href="tel:{{rcbp3Detail.Telephone}}" style="text-decoration: none;"><span ng-bind="rcbp3Detail.Telephone"></span></a>
+                    <span ng-bind="rcbp3.Handphone"></span>
+                    <a ng-href="tel:{{rcbp3.Telephone}}" style="text-decoration: none;"><span ng-bind="rcbp3.Telephone"></span></a>
                 </p>
                 <p>
                     <i class="iconfont icon-email"></i>&nbsp;&nbsp;
-                    <span ng-bind="rcbp3Detail.Email"></span>
+                    <span ng-bind="rcbp3.Email"></span>
                 </p>
             </div>
             <div class="item item-body">
-                <img class="full-image" ng-show="blnContainNameCard(rcbp3Detail)" ng-src="data:image/png;base64,{{rcbp3Detail.NameCard}}"/>
+                <img class="full-image" ng-show="blnContainNameCard(rcbp3)" ng-src="data:image/png;base64,{{rcbp3.NameCard}}"/>
                 <p>
                     <i class="iconfont icon-birthdaycake"></i>&nbsp;&nbsp;
-                    <span ng-bind="ShowDate(rcbp3Detail.Birthday)"></span>
+                    <span ng-bind="ShowDate(rcbp3.Birthday)"></span>
                 </p>
                 <p>
                     <i class="iconfont icon-like"></i>&nbsp;&nbsp;
-                    <span ng-bind="rcbp3Detail.Like"></span>
+                    <span ng-bind="rcbp3.Like"></span>
                 </p>
                 <p>
                     <i class="iconfont icon-dislike"></i>&nbsp;&nbsp;
-                    <span ng-bind="rcbp3Detail.Dislike"></span>
+                    <span ng-bind="rcbp3.Dislike"></span>
                 </p>
                 <p>
                     <i class="iconfont icon-facebook"></i>&nbsp;&nbsp;
-                    <span ng-bind="rcbp3Detail.Facebook"></span>
+                    <span ng-bind="rcbp3.Facebook"></span>
                 </p>
                 <p>
                     <i class="iconfont icon-msn"></i>&nbsp;&nbsp;
-                    <span ng-bind="rcbp3Detail.MSN"></span>
+                    <span ng-bind="rcbp3.MSN"></span>
                 </p>
                 <p>
                     <i class="iconfont icon-skype"></i>&nbsp;&nbsp;
-                    <span ng-bind="rcbp3Detail.Skype"></span>
+                    <span ng-bind="rcbp3.Skype"></span>
                 </p>
                 <p>
                     <i class="iconfont icon-twitter"></i>&nbsp;&nbsp;
-                    <span ng-bind="rcbp3Detail.Twitter"></span>
+                    <span ng-bind="rcbp3.Twitter"></span>
                 </p>
                 <p>
                     <i class="iconfont icon-qq"></i>&nbsp;&nbsp;
-                    <span ng-bind="rcbp3Detail.QQ"></span>
+                    <span ng-bind="rcbp3.QQ"></span>
                 </p>
                 <p>
-                    Others&nbsp;&nbsp;:&nbsp;&nbsp;<span ng-bind="rcbp3Detail.Others"></span>
+                    Others&nbsp;&nbsp;:&nbsp;&nbsp;<span ng-bind="rcbp3.Others"></span>
                 </p>
             </div>
         </div>
