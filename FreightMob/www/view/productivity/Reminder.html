@@ -11,7 +11,8 @@
                 <ion-item>
                     <h2><span ng-bind="item.Subject"></span></h2>
                     <p><i class="iconfont icon-date"></i>&nbsp;&nbsp;<span ng-bind="item.DueDate"></span>&nbsp;&nbsp;<span ng-bind="item.DueTime"></span></p>
-                    <p><span ng-bind="item.Message"></span></p>
+                    <br/>
+                    <textarea style="width:100%;height:50px;" ng-bind="item.Message" readonly="true"></textarea>
                 </ion-item>
             </div>
         </ion-list>
