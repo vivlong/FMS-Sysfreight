@@ -19,20 +19,17 @@ appService.service('WebApiService', ['$q', '$http', '$ionicLoading', '$ionicPopu
             strWebSiteURL = onStrToURL(strWebSiteURL);
             var strSignature = hex_md5(strBaseUrl + requestUrl + strSecretKey.replace(/-/ig, ""));
             var url = strWebServiceURL + strBaseUrl + requestUrl;
+            console.log(url);
             var config = {
-                withCredentials: false,
-                headers: {
-                  'content-type': 'application/json',
-                  'cache-control': 'no-cache'
-                  //'Signature': strSignature
-                }
+                'Content-Type':'application/json'
             };
-            $http.post(url, requestData, config).success(function (response) {
+            $http.post(url, requestData, config).success(function (data, status, headers, config, statusText) {
                 if(blnShowLoad){$ionicLoading.hide();}
-                deferred.resolve(response.data.results);
-            }).error(function (response) {
+                deferred.resolve(data);
+            }).error(function (data, status, headers, config, statusText) {
                 if(blnShowLoad){$ionicLoading.hide();}
-                deferred.reject(response);
+                deferred.reject(data);
+                console.log(data);
             });
             return deferred.promise;
         };
@@ -47,18 +44,13 @@ appService.service('WebApiService', ['$q', '$http', '$ionicLoading', '$ionicPopu
             var strSignature = hex_md5(strBaseUrl + requestUrl + "?format=json" + strSecretKey.replace(/-/ig, ""));
             var url = strWebServiceURL + strBaseUrl + requestUrl + "?format=json";
             console.log(url);
-            $http({
-                method: "GET",
-                url:    url
-                //headers: {
-                //    "Signature": strSignature
-                //}
-            }).success(function (response) {
+            $http.get(url).success(function (data, status, headers, config, statusText) {
                 if(blnShowLoad){$ionicLoading.hide();}
-                deferred.resolve(response.data.results);
-            }).error(function (response) {
+                deferred.resolve(data);
+            }).error(function (data, status, headers, config, statusText) {
                 if(blnShowLoad){$ionicLoading.hide();}
-                deferred.reject(response);
+                deferred.reject(data);
+                console.log(data);
             });
             return deferred.promise;
         };
@@ -73,22 +65,13 @@ appService.service('WebApiService', ['$q', '$http', '$ionicLoading', '$ionicPopu
             var strSignature = hex_md5(strBaseUrl + requestUrl + "&format=json" + strSecretKey.replace(/-/ig, ""));
             var url = strWebServiceURL + strBaseUrl + requestUrl + "&format=json";
             console.log(url);
-            $http({
-                method: "GET",
-                url:    url
-                //headers: {
-                //    "Signature": strSignature
-                //}
-            }).success(function (response) {
+            $http.get(url).success(function (data, status, headers, config, statusText) {
                 if(blnShowLoad){$ionicLoading.hide();}
-                deferred.resolve(response.data.results);
-            }).error(function (error) {
+                deferred.resolve(data);
+            }).error(function (data, status, headers, config, statusText) {
                 if(blnShowLoad){$ionicLoading.hide();}
-                var alertPopup = $ionicPopup.alert({
-                    title: error,
-                    okType: 'button-assertive'
-                });
-                deferred.reject(error);
+                deferred.reject(data);
+                console.log(data);
             });
             return deferred.promise;
         };
@@ -108,6 +91,8 @@ appService.service('DownloadFileService', ['$http', '$timeout', '$ionicLoading',
                     //
                 }, function (error) {
                     blnError = true;
+                }).catch(function(ex){
+                    console.log(ex);
                 });
                 var targetPath = cordova.file.externalRootDirectory + fileName;
                 var trustHosts = true;
@@ -120,6 +105,8 @@ appService.service('DownloadFileService', ['$http', '$timeout', '$ionicLoading',
                             // success
                         }, function (err) {
                             // error
+                        }).catch(function(ex){
+                            console.log(ex);
                         });
                     }, function (err) {
                         $cordovaToast.showShortCenter('Download faild.');
@@ -135,6 +122,8 @@ appService.service('DownloadFileService', ['$http', '$timeout', '$ionicLoading',
                                 $ionicLoading.hide();
                             }
                         })
+                    }).catch(function(ex){
+                        console.log(ex);
                     });
                 } else {
                     $ionicLoading.hide();
@@ -183,10 +172,10 @@ appService.service('OpenUrlService', ['$cordovaInAppBrowser',
                 };
                 $cordovaInAppBrowser.open(url, '_system', options)
                 .then(function(event) {
-                // success
+                    // success
                 })
                 .catch(function(event) {
-                // error
+                    // error
                     $cordovaInAppBrowser.close();
                 });
             }else{
