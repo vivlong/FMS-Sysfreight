@@ -4,7 +4,7 @@
   "description": "Freight Mob APP",
   "dependencies": {},
   "devDependencies": {
-    "bower": "^1.7.0",
+    "bower": ">=1.7.5",
     "shelljs": "^0.5.3"
   },
   "cordovaPlugins": [
