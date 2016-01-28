@@ -438,10 +438,10 @@ appControllers.controller('ContactsListCtrl',
         }]);
 
 appControllers.controller('ContactsDetailCtrl',
-        ['$scope', '$stateParams', '$state', '$timeout', '$ionicHistory', '$ionicLoading', '$ionicPopup', '$ionicTabsDelegate',
+        ['$scope', '$stateParams', '$state', '$timeout', '$ionicLoading', '$ionicPopup', '$ionicTabsDelegate',
          '$cordovaActionSheet', '$cordovaToast', '$cordovaSms', 'DateTimeService', 'WebApiService',
          'OpenUrlService', 'CONTACTS_ORM',
-        function ($scope, $stateParams, $state, $timeout, $ionicHistory, $ionicLoading, $ionicPopup, $ionicTabsDelegate,
+        function ($scope, $stateParams, $state, $timeout, $ionicLoading, $ionicPopup, $ionicTabsDelegate,
              $cordovaActionSheet, $cordovaToast, $cordovaSms, DateTimeService, WebApiService,
              OpenUrlService, CONTACTS_ORM) {
             $scope.ContactsDetail = {
@@ -681,15 +681,15 @@ appControllers.controller('PaymentApprovalCtrl',
         }]);
 
 appControllers.controller('PaymentApprovalListCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicHistory', '$ionicLoading', '$ionicPopup', 'DateTimeService', 'WebApiService',
-        function ($scope, $state, $stateParams, $timeout, $ionicHistory, $ionicLoading, $ionicPopup, DateTimeService, WebApiService) {
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'DateTimeService', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, DateTimeService, WebApiService) {
             var RecordCount = 0;
             var dataResults = new Array();
             $scope.Filter = {
                 FilterName:         $stateParams.FilterName,
                 FilterValue:        $stateParams.FilterValue,
                 CanLoadedMoreData:  true,
-                IsSelectAll:          false
+                IsSelectAll:        false
             };
             $scope.plviStatus = { text: "USE", checked: false };
             $scope.returnSearch = function () {
@@ -699,35 +699,42 @@ appControllers.controller('PaymentApprovalListCtrl',
                 return DateTimeService.ShowDate(utc);
             };
             $scope.showApproval = function () {
-                var blnSelect = false;
-                for(var index in $scope.plvi1s){
-                    if($scope.plvi1s[index].IsSelected){
-                        blnSelect = true;
-                        break;
-                    }
-                }
-                if(blnSelect){
-                    var jsonData = { "plvi1s": $scope.plvi1s };
-                    var strUri = "/api/freight/plvi1";
-                    WebApiService.Post(strUri, jsonData, true).then(function success(result){
-                        var alertPopup = $ionicPopup.alert({
-                            title: "Approval Success!",
-                            okType: 'button-calm'
-                        });
-                        $timeout(function () {
-                            alertPopup.close();
-                        }, 2500);
-                        for(i=0;i<=$scope.plvi1s.length -1;i++){
-                            if($scope.plvi1s[i].StatusCode === 'APP'){
-                                $scope.plvi1s.splice(i, 1);
-                            }
+                if($scope.plviStatus.text === 'USE'){
+                    var appPlvi1 = [];
+                    for(var i=0;i<=$scope.plvi1s.length-1;i++){
+                        if($scope.plvi1s[i].StatusCode === 'APP'){
+                            appPlvi1.push($scope.plvi1s[i]);
                         }
-                    },function error(error){
-                        var alertPopup = $ionicPopup.alert({
-                            title: "Approval Faild!",
-                            okType: 'button-assertive'
+                    }
+                    if(appPlvi1.length > 0){
+                        var jsonData = { "plvi1s": appPlvi1 };
+                        var strUri = "/api/freight/plvi1";
+                        WebApiService.Post(strUri, jsonData, true).then(function success(result){
+                            var alertPopup = $ionicPopup.alert({
+                                title: "Approval Success!",
+                                okType: 'button-calm'
+                            });
+                            $timeout(function () {
+                                alertPopup.close();
+                            }, 2500);
+                            for(var i=0;i<=$scope.plvi1s.length-1;i++){
+                                if($scope.plvi1s[i].StatusCode === 'APP'){
+                                    $scope.plvi1s.splice(i, 1);
+                                }
+                            }
+                        },function error(error){
+                            var strError = '';
+                            if(error === null){
+                                strError = 'Approval Failed! XHR Error 500.';
+                            }else{
+                                strError = 'Approval Failed! ' + error;
+                            }
+                            var alertPopup = $ionicPopup.alert({
+                                title: strError,
+                                okType: 'button-assertive'
+                            });
                         });
-                    });
+                    }
                 }
             };
             $scope.plviStatusChange = function () {
@@ -743,19 +750,29 @@ appControllers.controller('PaymentApprovalListCtrl',
                 $scope.loadMore();
             };
             $scope.ClickSelect = function(Plvi1) {
-                if(Plvi1.IsSelected){
-                    Plvi1.StatusCode = 'APP';
-                } else {
-                    Plvi1.StatusCode = 'USE';
+                if($scope.plviStatus.text != 'USE'){
+                    Plvi1.IsSelected = false;
+                }else{
+                    if(Plvi1.IsSelected){
+                        Plvi1.StatusCode = 'APP';
+                    } else {
+                        Plvi1.StatusCode = 'USE';
+                    }
                 }
             };
             $scope.ClickSelectAll = function() {
-                if($scope.plvi1s != null && $scope.plvi1s.length > 0){
+                if($scope.plvi1s != null && $scope.plvi1s.length > 0 && $scope.plviStatus.text === 'USE'){
                     $scope.Filter.IsSelectAll = !$scope.Filter.IsSelectAll;
                     if($scope.Filter.IsSelectAll){
-                        $scope.plvi1s.forEach( function(plvi1) { plvi1.IsSelected = true; plvi1.StatusCode = 'APP'; });
+                        for(var i=0;i<=$scope.plvi1s.length-1;i++){
+                            $scope.plvi1s[i].IsSelected = true;
+                            $scope.plvi1s[i].StatusCode = 'APP';
+                        }
                     }else{
-                        $scope.plvi1s.forEach( function(plvi1) { plvi1.IsSelected = false; plvi1.StatusCode = 'USE' });
+                        for(var i=0;i<=$scope.plvi1s.length-1;i++){
+                            $scope.plvi1s[i].IsSelected = false;
+                            $scope.plvi1s[i].StatusCode = 'USE';
+                        }
                     }
                 }
             };
@@ -990,8 +1007,8 @@ appControllers.controller('ShipmentStatusListCtrl',
         }]);
 
 appControllers.controller('ShipmentStatusDetailCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicHistory', '$ionicLoading', '$ionicPopup', 'DateTimeService', 'WebApiService', 'SHIPMENTSTATUS_PARAM',
-        function ($scope, $state, $stateParams, $timeout, $ionicHistory, $ionicLoading, $ionicPopup, DateTimeService, WebApiService, SHIPMENTSTATUS_PARAM) {
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'DateTimeService', 'WebApiService', 'SHIPMENTSTATUS_PARAM',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, DateTimeService, WebApiService, SHIPMENTSTATUS_PARAM) {
             $scope.Detail = SHIPMENTSTATUS_PARAM.GetDetial();
             if($scope.Detail.FilterName === ""){
                 $scope.Detail.FilterName = $stateParams.FilterName;
@@ -999,11 +1016,8 @@ appControllers.controller('ShipmentStatusDetailCtrl',
                 $scope.Detail.ModuleCode = $stateParams.ModuleCode;
             }
             $scope.returnList = function () {
-                if ($ionicHistory.backView()) {
-                    $ionicHistory.goBack();
-                }else{
-                    $state.go('shipmentStatus', {}, {});
-                }
+                //TO DO...
+                $state.go('shipmentStatusList', { 'FilterName':FilterName, 'FilterValue':FilterValue }, { reload:true });
             };
             $scope.ShowDate = function(utc){
                 return DateTimeService.ShowDate(utc);
