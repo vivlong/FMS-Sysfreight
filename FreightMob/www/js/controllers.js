@@ -708,7 +708,7 @@ appControllers.controller('PaymentApprovalListCtrl',
                     }
                     if(appPlvi1.length > 0){
                         var jsonData = { "plvi1s": appPlvi1 };
-                        var strUri = "/api/freight/plvi1";
+                        var strUri = "/api/freight/plvi1/update";
                         WebApiService.Post(strUri, jsonData, true).then(function success(result){
                             var alertPopup = $ionicPopup.alert({
                                 title: "Approval Success!",
