@@ -857,8 +857,8 @@ appControllers.controller('VesselScheduleDetailCtrl',
         }]);
 
 appControllers.controller('ShipmentStatusCtrl',
-        ['$scope', '$state', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService', 'SHIPMENTSTATUS_PARAM',
-        function ($scope, $state, $timeout, $ionicLoading, $ionicPopup, WebApiService, SHIPMENTSTATUS_PARAM) {
+        ['$scope', '$state', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService', 'TRACKING_ORM',
+        function ($scope, $state, $timeout, $ionicLoading, $ionicPopup, WebApiService, TRACKING_ORM) {
             $scope.Tracking = {
                 ContainerNo: '',
                 JobNo: '',
@@ -867,7 +867,28 @@ appControllers.controller('ShipmentStatusCtrl',
                 OrderNo: '',
                 ReferenceNo: ''
             };
-            SHIPMENTSTATUS_PARAM.Init('','');
+            switch(TRACKING_ORM.TRACKING_SEARCH.FilterName)
+            {
+                case 'ContainerNo':
+                    $scope.Tracking.ContainerNo = TRACKING_ORM.TRACKING_SEARCH.FilterValue;
+                    break;
+                case 'JobNo':
+                    $scope.Tracking.JobNo = TRACKING_ORM.TRACKING_SEARCH.FilterValue;
+                    break;
+                case 'BLNo':
+                    $scope.Tracking.BLNo = TRACKING_ORM.TRACKING_SEARCH.FilterValue;
+                    break;
+                case 'AWBNo':
+                    $scope.Tracking.AWBNo = TRACKING_ORM.TRACKING_SEARCH.FilterValue;
+                    break;
+                case 'OrderNo':
+                    $scope.Tracking.OrderNo = TRACKING_ORM.TRACKING_SEARCH.FilterValue;
+                    break;
+                case 'ReferenceNo':
+                    $scope.Tracking.ReferenceNo = TRACKING_ORM.TRACKING_SEARCH.FilterValue;
+                    break;
+                default:
+            }
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -875,7 +896,6 @@ appControllers.controller('ShipmentStatusCtrl',
                 var strUri = '/api/freight/tracking/count?FilterName=' + FilterName + '&FilterValue=' + FilterValue;
                 WebApiService.GetParam(strUri, true).then(function chkCount(result){
                     if (result.data.results > 1) {
-                        SHIPMENTSTATUS_PARAM.SetList(FilterName, FilterValue);
                         $state.go('shipmentStatusList', { 'FilterName':FilterName, 'FilterValue':FilterValue }, { reload: true });
                     } else if (result.data.results === 1) {
                         return FilterName;
@@ -891,14 +911,14 @@ appControllers.controller('ShipmentStatusCtrl',
                 }).then(function chkFilter(FilterName){
                     if(typeof(FilterName) != 'undefined'){
                         if (FilterName === 'OrderNo') {
-                            SHIPMENTSTATUS_PARAM.SetDetial(FilterName, FilterValue, '4');
-                            $state.go('shipmentStatusDetail', { 'FilterName':FilterName, 'FilterValue':FilterValue, 'ModuleCode':'4' }, { reload: true });
+                            TRACKING_ORM.TRACKING_DETAIL._set(FilterValue, '4');
+                            $state.go('shipmentStatusDetail', { 'FilterName':FilterName, 'Key':FilterValue, 'ModuleCode':'4' }, { reload: true });
                         } else{
                             strUri = '/api/freight/tracking/sps?FilterName=' + FilterName + '&RecordCount=0&FilterValue=' + FilterValue;
                             WebApiService.GetParam(strUri, false).then(function success(result){
                                 if(result.data.results.length > 0){
-                                    SHIPMENTSTATUS_PARAM.SetDetial(FilterName, result.data.results[0].JobNo, result.data.results[0].ModuleCode);
-                                    $state.go('shipmentStatusDetail', { 'FilterName':FilterName, 'FilterValue':result.data.results[0].JobNo, 'ModuleCode':result.data.results[0].ModuleCode }, { reload: true });
+                                    TRACKING_ORM.TRACKING_DETAIL._set(result.data.results[0].JobNo, result.data.results[0].ModuleCode);
+                                    $state.go('shipmentStatusDetail', { 'FilterName':FilterName, 'Key':result.data.results[0].JobNo, 'ModuleCode':result.data.results[0].ModuleCode }, { reload: true });
                                 }
                             });
                         }
@@ -915,6 +935,10 @@ appControllers.controller('ShipmentStatusCtrl',
                 else if (TypeName === 'Order No') { FilterValue = $scope.Tracking.OrderNo; FilterName = 'OrderNo'}
                 else if (TypeName === 'Reference No') { FilterValue = $scope.Tracking.ReferenceNo; FilterName = 'CustomerRefNo'}
                 if (FilterValue.length > 0) {
+                    if(TRACKING_ORM.TRACKING_SEARCH.FilterName != FilterName || TRACKING_ORM.TRACKING_SEARCH.FilterValue != FilterValue){
+                        TRACKING_ORM.init();
+                        TRACKING_ORM.TRACKING_SEARCH._set(FilterName,FilterValue);
+                    }
                     getSearchResult(FilterName, FilterValue);
                 } else {
                     var alertPopup = $ionicPopup.alert({
@@ -959,24 +983,25 @@ appControllers.controller('ShipmentStatusCtrl',
         }]);
 
 appControllers.controller('ShipmentStatusListCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'DateTimeService', 'WebApiService', 'SHIPMENTSTATUS_PARAM',
-        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, DateTimeService, WebApiService, SHIPMENTSTATUS_PARAM) {
+        ['$scope', '$state', '$stateParams', 'DateTimeService', 'WebApiService', 'TRACKING_ORM',
+        function ($scope, $state, $stateParams, DateTimeService, WebApiService, TRACKING_ORM) {
             var RecordCount = 0;
             var dataResults = new Array();
-            $scope.Filter = SHIPMENTSTATUS_PARAM.GetList();
-            $scope.List = {
-                moreDataCanBeLoaded: true
+            $scope.TrackingList = {
+                FilterName :        TRACKING_ORM.TRACKING_SEARCH.FilterName,
+                FilterValue :       TRACKING_ORM.TRACKING_SEARCH.FilterValue,
+                CanLoadedMoreData : true
             };
-            if($scope.Filter.FilterName === ""){
-                $scope.Filter.FilterName = $stateParams.FilterName;
-                $scope.Filter.FilterValue = $stateParams.FilterValue;
+            if($scope.TrackingList.FilterName === ''){
+                $scope.TrackingList.FilterName = $stateParams.FilterName;
+                $scope.TrackingList.FilterValue = $stateParams.FilterValue;
             }
             $scope.returnShipmentStatus = function () {
                 $state.go('shipmentStatus', {}, {});
             };
             $scope.GoToDetail = function (Jmjm1) {
-                SHIPMENTSTATUS_PARAM.SetDetial($scope.Filter.FilterName, Jmjm1.JobNo, Jmjm1.ModuleCode)
-                $state.go('shipmentStatusDetail', { 'FilterName':$scope.Filter.FilterName, 'FilterValue':Jmjm1.JobNo, 'ModuleCode':Jmjm1.ModuleCode }, { reload: true });
+                TRACKING_ORM.TRACKING_DETAIL._set(Jmjm1.JobNo, Jmjm1.ModuleCode);
+                $state.go('shipmentStatusDetail', { 'FilterName':$scope.TrackingList.FilterName, 'Key':Jmjm1.JobNo, 'ModuleCode':Jmjm1.ModuleCode }, { reload: true });
             };
             $scope.ShowDate= function (utc) {
                 return DateTimeService.ShowDate(utc);
@@ -985,39 +1010,48 @@ appControllers.controller('ShipmentStatusListCtrl',
                 return DateTimeService.ShowDatetime(utc);
             };
             $scope.funcShowLabel = function(FilterName){
-                if(FilterName === $scope.Filter.FilterName){
+                if(FilterName === $scope.TrackingList.FilterName){
                     return true;
                 }else { return false; }
             };
             $scope.funcLoadMore = function() {
-                var strUri = '/api/freight/tracking/sps?FilterName=' + $scope.Filter.FilterName + '&RecordCount=' + RecordCount + '&FilterValue=' + $scope.Filter.FilterValue;
-                WebApiService.GetParam(strUri, false).then(function success(result){
-                    if(result.data.results.length > 0){
-                        dataResults = dataResults.concat(result.data.results);
-                        $scope.Jmjm1s = dataResults;
-                        $scope.List.moreDataCanBeLoaded = true;
-                        RecordCount = RecordCount + 20;
-                    }else{
-                        $scope.List.moreDataCanBeLoaded = false;
-                        RecordCount = 0;
-                    }
-                    $scope.$broadcast('scroll.infiniteScrollComplete');
-                });
+                if(TRACKING_ORM.TRACKING_LIST.Jmjm1s != null && TRACKING_ORM.TRACKING_LIST.Jmjm1s.length > 0){
+                    $scope.Jmjm1s = TRACKING_ORM.TRACKING_LIST.Jmjm1s;
+                    $scope.TrackingList.CanLoadedMoreData = false;
+                }else{
+                    var strUri = '/api/freight/tracking/sps?FilterName=' + $scope.TrackingList.FilterName + '&RecordCount=' + RecordCount + '&FilterValue=' + $scope.TrackingList.FilterValue;
+                    WebApiService.GetParam(strUri, false).then(function success(result){
+                        if(result.data.results.length > 0){
+                            dataResults = dataResults.concat(result.data.results);
+                            $scope.Jmjm1s = dataResults;
+                            $scope.TrackingList.CanLoadedMoreData = true;
+                            RecordCount = RecordCount + 20;
+                            TRACKING_ORM.TRACKING_LIST._setJmjm($scope.Jmjm1s);
+                        }else{
+                            $scope.TrackingList.CanLoadedMoreData = false;
+                            RecordCount = 0;
+                        }
+                        $scope.$broadcast('scroll.infiniteScrollComplete');
+                    });
+                }
             };
         }]);
 
 appControllers.controller('ShipmentStatusDetailCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'DateTimeService', 'WebApiService', 'SHIPMENTSTATUS_PARAM',
-        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, DateTimeService, WebApiService, SHIPMENTSTATUS_PARAM) {
-            $scope.Detail = SHIPMENTSTATUS_PARAM.GetDetial();
-            if($scope.Detail.FilterName === ""){
-                $scope.Detail.FilterName = $stateParams.FilterName;
-                $scope.Detail.FilterValue = $stateParams.FilterValue;
-                $scope.Detail.ModuleCode = $stateParams.ModuleCode;
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'DateTimeService', 'WebApiService', 'TRACKING_ORM',
+        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, DateTimeService, WebApiService, TRACKING_ORM) {
+            $scope.Detail = {
+                FilterName :    TRACKING_ORM.TRACKING_SEARCH.FilterName,
+                Key :           TRACKING_ORM.TRACKING_DETAIL.Key,
+                ModuleCode :    TRACKING_ORM.TRACKING_DETAIL.ModuleCode
+            };
+            if($scope.Detail.FilterName === ''){
+                $scope.Detail.FilterName =  $stateParams.FilterName;
+                $scope.Detail.Key =         $stateParams.Key;
+                $scope.Detail.ModuleCode =  $stateParams.ModuleCode;
             }
             $scope.returnList = function () {
-                //TO DO...
-                $state.go('shipmentStatusList', { 'FilterName':FilterName, 'FilterValue':FilterValue }, { reload:true });
+                $state.go('shipmentStatusList', { 'FilterName':TRACKING_ORM.TRACKING_SEARCH.FilterName, 'FilterValue':TRACKING_ORM.TRACKING_SEARCH.FilterValue }, { reload:true });
             };
             $scope.ShowDate = function(utc){
                 return DateTimeService.ShowDate(utc);
@@ -1025,34 +1059,32 @@ appControllers.controller('ShipmentStatusDetailCtrl',
             $scope.ShowDatetime = function(utc){
                 return DateTimeService.ShowDatetime(utc);
             };
-            $scope.funcShowLabel = function(FilterName){
-                if(FilterName === $scope.Detail.FilterName){
-                    return true;
-                }else { return false; }
-            };
-            var strUri = '';
-            var onSuccess = null;
-            var onError = function (response) {
-            };
-            var onFinally = function (response) {
-                $ionicLoading.hide();
-            };
             if($scope.Detail.FilterName === 'OrderNo'){
-                var getOmtx1 = function (FilterName, FilterValue) {
-                    strUri = '/api/freight/tracking?FilterName=' + FilterName + '&FilterValue=' + FilterValue;
-                    WebApiService.GetParam(strUri, true).then(function success(result){
-                        $scope.Omtx1s = result.data.results;
-                    });
-                };
-                getOmtx1($scope.Detail.FilterName, $scope.Detail.FilterValue);
+                if(TRACKING_ORM.TRACKING_DETAIL.Omtx1 != null && TRACKING_ORM.TRACKING_DETAIL.Omtx1.OrderNo === $scope.Detail.Key){
+                    $scope.Omtx1s = TRACKING_ORM.TRACKING_DETAIL.Omtx1;
+                }else{
+                    var getOmtx1 = function (FilterName, FilterValue) {
+                        var strUri = '/api/freight/tracking?FilterName=' + FilterName + '&FilterValue=' + FilterValue;
+                        WebApiService.GetParam(strUri, true).then(function success(result){
+                            $scope.Omtx1s = result.data.results;
+                            TRACKING_ORM.TRACKING_DETAIL._setOmtx($scope.Omtx1s);
+                        });
+                    };
+                    getOmtx1($scope.Detail.FilterName, $scope.Detail.Key);
+                }
             }else{
-                var getJmjm1 = function (FilterName, FilterValue, ModuleCode) {
-                    strUri = '/api/freight/tracking?FilterName=' + FilterName + '&ModuleCode=' + ModuleCode + '&FilterValue=' + FilterValue;
-                    WebApiService.GetParam(strUri, true).then(function success(result){
-                        $scope.Jmjm1s = result.data.results;
-                    });
-                };
-                getJmjm1($scope.Detail.FilterName, $scope.Detail.FilterValue, $scope.Detail.ModuleCode);
+                if(TRACKING_ORM.TRACKING_DETAIL.Jmjm1 != null && TRACKING_ORM.TRACKING_DETAIL.Jmjm1.JobNo === $scope.Detail.Key){
+                    $scope.jmjm1 = TRACKING_ORM.TRACKING_DETAIL.Jmjm1;
+                }else{
+                    var getJmjm1 = function (FilterName, FilterValue, ModuleCode) {
+                        var strUri = '/api/freight/tracking?FilterName=' + FilterName + '&ModuleCode=' + ModuleCode + '&FilterValue=' + FilterValue;
+                        WebApiService.GetParam(strUri, true).then(function success(result){
+                            $scope.jmjm1 = result.data.results[0];
+                            TRACKING_ORM.TRACKING_DETAIL._setJmjm($scope.jmjm1);
+                        });
+                    };
+                    getJmjm1($scope.Detail.FilterName, $scope.Detail.Key, $scope.Detail.ModuleCode);
+                }
             }
         }]);
 
