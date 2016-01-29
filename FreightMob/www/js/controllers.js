@@ -17,8 +17,8 @@ var appControllers = angular.module('MobileAPP.controllers', [
 ]);
 
 appControllers.controller('IndexCtrl',
-        ['$scope', '$state', '$http', '$timeout', '$ionicPopup', '$cordovaAppVersion',
-        function ($scope, $state, $http, $timeout, $ionicPopup, $cordovaAppVersion) {
+        ['$scope', '$state', '$http', '$ionicPopup', '$cordovaAppVersion',
+        function ($scope, $state, $http, $ionicPopup, $cordovaAppVersion) {
             $scope.GoToLogin = function () {
                 $state.go('login', { 'CanCheckUpdate': 'N' }, { reload: true });
             };
@@ -39,9 +39,6 @@ appControllers.controller('IndexCtrl',
                                         title: "Already the Latest Version!",
                                         okType: 'button-assertive'
                                     });
-                                    $timeout(function () {
-                                        alertPopup.close();
-                                    }, 2500);
                                 }
                             });
                         })
@@ -50,9 +47,6 @@ appControllers.controller('IndexCtrl',
                             title: "Connect Update Server Error!",
                             okType: 'button-assertive'
                         });
-                        $timeout(function () {
-                            alertPopup.close();
-                        }, 2500);
                     });
                     //$state.go('login', { 'CanCheckUpdate': 'N' }, { reload: true });
                 } else {
@@ -60,9 +54,6 @@ appControllers.controller('IndexCtrl',
                         title: "Web Platform Not Supported!",
                         okType: 'button-assertive'
                     });
-                    $timeout(function () {
-                        alertPopup.close();
-                    }, 2500);
                 }
             }
         }]);
@@ -76,75 +67,47 @@ appControllers.controller('LoadingCtrl',
         }]);
 
 appControllers.controller('LoginCtrl',
-        ['$scope', '$http', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', '$cordovaToast', '$cordovaAppVersion', 'WebApiService',
-        function ($scope, $http, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, $cordovaToast, $cordovaAppVersion, WebApiService) {
+        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$cordovaToast', '$cordovaAppVersion', 'WebApiService',
+        function ($scope, $http, $state, $stateParams, $ionicPopup, $cordovaToast, $cordovaAppVersion, WebApiService) {
             $scope.logininfo = {
                 strUserName: '',
                 strPassword: ''
             };
-            $scope.GoToUpdate = function () {
-                var url = strWebSiteURL + '/update.json';
-                $http.get(url)
-                .success(function (res) {
-                    var serverAppVersion = res.version;
-                    $cordovaAppVersion.getVersionNumber().then(function (version) {
-                        if (version != serverAppVersion) {
-                            $state.go('update', { 'Version': serverAppVersion });
-                        } else {
-                            var alertPopup = $ionicPopup.alert({
-                                title: "Already the Latest Version!",
-                                okType: 'button-assertive'
-                            });
-                            $timeout(function () {
-                                alertPopup.close();
-                            }, 2500);
-                        }
-                    });
-                })
-                .error(function (res) {
-                    var alertPopup = $ionicPopup.alert({
-                        title: "Get Update Info Faild!",
-                        okType: 'button-assertive'
-                    });
-                    $timeout(function () {
-                        alertPopup.close();
-                    }, 2500);
-                });
-            };
-            $scope.GoToSetting = function () {
-                $state.go('setting', {}, { reload: true });
-            };
+            var alertPopup = null;
             $scope.login = function () {
                 if (window.cordova && window.cordova.plugins.Keyboard) {
                     cordova.plugins.Keyboard.close();
                 }
                 if ($scope.logininfo.strUserName == "") {
-                    var alertPopup = $ionicPopup.alert({
+                    alertPopup = $ionicPopup.alert({
                         title: 'Please Enter User Name.',
                         okType: 'button-assertive'
                     });
-                    $timeout(function () {
-                        alertPopup.close();
-                    }, 2500);
-                    return;
-                }
-                var strUri = '/api/freight/login/check?UserId=' + $scope.logininfo.strUserName + '&Md5Stamp=' + hex_md5($scope.logininfo.strPassword);
-                WebApiService.GetParam(strUri, true).then(function success(result){
-                    if(result.data.results>0){
-                        sessionStorage.clear();
-                        sessionStorage.setItem("UserId", $scope.logininfo.strUserName);
-                        //Add JPush RegistradionID
-                        if (blnMobilePlatform) {
-                            window.plugins.jPushPlugin.getRegistrationID(onGetRegistradionID);
+                    alertPopup.then(function(res) {
+                        console.log('Please Enter User Name.');
+                    });
+                }else{
+                    var strUri = '/api/freight/login/check?UserId=' + $scope.logininfo.strUserName + '&Md5Stamp=' + hex_md5($scope.logininfo.strPassword);
+                    WebApiService.GetParam(strUri, true).then(function success(result){
+                        if(result.data.results>0){
+                            sessionStorage.clear();
+                            sessionStorage.setItem("UserId", $scope.logininfo.strUserName);
+                            //Add JPush RegistradionID
+                            if (blnMobilePlatform) {
+                                window.plugins.jPushPlugin.getRegistrationID(onGetRegistradionID);
+                            }
+                            $state.go('main', {}, { reload: true });
+                        }else{
+                            alertPopup = $ionicPopup.alert({
+                                title: 'Invaild User',
+                                okType: 'button-assertive'
+                            });
+                            alertPopup.then(function(res) {
+                                console.log('Invaild User');
+                            });
                         }
-                        $state.go('main', {}, { reload: true });
-                    }else{
-                        var alertPopup = $ionicPopup.alert({
-                            title: 'Invaild User',
-                            okType: 'button-assertive'
-                        });
-                    }
-                });
+                    });
+                }
             };
             if (!blnMobilePlatform && $stateParams.CanCheckUpdate === 'Y') {
                 var url = strWebSiteURL + '/update.json';
@@ -166,15 +129,20 @@ appControllers.controller('LoginCtrl',
             });
             $('#iPassword').on('keydown', function (e) {
                 if (e.which === 9 || e.which === 13) {
-                    $scope.login();
+                    if(alertPopup === null){
+                        $scope.login();
+                    }else{
+                        alertPopup.close();
+                        alertPopup = null;
+                    }
                 }
             });
             $('#iUserName').focus();
         }]);
 
 appControllers.controller('SettingCtrl',
-        ['$scope', '$state', '$timeout', '$ionicLoading', '$ionicPopup', '$cordovaToast', '$cordovaFile',
-        function ($scope, $state, $timeout, $ionicLoading, $ionicPopup, $cordovaToast, $cordovaFile) {
+        ['$scope', '$state', '$ionicPopup', '$cordovaToast', '$cordovaFile',
+        function ($scope, $state, $ionicPopup, $cordovaToast, $cordovaFile) {
             $scope.Setting = {
                 WebServiceURL: strWebServiceURL.replace('http://', ''),
                 BaseUrl: strBaseUrl.replace('/', ''),
@@ -215,9 +183,6 @@ appControllers.controller('SettingCtrl',
                         title: 'Delete Config File Success.',
                         okType: 'button-calm'
                     });
-                    $timeout(function () {
-                        alertPopup.close();
-                    }, 2500);
                 }, function (error) {
                     $cordovaToast.showShortBottom(error);
                 });
@@ -278,11 +243,12 @@ appControllers.controller('MainCtrl',
         }]);
 
 appControllers.controller('SalesmanActivityCtrl',
-        ['$scope', '$state', '$timeout', '$ionicPopup', 'WebApiService',
-        function ($scope, $state, $timeout, $ionicPopup, WebApiService) {
+        ['$scope', '$state', '$ionicPopup', 'WebApiService',
+        function ($scope, $state, $ionicPopup, WebApiService) {
             $scope.Rcsm1 = {
                 SalesmanNameLike: ''
             };
+            var alertPopup = null;
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -292,19 +258,21 @@ appControllers.controller('SalesmanActivityCtrl',
                     if (result.data.results > 0) {
                         $state.go('salesmanActivityList', { 'SalesmanNameLike': $scope.Rcsm1.SalesmanNameLike }, { reload: true });
                     } else {
-                        var alertPopup = $ionicPopup.alert({
+                        alertPopup = $ionicPopup.alert({
                                 title: 'No Records Found.',
                                 okType: 'button-assertive'
                         });
-                        $timeout(function () {
-                            alertPopup.close();
-                        }, 2500);
                     }
                 });
             };
             $('#iSalesmanName').on('keydown', function (e) {
                 if (e.which === 9 || e.which === 13) {
-                    $scope.GoToList();
+                    if(alertPopup === null){
+                        $scope.GoToList();
+                    }else{
+                        alertPopup.close();
+                        alertPopup = null;
+                    }
                 }
             });
             $('#iSalesmanName').focus();
@@ -438,10 +406,10 @@ appControllers.controller('ContactsListCtrl',
         }]);
 
 appControllers.controller('ContactsDetailCtrl',
-        ['$scope', '$stateParams', '$state', '$timeout', '$ionicLoading', '$ionicPopup', '$ionicTabsDelegate',
+        ['$scope', '$stateParams', '$state', '$ionicTabsDelegate',
          '$cordovaActionSheet', '$cordovaToast', '$cordovaSms', 'DateTimeService', 'WebApiService',
          'OpenUrlService', 'CONTACTS_ORM',
-        function ($scope, $stateParams, $state, $timeout, $ionicLoading, $ionicPopup, $ionicTabsDelegate,
+        function ($scope, $stateParams, $state, $ionicTabsDelegate,
              $cordovaActionSheet, $cordovaToast, $cordovaSms, DateTimeService, WebApiService,
              OpenUrlService, CONTACTS_ORM) {
             $scope.ContactsDetail = {
@@ -681,8 +649,8 @@ appControllers.controller('PaymentApprovalCtrl',
         }]);
 
 appControllers.controller('PaymentApprovalListCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'DateTimeService', 'WebApiService',
-        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, DateTimeService, WebApiService) {
+        ['$scope', '$state', '$stateParams', '$ionicPopup', 'DateTimeService', 'WebApiService',
+        function ($scope, $state, $stateParams, $ionicPopup, DateTimeService, WebApiService) {
             var RecordCount = 0;
             var dataResults = new Array();
             $scope.Filter = {
@@ -710,18 +678,15 @@ appControllers.controller('PaymentApprovalListCtrl',
                         var jsonData = { "plvi1s": appPlvi1 };
                         var strUri = "/api/freight/plvi1/update";
                         WebApiService.Post(strUri, jsonData, true).then(function success(result){
-                            var alertPopup = $ionicPopup.alert({
-                                title: "Approval Success!",
-                                okType: 'button-calm'
-                            });
-                            $timeout(function () {
-                                alertPopup.close();
-                            }, 2500);
                             for(var i=0;i<=$scope.plvi1s.length-1;i++){
                                 if($scope.plvi1s[i].StatusCode === 'APP'){
                                     $scope.plvi1s.splice(i, 1);
                                 }
                             }
+                            var alertPopup = $ionicPopup.alert({
+                                title: "Approval Successfully!",
+                                okType: 'button-calm'
+                            });
                         },function error(error){
                             var strError = '';
                             if(error === null){
@@ -732,6 +697,9 @@ appControllers.controller('PaymentApprovalListCtrl',
                             var alertPopup = $ionicPopup.alert({
                                 title: strError,
                                 okType: 'button-assertive'
+                            });
+                            alertPopup.then(function(res) {
+                                console.log(strError);
                             });
                         });
                     }
@@ -801,8 +769,8 @@ appControllers.controller('PaymentApprovalListCtrl',
         }]);
 
 appControllers.controller('VesselScheduleCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService',
-        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, WebApiService) {
+        ['$scope', '$state', '$stateParams', 'WebApiService',
+        function ($scope, $state, $stateParams, WebApiService) {
             $scope.rcvy = {
                 PortOfDischargeName: ''
             };
@@ -834,8 +802,8 @@ appControllers.controller('VesselScheduleCtrl',
         }]);
 
 appControllers.controller('VesselScheduleDetailCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'DateTimeService', 'WebApiService',
-        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, DateTimeService, WebApiService) {
+        ['$scope', '$state', '$stateParams', 'DateTimeService', 'WebApiService',
+        function ($scope, $state, $stateParams, DateTimeService, WebApiService) {
             $scope.Rcvy1Detail = {
                 PortOfDischargeName : $stateParams.PortOfDischargeName
             };
@@ -857,8 +825,8 @@ appControllers.controller('VesselScheduleDetailCtrl',
         }]);
 
 appControllers.controller('ShipmentStatusCtrl',
-        ['$scope', '$state', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService', 'TRACKING_ORM',
-        function ($scope, $state, $timeout, $ionicLoading, $ionicPopup, WebApiService, TRACKING_ORM) {
+        ['$scope', '$state', '$ionicPopup', 'WebApiService', 'TRACKING_ORM',
+        function ($scope, $state, $ionicPopup, WebApiService, TRACKING_ORM) {
             $scope.Tracking = {
                 ContainerNo: '',
                 JobNo: '',
@@ -889,6 +857,7 @@ appControllers.controller('ShipmentStatusCtrl',
                     break;
                 default:
             }
+            var alertPopup = null;
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -900,13 +869,10 @@ appControllers.controller('ShipmentStatusCtrl',
                     } else if (result.data.results === 1) {
                         return FilterName;
                     } else {
-                        var alertPopup = $ionicPopup.alert({
+                        alertPopup = $ionicPopup.alert({
                                 title: 'No Records Found.',
                                 okType: 'button-assertive'
                         });
-                        $timeout(function () {
-                            alertPopup.close();
-                        }, 2500);
                     }
                 }).then(function chkFilter(FilterName){
                     if(typeof(FilterName) != 'undefined'){
@@ -926,28 +892,30 @@ appControllers.controller('ShipmentStatusCtrl',
                 });
             };
             $scope.GoToDetail = function (TypeName) {
-                var FilterName = '';
-                var FilterValue = '';
-                if (TypeName === 'Container No') { FilterValue = $scope.Tracking.ContainerNo; FilterName = 'ContainerNo'}
-                else if (TypeName === 'Job No') { FilterValue = $scope.Tracking.JobNo; FilterName = 'JobNo'}
-                else if (TypeName === 'BL No') { FilterValue = $scope.Tracking.BLNo; FilterName = 'BlNo'}
-                else if (TypeName === 'AWB No') { FilterValue = $scope.Tracking.AWBNo; FilterName = 'AwbNo'}
-                else if (TypeName === 'Order No') { FilterValue = $scope.Tracking.OrderNo; FilterName = 'OrderNo'}
-                else if (TypeName === 'Reference No') { FilterValue = $scope.Tracking.ReferenceNo; FilterName = 'CustomerRefNo'}
-                if (FilterValue.length > 0) {
-                    if(TRACKING_ORM.TRACKING_SEARCH.FilterName != FilterName || TRACKING_ORM.TRACKING_SEARCH.FilterValue != FilterValue){
-                        TRACKING_ORM.init();
-                        TRACKING_ORM.TRACKING_SEARCH._set(FilterName,FilterValue);
+                if(alertPopup === null){
+                    var FilterName = '';
+                    var FilterValue = '';
+                    if (TypeName === 'Container No') { FilterValue = $scope.Tracking.ContainerNo; FilterName = 'ContainerNo'}
+                    else if (TypeName === 'Job No') { FilterValue = $scope.Tracking.JobNo; FilterName = 'JobNo'}
+                    else if (TypeName === 'BL No') { FilterValue = $scope.Tracking.BLNo; FilterName = 'BlNo'}
+                    else if (TypeName === 'AWB No') { FilterValue = $scope.Tracking.AWBNo; FilterName = 'AwbNo'}
+                    else if (TypeName === 'Order No') { FilterValue = $scope.Tracking.OrderNo; FilterName = 'OrderNo'}
+                    else if (TypeName === 'Reference No') { FilterValue = $scope.Tracking.ReferenceNo; FilterName = 'CustomerRefNo'}
+                    if (FilterValue.length > 0) {
+                        if(TRACKING_ORM.TRACKING_SEARCH.FilterName != FilterName || TRACKING_ORM.TRACKING_SEARCH.FilterValue != FilterValue){
+                            TRACKING_ORM.init();
+                            TRACKING_ORM.TRACKING_SEARCH._set(FilterName,FilterValue);
+                        }
+                        getSearchResult(FilterName, FilterValue);
+                    } else {
+                        alertPopup = $ionicPopup.alert({
+                            title: TypeName + ' is Empty.',
+                            okType: 'button-assertive'
+                        });
                     }
-                    getSearchResult(FilterName, FilterValue);
-                } else {
-                    var alertPopup = $ionicPopup.alert({
-                        title: TypeName + ' is Empty.',
-                        okType: 'button-assertive'
-                    });
-                    $timeout(function () {
-                        alertPopup.close();
-                    }, 2500);
+                }else{
+                    alertPopup.close();
+                    alertPopup = null;
                 }
             };
             $('#iContainerNo').on('keydown', function (e) {
@@ -1038,8 +1006,8 @@ appControllers.controller('ShipmentStatusListCtrl',
         }]);
 
 appControllers.controller('ShipmentStatusDetailCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'DateTimeService', 'WebApiService', 'TRACKING_ORM',
-        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, DateTimeService, WebApiService, TRACKING_ORM) {
+        ['$scope', '$state', '$stateParams', '$ionicPopup', 'DateTimeService', 'WebApiService', 'TRACKING_ORM',
+        function ($scope, $state, $stateParams, $ionicPopup, DateTimeService, WebApiService, TRACKING_ORM) {
             $scope.Detail = {
                 FilterName :    TRACKING_ORM.TRACKING_SEARCH.FilterName,
                 Key :           TRACKING_ORM.TRACKING_DETAIL.Key,
@@ -1089,8 +1057,8 @@ appControllers.controller('ShipmentStatusDetailCtrl',
         }]);
 
 appControllers.controller('InvoiceCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'DownloadFileService', 'WebApiService',
-        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, DownloadFileService, WebApiService) {
+        ['$scope', '$state', '$stateParams', '$ionicPopup', 'DownloadFileService', 'WebApiService',
+        function ($scope, $state, $stateParams, $ionicPopup, DownloadFileService, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -1107,8 +1075,8 @@ appControllers.controller('InvoiceCtrl',
         }]);
 
 appControllers.controller('BlCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'DownloadFileService', 'WebApiService',
-        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, DownloadFileService, WebApiService) {
+        ['$scope', '$state', '$stateParams', '$ionicPopup', 'DownloadFileService', 'WebApiService',
+        function ($scope, $state, $stateParams, $ionicPopup, DownloadFileService, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -1125,8 +1093,8 @@ appControllers.controller('BlCtrl',
         }]);
 
 appControllers.controller('AwbCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'DownloadFileService', 'WebApiService',
-        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, DownloadFileService, WebApiService) {
+        ['$scope', '$state', '$stateParams', '$ionicPopup', 'DownloadFileService', 'WebApiService',
+        function ($scope, $state, $stateParams, $ionicPopup, DownloadFileService, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -1143,8 +1111,8 @@ appControllers.controller('AwbCtrl',
         }]);
 
 appControllers.controller('SOACtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'DownloadFileService', 'WebApiService',
-        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, DownloadFileService, WebApiService) {
+        ['$scope', '$state', '$stateParams', '$ionicPopup', 'DownloadFileService', 'WebApiService',
+        function ($scope, $state, $stateParams, $ionicPopup, DownloadFileService, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -1161,8 +1129,8 @@ appControllers.controller('SOACtrl',
         }]);
 
 appControllers.controller('MemoCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicLoading', '$ionicPopup', 'WebApiService',
-        function ($scope, $state, $stateParams, $timeout, $ionicLoading, $ionicPopup, WebApiService) {
+        ['$scope', '$state', '$stateParams', '$ionicPopup', 'WebApiService',
+        function ($scope, $state, $stateParams, $ionicPopup, WebApiService) {
             $scope.Saus1 = {
                 UserID: sessionStorage.getItem("UserId"),
                 Memo :  ''
@@ -1179,9 +1147,6 @@ appControllers.controller('MemoCtrl',
                         title: "Save Success!",
                         okType: 'button-calm'
                     });
-                    $timeout(function () {
-                        alertPopup.close();
-                    }, 2500);
                 });
             };
             var GetSaus1 = function (uid) {
@@ -1194,8 +1159,8 @@ appControllers.controller('MemoCtrl',
         }]);
 
 appControllers.controller('ReminderCtrl',
-        ['$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', 'WebApiService',
-        function ($scope, $state, $stateParams, $timeout, $ionicPopup, WebApiService) {
+        ['$scope', '$state', '$stateParams', 'WebApiService',
+        function ($scope, $state, $stateParams, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
