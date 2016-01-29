@@ -1141,18 +1141,24 @@ appControllers.controller('MemoCtrl',
                 Memo :  ''
             };
             if($scope.Saus1.UserID === null){ $scope.Saus1.UserID='s'; }
+            var alertPopup = null;
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
             $scope.returnUpdateMemo = function(){
-                var jsonData = { "saus1": $scope.Saus1 };
-                var strUri = "/api/freight/saus1/memo";
-                WebApiService.Post(strUri, jsonData, true).then(function success(result){
-                    var alertPopup = $ionicPopup.alert({
-                        title: "Save Success!",
-                        okType: 'button-calm'
+                if(alertPopup === null){
+                    var jsonData = { "saus1": $scope.Saus1 };
+                    var strUri = "/api/freight/saus1/memo";
+                    WebApiService.Post(strUri, jsonData, true).then(function success(result){
+                        alertPopup = $ionicPopup.alert({
+                            title: "Save Successfully!",
+                            okType: 'button-calm'
+                        });
                     });
-                });
+                }else{
+                    alertPopup.close();
+                    alertPopup = null;
+                }
             };
             var GetSaus1 = function (uid) {
                 var strUri = "/api/freight/saus1/memo?userID=" + uid;
