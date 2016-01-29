@@ -678,11 +678,16 @@ appControllers.controller('PaymentApprovalListCtrl',
                         var jsonData = { "plvi1s": appPlvi1 };
                         var strUri = "/api/freight/plvi1/update";
                         WebApiService.Post(strUri, jsonData, true).then(function success(result){
-                            for(var i=0;i<=$scope.plvi1s.length-1;i++){
-                                if($scope.plvi1s[i].StatusCode === 'APP'){
-                                    $scope.plvi1s.splice(i, 1);
+                            var removeApp = function(plvi1s){
+                                for(var i=0;i<=plvi1s.length-1;i++){
+                                    if(plvi1s[i].StatusCode === 'APP'){
+                                        $scope.plvi1s.splice(i, 1);
+                                        removeApp($scope.plvi1s);
+                                        break;
+                                    }
                                 }
-                            }
+                            };
+                            removeApp($scope.plvi1s);
                             var alertPopup = $ionicPopup.alert({
                                 title: "Approval Successfully!",
                                 okType: 'button-calm'
