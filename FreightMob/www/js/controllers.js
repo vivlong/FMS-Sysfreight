@@ -497,13 +497,6 @@ appControllers.controller('ContactsDetailCtrl',
             $scope.GoToContactAdd = function (rcbp3) {
                 $state.go('contactsInfoAdd', { 'BusinessPartyCode': $scope.rcbp1.BusinessPartyCode, 'LineItemNo': rcbp3.length + 1 }, { reload: true });
             };
-            $scope.blnContainNameCard = function (rcbp3) {
-                if (typeof (rcbp3) == "undefined") return false;
-                if (typeof (rcbp3.NameCard) == "undefined") return false;
-                if (rcbp3.NameCard.length > 0) {
-                    return true;
-                } else { return false; }
-            };
             $scope.ShowDate= function (utc) {
                 return DateTimeService.ShowDate(utc);
             };
@@ -511,7 +504,7 @@ appControllers.controller('ContactsDetailCtrl',
                 if(CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s != null && CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s.length > 0 && CONTACTS_ORM.CONTACTS_SUBLIST.BusinessPartyCode === CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s[0].BusinessPartyCode){
                     $scope.rcbp3s = CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s;
                 }else{
-                    var strUri = "/api/freight/rcbp3?BusinessPartyCode=" + BusinessPartyCode;
+                    var strUri = '/api/freight/rcbp3/read?BusinessPartyCode=' + BusinessPartyCode;
                     WebApiService.GetParam(strUri, false).then(function success(result){
                         $scope.rcbp3s = result.data.results;
                         CONTACTS_ORM.CONTACTS_SUBLIST._setId(BusinessPartyCode);
@@ -524,8 +517,8 @@ appControllers.controller('ContactsDetailCtrl',
                     $scope.rcbp1 = CONTACTS_ORM.CONTACTS_DETAIL.Rcbp1;
                 }
                 else{
-                    var strUri = "/api/freight/rcbp1/TrxNo/" + TrxNo;
-                    WebApiService.Get(strUri, true).then(function success(result){
+                    var strUri = '/api/freight/rcbp1/read?TrxNo=' + TrxNo;
+                    WebApiService.GetParam(strUri, true).then(function success(result){
                         $scope.rcbp1 = result.data.results[0];
                         CONTACTS_ORM.CONTACTS_DETAIL._setId(TrxNo);
                         CONTACTS_ORM.CONTACTS_DETAIL._setObj($scope.rcbp1);
@@ -543,8 +536,8 @@ appControllers.controller('ContactsDetailEditCtrl',
                 $state.go('contactsDetail', { 'TrxNo': $scope.rcbp1.TrxNo }, { reload: true });
             };
             $scope.returnUpdateRcbp1 = function () {
-                var jsonData = { "rcbp1": $scope.rcbpDetail };
-                var strUri = "/api/freight/rcbp1";
+                var jsonData = { "rcbp1": $scope.rcbp1 };
+                var strUri = "/api/freight/rcbp1/update";
                 WebApiService.Post(strUri, jsonData, true).then(function success(result){
                     $scope.returnDetail();
                 });
@@ -560,6 +553,13 @@ appControllers.controller('ContactsInfoCtrl',
             };
             $scope.GoToContactEdit = function () {
                 $state.go('contactsInfoEdit', {}, { reload: true });
+            };
+            $scope.blnContainNameCard = function (rcbp3) {
+                if (typeof (rcbp3) == "undefined") return false;
+                if (typeof (rcbp3.NameCard) == "undefined") return false;
+                if (rcbp3.NameCard.length > 0) {
+                    return true;
+                } else { return false; }
             };
         }]);
 
@@ -590,7 +590,7 @@ appControllers.controller('ContactsInfoAddCtrl',
             };
             $scope.returnInsertRcbp3 = function () {
                 var jsonData = { "rcbp3": $scope.rcbp3 };
-                var strUri = "/api/freight/rcbp3";
+                var strUri = "/api/freight/rcbp3/create";
                 WebApiService.Post(strUri, jsonData, true).then(function success(result){
                     if(CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s != null && CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s.length > 0)
                     {
@@ -611,7 +611,7 @@ appControllers.controller('ContactsInfoEditCtrl',
                 $state.go('contactsInfo', {}, { reload: true });
             };
             $scope.returnUpdateRcbp3 = function () {
-                var jsonData = { "rcbp3": $scope.rcbp3Detail };
+                var jsonData = { "rcbp3": $scope.rcbp3 };
                 var strUri = "/api/freight/rcbp3/update";
                 WebApiService.Post(strUri, jsonData, true).then(function success(result){
                     $scope.returnInfo();
@@ -794,7 +794,7 @@ appControllers.controller('VesselScheduleCtrl',
                 var strUri = "/api/freight/rcvy1";
                 if (PortOfDischargeName != null && PortOfDischargeName.length > 0) {
                     strUri = strUri + "?PortOfDischargeName=" + PortOfDischargeName;
-                    WebApiService.Get(strUri, true).then(function success(result){
+                    WebApiService.GetParam(strUri, true).then(function success(result){
                         $scope.PortOfDischargeNames = result.data.results;
                     });
                 } else {
