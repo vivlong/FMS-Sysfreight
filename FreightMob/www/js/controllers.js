@@ -406,10 +406,10 @@ appControllers.controller('ContactsListCtrl',
         }]);
 
 appControllers.controller('ContactsDetailCtrl',
-        ['$scope', '$stateParams', '$state', '$ionicTabsDelegate',
+        ['$scope', '$stateParams', '$state', '$ionicTabsDelegate', '$ionicPopup',
          '$cordovaActionSheet', '$cordovaToast', '$cordovaSms', 'DateTimeService', 'WebApiService',
          'OpenUrlService', 'CONTACTS_ORM',
-        function ($scope, $stateParams, $state, $ionicTabsDelegate,
+        function ($scope, $stateParams, $state, $ionicTabsDelegate, $ionicPopup,
              $cordovaActionSheet, $cordovaToast, $cordovaSms, DateTimeService, WebApiService,
              OpenUrlService, CONTACTS_ORM) {
             $scope.ContactsDetail = {
@@ -487,10 +487,19 @@ appControllers.controller('ContactsDetailCtrl',
                 $state.go('contactsInfo', { 'BusinessPartyCode': rcbp3.BusinessPartyCode, 'LineItemNo': rcbp3.LineItemNo }, { reload: true });
             };
             $scope.GoToContactDel = function (index,rcbp3) {
-                var strUri = "/api/freight/rcbp3/delete?BusinessPartyCode=" + rcbp3.BusinessPartyCode + "&LineItemNo=" + rcbp3.LineItemNo;
-                WebApiService.GetParam(strUri, true).then(function success(result){
-                    if(result.data.results > 0){
-                        $scope.rcbp3s.splice(index, 1);
+                var confirmPopup = $ionicPopup.confirm({
+                    title: '',
+                    template: 'Are you sure to DELETE this contact?'
+                });
+                confirmPopup.then(function(res) {
+                    if(res) {
+                        var strUri = "/api/freight/rcbp3/delete?BusinessPartyCode=" + rcbp3.BusinessPartyCode + "&LineItemNo=" + rcbp3.LineItemNo;
+                        WebApiService.GetParam(strUri, true).then(function success(result){
+                            if(result.data.results > 0){
+                                $scope.rcbp3s.splice(index, 1);
+                            }
+                        });
+                        console.log('Del Rcbp3 ' + rcbp3.BusinessPartyCode + ' at ' + rcbp3.LineItemNo);
                     }
                 });
             };

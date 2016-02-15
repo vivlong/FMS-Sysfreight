@@ -91,7 +91,7 @@
     						<p ng-if="rcbp3.QQ != ''"><i class="iconfont icon-qq"></i>&nbsp;&nbsp;<span ng-bind="rcbp3.QQ" style="font-size:1.2em;"></span></p>
                         </div>
 						<div>
-                            <i class="icon iconfont-assertive ion-android-delete"></i>
+                            <i class="icon iconfont-assertive ion-android-delete" ng-click="GoToContactDel($index,rcbp3)"></i>
                         </div>
                         <ion-option-button class="button-assertive" ng-click="GoToContactDel($index,rcbp3)"><i class="icon ion-android-delete"></i></ion-option-button>
 					</ion-item>
