@@ -1062,57 +1062,75 @@ appControllers.controller('ShipmentStatusDetailCtrl',
         }]);
 
 appControllers.controller('InvoiceCtrl',
-        ['$scope', '$state', '$stateParams', '$ionicPopup', 'DownloadFileService', 'WebApiService',
-        function ($scope, $state, $stateParams, $ionicPopup, DownloadFileService, WebApiService) {
+        ['$scope', '$state', '$stateParams', 'DateTimeService', 'DownloadFileService', 'WebApiService',
+        function ($scope, $state, $stateParams, DateTimeService, DownloadFileService, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
-            $scope.items = [
-                { InvoiceNo: 'SESIN0905182-00', InvoiceDate: '04/11/2015', CustomerName: 'S A ORANJE 123', Amt: '100' },
-                { InvoiceNo: 'SESIN1511137-02', InvoiceDate: '04/11/2015', CustomerName: 'KADIMA', Amt: '500' }
-            ];
+            $scope.ShowDate = function(utc){
+                return DateTimeService.ShowDate(utc);
+            };
             var onPlatformError = function(url){
                 window.open(url);
             };
-            $scope.download = function () {
-                DownloadFileService.Download('INVOICE.pdf', 'application/pdf', onPlatformError, null, null);
+            $scope.download = function (Ivcr1) {
+                DownloadFileService.Download('attach/' + Ivcr1.FilePath, 'application/pdf', onPlatformError, null, null);
             };
+            var GetIvcr1s = function () {
+                var strUri = "/api/freight/view/pdf?FolderName=ivcr1";
+                WebApiService.GetParam(strUri, true).then(function success(result){
+                    $scope.Ivcr1s = result.data.results;
+                });
+            };
+            GetIvcr1s();
         }]);
 
 appControllers.controller('BlCtrl',
-        ['$scope', '$state', '$stateParams', '$ionicPopup', 'DownloadFileService', 'WebApiService',
-        function ($scope, $state, $stateParams, $ionicPopup, DownloadFileService, WebApiService) {
+        ['$scope', '$state', '$stateParams', 'DateTimeService', 'DownloadFileService', 'WebApiService',
+        function ($scope, $state, $stateParams, DateTimeService, DownloadFileService, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
-            $scope.items = [
-                { InvoiceNo: 'SESIN0905182-00', InvoiceDate: '04/11/2015', CustomerName: 'S A ORANJE 123', Amt: '100' },
-                { InvoiceNo: 'SESIN1511137-02', InvoiceDate: '04/11/2015', CustomerName: 'KADIMA', Amt: '500' }
-            ];
+            $scope.ShowDate = function(utc){
+                return DateTimeService.ShowDate(utc);
+            };
             var onPlatformError = function(url){
                 window.open(url);
             };
-            $scope.download = function () {
-                DownloadFileService.Download('HOUSE-BL.pdf', 'application/pdf', onPlatformError, null, null);
+            $scope.download = function (Jmjm1) {
+                DownloadFileService.Download('attach/' + Jmjm1.FilePath, 'application/pdf', onPlatformError, null, null);
             };
+            var GetJmjm1s = function () {
+                var strUri = "/api/freight/view/pdf?FolderName=jmjm1";
+                WebApiService.GetParam(strUri, true).then(function success(result){
+                    $scope.Jmjm1s = result.data.results;
+                });
+            };
+            GetJmjm1s();
         }]);
 
 appControllers.controller('AwbCtrl',
-        ['$scope', '$state', '$stateParams', '$ionicPopup', 'DownloadFileService', 'WebApiService',
-        function ($scope, $state, $stateParams, $ionicPopup, DownloadFileService, WebApiService) {
+        ['$scope', '$state', '$stateParams', 'DateTimeService', 'DownloadFileService', 'WebApiService',
+        function ($scope, $state, $stateParams, DateTimeService, DownloadFileService, WebApiService) {
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
-            $scope.items = [
-                { InvoiceNo: 'SESIN0905182-00', InvoiceDate: '04/11/2015', CustomerName: 'S A ORANJE 123', Amt: '100' },
-                { InvoiceNo: 'SESIN1511137-02', InvoiceDate: '04/11/2015', CustomerName: 'KADIMA', Amt: '500' }
-            ];
+            $scope.ShowDate = function(utc){
+                return DateTimeService.ShowDate(utc);
+            };
             var onPlatformError = function(url){
                 window.open(url);
             };
-            $scope.download = function () {
-                DownloadFileService.Download('AWB.pdf', 'application/pdf', onPlatformError, null, null);
+            $scope.download = function (Jmjm1) {
+                DownloadFileService.Download('attach/' + Jmjm1.FilePath, 'application/pdf', onPlatformError, null, null);
             };
+            var GetJmjm1s = function () {
+                var strUri = "/api/freight/view/pdf?FolderName=jmjm1";
+                WebApiService.GetParam(strUri, true).then(function success(result){
+                    $scope.Jmjm1s = result.data.results;
+                });
+            };
+            GetJmjm1s();
         }]);
 
 appControllers.controller('SOACtrl',
