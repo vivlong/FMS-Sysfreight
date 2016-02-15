@@ -83,7 +83,8 @@ appService.service('DownloadFileService', ['$http', '$timeout', '$ionicLoading',
             $ionicLoading.show({
                 template: "Download  0%"
             });
-            var url = strWebSiteURL + "/" + fileName;
+            var url = strWebSiteURL + '/' + fileName;
+            fileName = url.substring(url.lastIndexOf('/')+1);
             var blnError = false;
             if (blnMobilePlatform) {
                 $cordovaFile.checkFile(cordova.file.externalRootDirectory, fileName)
