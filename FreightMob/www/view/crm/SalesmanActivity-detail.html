@@ -8,7 +8,7 @@
     <ion-content class="has-header">
         <div class="card activityDetail" ng-repeat="Smsa2 in Smsa2s">
             <div class="list">
-                <ion-item nav-clear menu-close class="item">
+                <ion-item nav-clear menu-close class="item item-icon-right">
                     <div class="row nopadding">
                         <div class="col nopadding"><p>Date</p></div>
                         <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h5" ng-bind="ShowDate(Smsa2.DateTime)"></span></p></div>
@@ -47,8 +47,11 @@
                     </div>
                     <div class="row nopadding">
                         <div class="col nopadding"><p>Remark</p></div>
-                        <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;<span class="h5" ng-bind="Smsa2.Remark"></span></p></div>
+                        <div class="col col-75 nopadding"><p>:&nbsp;&nbsp;
+                            <textarea class="h5" style="width:100%;height:100%;" ng-bind="Smsa2.Remark" readonly="true"></textarea>
+                        </p></div>
                     </div>
+                    <i class="icon ion-android-arrow-dropleft"></i>
                 </ion-item>
             </div>
         </div>
