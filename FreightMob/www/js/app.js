@@ -217,6 +217,12 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
                 templateUrl: 'view/crm/SalesmanActivity-detail-edit.html',
                 controller: 'SalesmanActivityDetailEditCtrl'
             })
+            .state('salesmanActivityDetailAdd', {
+                url: '/salesmanActivity/detail/add/:TrxNo/:LineItemNo',
+                cache: 'false',
+                templateUrl: 'view/crm/SalesmanActivity-detail-add.html',
+                controller: 'SalesmanActivityDetailAddCtrl'
+            })
             .state('contacts', {
                 url: '/contacts',
                 cache: 'false',

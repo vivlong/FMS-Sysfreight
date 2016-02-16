@@ -349,8 +349,7 @@ appControllers.controller('SalesmanActivityDetailCtrl',
                 $state.go('salesmanActivityList', { 'SalesmanNameLike':SALESMANACTIVITY_ORM.SEARCH.SalesmanNameLike }, { reload:true });
             };
             $scope.GoToAdd = function () {
-
-                $state.go('salesmanActivityDetailEdit', { 'SalesmanNameLike':SALESMANACTIVITY_ORM.SEARCH.SalesmanNameLike, 'TrxNo':$scope.Detail.TrxNo }, { reload:true });
+                $state.go('salesmanActivityDetailAdd', { 'TrxNo':$scope.Detail.TrxNo, 'LineItemNo':$scope.Smsa2s.length+1 }, { reload:true });
             };
             $scope.GoToEdit = function (Smsa2) {
                 if(Smsa2 != SALESMANACTIVITY_ORM.SUBDETAIL.Smsa2){
@@ -388,6 +387,53 @@ appControllers.controller('SalesmanActivityDetailEditCtrl',
             };
             $scope.ShowDate= function (utc) {
                 return DateTimeService.ShowDate(utc);
+            };
+            $scope.returnUpdateSmsa2 = function () {
+                var jsonData = { "smsa2": $scope.Smsa2 };
+                var strUri = "/api/freight/smsa2/update";
+                WebApiService.Post(strUri, jsonData, true).then(function success(result){
+                    $scope.returnDetail();
+                });
+            };
+        }]);
+
+appControllers.controller('SalesmanActivityDetailAddCtrl',
+        ['$scope', '$state', '$stateParams', 'DateTimeService', 'WebApiService', 'SALESMANACTIVITY_ORM',
+        function ($scope, $state, $stateParams, DateTimeService, WebApiService, SALESMANACTIVITY_ORM) {
+            $scope.smsa2 = {
+                TrxNo           : $stateParams.TrxNo,
+                LineItemNo      : $stateParams.LineItemNo,
+                Action          : '',
+                Conclusion      : '',
+                CustomerCode    : '',
+                CustomerName    : '',
+                DateTime        : '',
+                Description     : '',
+                Discussion      : '',
+                QuotationNo     : '',
+                Reference       : '',
+                Remark          : '',
+                Status          : ''
+            };
+            $scope.returnDetail = function () {
+                $state.go('salesmanActivityDetail', { 'TrxNo': $scope.smsa2.TrxNo, 'SalesmanNameLike': SALESMANACTIVITY_ORM.SEARCH.SalesmanNameLike }, { reload:true });
+            };
+            $scope.ShowDate= function (utc) {
+                return DateTimeService.ShowDate(utc);
+            };
+            $scope.returnInsertSmsa2 = function () {
+                var jsonData = { "smsa2": $scope.smsa2 };
+                var strUri = "/api/freight/smsa2/create";
+                WebApiService.Post(strUri, jsonData, true).then(function success(result){
+                    if (SALESMANACTIVITY_ORM.DETAIL.Smsa2s != null && SALESMANACTIVITY_ORM.DETAIL.Smsa2s.length > 0) {
+                        SALESMANACTIVITY_ORM.DETAIL.Smsa2s.push($scope.smsa2);
+                    } else {
+                        var arrSmsa2s=[];
+                        arrSmsa2s.push($scope.smsa2);
+                        SALESMANACTIVITY_ORM.DETAIL._setObj(arrSmsa2s);
+                    }
+                    $scope.returnDetail();
+                });
             };
         }]);
 
@@ -657,11 +703,12 @@ appControllers.controller('ContactsInfoAddCtrl',
                 var jsonData = { "rcbp3": $scope.rcbp3 };
                 var strUri = "/api/freight/rcbp3/create";
                 WebApiService.Post(strUri, jsonData, true).then(function success(result){
-                    if(CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s != null && CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s.length > 0)
-                    {
+                    if(CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s != null && CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s.length > 0) {
                         CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s.push($scope.rcbp3);
                     }else{
-                        CONTACTS_ORM.CONTACTS_SUBLIST._setObj($scope.rcbp3);
+                        var arrRcbp3s=[];
+                        arrRcbp3s.push($scope.rcbp3);
+                        CONTACTS_ORM.CONTACTS_SUBLIST._setObj(arrRcbp3s);
                     }
                     $scope.returnDetail();
                 });
