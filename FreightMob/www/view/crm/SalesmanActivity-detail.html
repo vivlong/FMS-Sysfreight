@@ -4,10 +4,13 @@
 			<button class="button button-icon button-clear ion-navicon" ng-click="returnList()"></button>
 		</div>
 		<h1 class="title">Activity Log</h1>
+        <div class="buttons">
+            <button class="button button-icon button-small button-clear ion-android-add" ng-click="GoToAdd()"></button>
+        </div>
 	</ion-header-bar>
     <ion-content class="has-header">
         <div class="card activityDetail" ng-repeat="Smsa2 in Smsa2s">
-            <div class="list">
+            <ion-list can-swipe="true">
                 <ion-item nav-clear menu-close class="item item-icon-right">
                     <div class="row nopadding">
                         <div class="col nopadding"><p>Date</p></div>
@@ -50,8 +53,14 @@
                         <div class="col col-67 nopadding"><p>:&nbsp;&nbsp;<span class="h5" ng-bind="Smsa2.Remark"></span></p></div>
                     </div>
                     <i class="icon ion-android-arrow-dropleft"></i>
+    			    <ion-option-button class="button-calm" ng-click="GoToEdit(Smsa2)">
+        				<i class="icon ion-android-create"></i>
+    			    </ion-option-button>
+                    <!--ion-option-button class="button-assertive" ng-click="GoToDel(Smsa2)">
+                        <i class="icon ion-android-delete"></i>
+                    </ion-option-button-->
                 </ion-item>
-            </div>
+            </ion-list>
         </div>
     </ion-content>
 </ion-view>

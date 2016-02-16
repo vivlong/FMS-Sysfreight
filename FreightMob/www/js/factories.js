@@ -112,3 +112,45 @@ appFactory.factory('CONTACTS_ORM',function(){
     };
     return CONTACTS_ORM;
 });
+appFactory.factory('SALESMANACTIVITY_ORM',function(){
+    var SALESMANACTIVITY_ORM = {
+        SEARCH : {
+            SalesmanNameLike:  '',
+            _setKey:   function(value) {
+                SALESMANACTIVITY_ORM.SEARCH.SalesmanNameLike = value;
+            }
+        },
+        LIST : {
+            CanLoadedMoreData:      true,
+            Smsa1s:                 {},
+            _setObj:   function(value) {
+                SALESMANACTIVITY_ORM.LIST.Smsa1s = value;
+            }
+        },
+        DETAIL : {
+            TrxNo:                  '',
+            Smsa2s:                  {},
+            _setKey:     function(value) {
+                SALESMANACTIVITY_ORM.DETAIL.TrxNo = value;
+            },
+            _setObj:    function(value) {
+                SALESMANACTIVITY_ORM.DETAIL.Smsa2s = value;
+            }
+        },
+        SUBDETAIL : {
+            Smsa2:                  {},
+            _setObj:    function(value) {
+                SALESMANACTIVITY_ORM.SUBDETAIL.Smsa2 = value;
+            }
+        }
+    };
+    SALESMANACTIVITY_ORM.init = function() {
+        SALESMANACTIVITY_ORM.SEARCH.SalesmanNameLike =      '';
+        SALESMANACTIVITY_ORM.LIST.CanLoadedMoreData =       true;
+        SALESMANACTIVITY_ORM.LIST.Smsa1s =                  {};
+        SALESMANACTIVITY_ORM.DETAIL.TrxNo =                 '';
+        SALESMANACTIVITY_ORM.DETAIL.Smsa2s =                {};
+        SALESMANACTIVITY_ORM.SUBDETAIL.Smsa2 =              {};
+    };
+    return SALESMANACTIVITY_ORM;
+});
