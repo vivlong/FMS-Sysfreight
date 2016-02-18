@@ -400,6 +400,7 @@ appControllers.controller('SalesmanActivityDetailEditCtrl',
 appControllers.controller('SalesmanActivityDetailAddCtrl',
         ['$scope', '$state', '$stateParams', 'DateTimeService', 'WebApiService', 'SALESMANACTIVITY_ORM',
         function ($scope, $state, $stateParams, DateTimeService, WebApiService, SALESMANACTIVITY_ORM) {
+            var currentDate = new Date();
             $scope.smsa2 = {
                 TrxNo           : $stateParams.TrxNo,
                 LineItemNo      : $stateParams.LineItemNo,
@@ -407,7 +408,7 @@ appControllers.controller('SalesmanActivityDetailAddCtrl',
                 Conclusion      : '',
                 CustomerCode    : '',
                 CustomerName    : '',
-                DateTime        : '',
+                DateTime        : currentDate.Format('dd-NNN-yyyy'),
                 Description     : '',
                 Discussion      : '',
                 QuotationNo     : '',
