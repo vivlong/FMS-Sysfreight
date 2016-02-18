@@ -6,16 +6,16 @@
 		<h1 class="title">STATEMENT OF ACCOUNTS</h1>
 	</ion-header-bar>
     <ion-content class="has-header">
-        <div class="card" ng-repeat="item in items">
+        <div class="card" ng-repeat="Slcu1 in Slcu1s">
             <div class="list">
                 <ion-item nav-clear menu-close class="item">
                     <div class="pull-left" style="width:80%;">
-                        <h2>Invoice  No&nbsp;:&nbsp;<span ng-bind="item.InvoiceNo"></span></h2>
-                        <p>Invoice Date&nbsp;:&nbsp;<span ng-bind="item.InvoiceDate"></span></p>
-                        <p>Customer Name&nbsp;:&nbsp;<span ng-bind="item.CustomerName"></span></p>
-						<p>Amt&nbsp;:&nbsp;<span ng-bind="item.Amt"></span></p>
+                        <h2>Invoice  No&nbsp;:&nbsp;<span ng-bind="Slcu1.InvoiceNo"></span></h2>
+                        <p>Invoice Date&nbsp;:&nbsp;<span ng-bind="ShowDate(Slcu1.InvoiceDate)"></span></p>
+                        <p>Customer Name&nbsp;:&nbsp;<span ng-bind="Slcu1.CustomerName"></span></p>
+						<p>Amt&nbsp;:&nbsp;<span ng-bind="Slcu1.InvoiceAmt"></span></p>
                     </div>
-                    <button class="button button-clear" ng-click="download()"><i class="iconfont icon-pdf"></i></button>
+                    <button class="button button-clear" ng-click="download(Slcu1)"><i class="iconfont icon-pdf"></i></button>
                 </ion-item>
             </div>
         </div>

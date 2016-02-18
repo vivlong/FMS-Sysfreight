@@ -401,7 +401,7 @@ appControllers.controller('SalesmanActivityDetailAddCtrl',
         ['$scope', '$state', '$stateParams', 'DateTimeService', 'WebApiService', 'SALESMANACTIVITY_ORM',
         function ($scope, $state, $stateParams, DateTimeService, WebApiService, SALESMANACTIVITY_ORM) {
             var currentDate = new Date();
-            $scope.smsa2 = {
+            $scope.Smsa2 = {
                 TrxNo           : $stateParams.TrxNo,
                 LineItemNo      : $stateParams.LineItemNo,
                 Action          : '',
@@ -417,20 +417,20 @@ appControllers.controller('SalesmanActivityDetailAddCtrl',
                 Status          : ''
             };
             $scope.returnDetail = function () {
-                $state.go('salesmanActivityDetail', { 'TrxNo': $scope.smsa2.TrxNo, 'SalesmanNameLike': SALESMANACTIVITY_ORM.SEARCH.SalesmanNameLike }, { reload:true });
+                $state.go('salesmanActivityDetail', { 'TrxNo': $scope.Smsa2.TrxNo, 'SalesmanNameLike': SALESMANACTIVITY_ORM.SEARCH.SalesmanNameLike }, { reload:true });
             };
             $scope.ShowDate= function (utc) {
                 return DateTimeService.ShowDate(utc);
             };
             $scope.returnInsertSmsa2 = function () {
-                var jsonData = { "smsa2": $scope.smsa2 };
+                var jsonData = { "smsa2": $scope.Smsa2 };
                 var strUri = "/api/freight/smsa2/create";
                 WebApiService.Post(strUri, jsonData, true).then(function success(result){
                     if (SALESMANACTIVITY_ORM.DETAIL.Smsa2s != null && SALESMANACTIVITY_ORM.DETAIL.Smsa2s.length > 0) {
-                        SALESMANACTIVITY_ORM.DETAIL.Smsa2s.push($scope.smsa2);
+                        SALESMANACTIVITY_ORM.DETAIL.Smsa2s.push($scope.Smsa2);
                     } else {
                         var arrSmsa2s=[];
-                        arrSmsa2s.push($scope.smsa2);
+                        arrSmsa2s.push($scope.Smsa2);
                         SALESMANACTIVITY_ORM.DETAIL._setObj(arrSmsa2s);
                     }
                     $scope.returnDetail();
@@ -1175,8 +1175,9 @@ appControllers.controller('ShipmentStatusDetailCtrl',
         }]);
 
 appControllers.controller('InvoiceCtrl',
-        ['$scope', '$state', '$stateParams', 'DateTimeService', 'DownloadFileService', 'WebApiService',
-        function ($scope, $state, $stateParams, DateTimeService, DownloadFileService, WebApiService) {
+        ['$scope', '$state', '$ionicPopup', 'DateTimeService', 'DownloadFileService', 'WebApiService',
+        function ($scope, $state, $ionicPopup, DateTimeService, DownloadFileService, WebApiService) {
+            var alertPopup = null;
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -1192,15 +1193,28 @@ appControllers.controller('InvoiceCtrl',
             var GetIvcr1s = function () {
                 var strUri = "/api/freight/view/pdf?FolderName=ivcr1";
                 WebApiService.GetParam(strUri, true).then(function success(result){
-                    $scope.Ivcr1s = result.data.results;
+                    if (result.data.results != null && result.data.results.length > 0) {
+                        $scope.Ivcr1s = result.data.results;
+                    } else {
+                        $scope.Ivcr1s = null;
+                        alertPopup = $ionicPopup.alert({
+                            title: 'No Invoice Report Found.',
+                            okType: 'button-calm'
+                        });
+                        alertPopup.then(function(res) {
+                            console.log('No Invoice Report Found.');
+                            $scope.returnMain();
+                        });
+                    }
                 });
             };
             GetIvcr1s();
         }]);
 
 appControllers.controller('BlCtrl',
-        ['$scope', '$state', '$stateParams', 'DateTimeService', 'DownloadFileService', 'WebApiService',
-        function ($scope, $state, $stateParams, DateTimeService, DownloadFileService, WebApiService) {
+        ['$scope', '$state', '$ionicPopup', 'DateTimeService', 'DownloadFileService', 'WebApiService',
+        function ($scope, $state, $ionicPopup, DateTimeService, DownloadFileService, WebApiService) {
+            var alertPopup = null;
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -1216,15 +1230,28 @@ appControllers.controller('BlCtrl',
             var GetJmjm1s = function () {
                 var strUri = "/api/freight/view/pdf?FolderName=jmjm1";
                 WebApiService.GetParam(strUri, true).then(function success(result){
-                    $scope.Jmjm1s = result.data.results;
+                    if (result.data.results != null && result.data.results.length > 0) {
+                        $scope.Jmjm1s = result.data.results;
+                    } else {
+                        $scope.Jmjm1s = null;
+                        alertPopup = $ionicPopup.alert({
+                            title: 'No BL Report Found.',
+                            okType: 'button-calm'
+                        });
+                        alertPopup.then(function(res) {
+                            console.log('No BL Report Found.');
+                            $scope.returnMain();
+                        });
+                    }
                 });
             };
             GetJmjm1s();
         }]);
 
 appControllers.controller('AwbCtrl',
-        ['$scope', '$state', '$stateParams', 'DateTimeService', 'DownloadFileService', 'WebApiService',
-        function ($scope, $state, $stateParams, DateTimeService, DownloadFileService, WebApiService) {
+        ['$scope', '$state', '$ionicPopup', 'DateTimeService', 'DownloadFileService', 'WebApiService',
+        function ($scope, $state, $ionicPopup, DateTimeService, DownloadFileService, WebApiService) {
+            var alertPopup = null;
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
@@ -1240,28 +1267,59 @@ appControllers.controller('AwbCtrl',
             var GetJmjm1s = function () {
                 var strUri = "/api/freight/view/pdf?FolderName=jmjm1";
                 WebApiService.GetParam(strUri, true).then(function success(result){
-                    $scope.Jmjm1s = result.data.results;
+                    if (result.data.results != null && result.data.results.length > 0) {
+                        $scope.Jmjm1s = result.data.results;
+                    } else {
+                        $scope.Jmjm1s = null;
+                        alertPopup = $ionicPopup.alert({
+                            title: 'No AWB Report Found.',
+                            okType: 'button-calm'
+                        });
+                        alertPopup.then(function(res) {
+                            console.log('No AWB Report Found.');
+                            $scope.returnMain();
+                        });
+                    }
                 });
             };
             GetJmjm1s();
         }]);
 
 appControllers.controller('SOACtrl',
-        ['$scope', '$state', '$stateParams', '$ionicPopup', 'DownloadFileService', 'WebApiService',
-        function ($scope, $state, $stateParams, $ionicPopup, DownloadFileService, WebApiService) {
+        ['$scope', '$state', '$ionicPopup', 'DateTimeService', 'DownloadFileService', 'WebApiService',
+        function ($scope, $state, $ionicPopup, DateTimeService, DownloadFileService, WebApiService) {
+            var alertPopup = null;
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
-            $scope.items = [
-                { InvoiceNo: 'SESIN0905182-00', InvoiceDate: '04/11/2015', CustomerName: 'S A ORANJE 123', Amt: '100' },
-                { InvoiceNo: 'SESIN1511137-02', InvoiceDate: '04/11/2015', CustomerName: 'KADIMA', Amt: '500' }
-            ];
+            $scope.ShowDate = function(utc){
+                return DateTimeService.ShowDate(utc);
+            };
             var onPlatformError = function(url){
                 window.open(url);
             };
-            $scope.download = function () {
-                DownloadFileService.Download('CUSTOMER-STATEMENT.pdf', 'application/pdf', onPlatformError, null, null);
+            $scope.download = function (Slcu1) {
+                DownloadFileService.Download('attach/' + Slcu1.FilePath, 'application/pdf', onPlatformError, null, null);
             };
+            var GetJmjm1s = function () {
+                var strUri = "/api/freight/view/pdf?FolderName=slcu1";
+                WebApiService.GetParam(strUri, true).then(function success(result){
+                    if (result.data.results != null && result.data.results.length > 0) {
+                        $scope.Slcu1s = result.data.results;
+                    } else {
+                        $scope.Slcu1s = null;
+                        alertPopup = $ionicPopup.alert({
+                            title: 'No SOA Report Found.',
+                            okType: 'button-calm'
+                        });
+                        alertPopup.then(function(res) {
+                            console.log('No SOA Report Found.');
+                            $scope.returnMain();
+                        });
+                    }
+                });
+            };
+            GetJmjm1s();
         }]);
 
 appControllers.controller('MemoCtrl',
