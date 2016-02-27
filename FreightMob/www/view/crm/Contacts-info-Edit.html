@@ -5,7 +5,8 @@
 		</div>
 		<h1 class="title">Contact Edit</h1>
 	</ion-header-bar>
-    <ion-content class="has-header">
+    <ion-content>
+        <div style="height: 50px;"></div>
         <div class="list card">
             <div class="item item-body">
                 <label class="item item-input item-md-label ng-valid" id="iContactName" highlight-color="balanced">
@@ -40,6 +41,9 @@
 				</label>
             </div>
             <div class="item item-body">
+                <ionic-datepicker input-obj="datepickerObjectModal">
+                    <button class="button button-block button-positive"><i class='iconfont icon-birthdaycake' style="color:white;"></i>&nbsp;&nbsp;{{datepickerObjectModal.inputDate | date:'dd - MMM - yyyy'}}</button>
+                </ionic-datepicker>
                 <!--label class="item item-input item-md-label ng-valid" id="iBirthday" highlight-color="balanced">
                     <input type="text" class="md-input ng-pristine ng-valid used ng-touched" ng-model="rcbp3.Birthday">
                     <span class="input-label"><i class='iconfont icon-birthdaycake'></i>&nbsp;&nbsp;Birthday</span>

@@ -79,15 +79,14 @@ appService.service('WebApiService', ['$q', '$http', '$ionicLoading', '$ionicPopu
 
 appService.service('DownloadFileService', ['$http', '$timeout', '$ionicLoading', '$cordovaToast', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2',
     function ($http, $timeout, $ionicLoading, $cordovaToast, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2) {
-        this.Download = function(fileName, fileType, onPlatformError, onCheckError, onDownloadError){
+        this.Download = function(urlPath, fileName, fileType, onPlatformError, onCheckError, onDownloadError){
             $ionicLoading.show({
                 template: "Download  0%"
             });
-            var url = strWebSiteURL + '/' + fileName;
-            fileName = url.substring(url.lastIndexOf('/')+1);
+            var url = strWebServiceURL + strBaseUrl + urlPath;
             var blnError = false;
             if (blnMobilePlatform) {
-                $cordovaFile.checkFile(cordova.file.externalRootDirectory, fileName)
+                $cordovaFile.checkFile(cordova.file.externalRootDirectory + '/FreightApp', fileName)
                 .then(function (success) {
                     //
                 }, function (error) {
@@ -95,7 +94,7 @@ appService.service('DownloadFileService', ['$http', '$timeout', '$ionicLoading',
                 }).catch(function(ex){
                     console.log(ex);
                 });
-                var targetPath = cordova.file.externalRootDirectory + fileName;
+                var targetPath = cordova.file.externalRootDirectory + '/FreightApp/' + fileName;
                 var trustHosts = true;
                 var options = {};
                 if (!blnError) {

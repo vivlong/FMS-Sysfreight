@@ -1,5 +1,7 @@
 var app = angular.module('MobileAPP', [
     'ionic',
+    'jett.ionic.filter.bar',
+    'ionic-datepicker',
     'ngCordova.plugins.toast',
     'ngCordova.plugins.dialogs',
     'ngCordova.plugins.appVersion',
@@ -19,6 +21,7 @@ app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$io
             if (window.cordova && window.cordova.plugins.Keyboard) {
 				blnMobilePlatform = true;
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+                cordova.plugins.Keyboard.disableScroll(true);
                 /*
                 if(window.plugins.jPushPlugin){
                     // Add JPush
@@ -160,8 +163,8 @@ app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$io
         }, 101);
     }]);
 
-app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
-    function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider', '$ionicFilterBarConfigProvider',
+    function ($stateProvider, $urlRouterProvider, $ionicConfigProvider, $ionicFilterBarConfigProvider) {
         $ionicConfigProvider.backButton.previousTitleText(false);
         $stateProvider
             .state('loading', {
@@ -341,6 +344,14 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider',
                 controller: 'ReminderCtrl'
             });
         $urlRouterProvider.otherwise('/login/N');
+        /*
+        $ionicFilterBarConfigProvider.theme('calm');
+        $ionicFilterBarConfigProvider.clear('ion-close');
+        $ionicFilterBarConfigProvider.search('ion-search');
+        $ionicFilterBarConfigProvider.backdrop(false);
+        $ionicFilterBarConfigProvider.transition('vertical');
+        $ionicFilterBarConfigProvider.placeholder('Filter');
+        */
     }]);
 
 app.constant('$ionicLoadingConfig', {

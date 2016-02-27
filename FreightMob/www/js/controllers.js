@@ -1,5 +1,7 @@
 var appControllers = angular.module('MobileAPP.controllers', [
     'ionic',
+    'ionic.ion.headerShrink',
+    'jett.ionic.filter.bar',
     'ionMdInput',
     'ngCordova.plugins.toast',
     'ngCordova.plugins.dialogs',
@@ -7,7 +9,6 @@ var appControllers = angular.module('MobileAPP.controllers', [
     'ngCordova.plugins.file',
     'ngCordova.plugins.fileTransfer',
     'ngCordova.plugins.fileOpener2',
-    'ngCordova.plugins.datePicker',
     'ngCordova.plugins.barcodeScanner',
     'ngCordova.plugins.sms',
     'ngCordova.plugins.actionSheet',
@@ -281,7 +282,14 @@ appControllers.controller('SalesmanActivityCtrl',
             $('#iSalesmanName').on('keydown', function (e) {
                 if (e.which === 9 || e.which === 13) {
                     if(alertPopup === null){
-                        $scope.GoToList();
+                        if($scope.Rcsm1.SalesmanNameLike.length > 0){
+                            $scope.GoToList();
+                        }else{
+                            alertPopup = $ionicPopup.alert({
+                                    title: 'Please Enter Salesman Name.',
+                                    okType: 'button-calm'
+                            });
+                        }
                     }else{
                         alertPopup.close();
                         alertPopup = null;
@@ -408,7 +416,7 @@ appControllers.controller('SalesmanActivityDetailAddCtrl',
                 Conclusion      : '',
                 CustomerCode    : '',
                 CustomerName    : '',
-                DateTime        : currentDate.Format('dd-NNN-yyyy'),
+                DateTime        : currentDate,
                 Description     : '',
                 Discussion      : '',
                 QuotationNo     : '',
@@ -719,6 +727,30 @@ appControllers.controller('ContactsInfoAddCtrl',
 appControllers.controller('ContactsInfoEditCtrl',
         ['$scope', '$state', '$stateParams', 'WebApiService', 'CONTACTS_ORM',
         function ($scope, $state, $stateParams, WebApiService, CONTACTS_ORM) {
+            var weekDaysList = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            $scope.datepickerObject = {};
+            $scope.datepickerObject.inputDate = new Date();
+            $scope.datepickerObjectModal = {
+                modalHeaderColor:   'bar-positive',
+                modalFooterColor:   'bar-positive',
+                templateType:       'modal',
+                inputDate:          $scope.datepickerObject.inputDate,
+                mondayFirst:        true,
+                weekDaysList:       weekDaysList,
+                from:               new Date(1916, 1, 1),
+                to:                 new Date(),
+                callback: function (val) { //Optional
+                    datePickerCallbackModal(val);
+                }
+            };
+            var datePickerCallbackModal = function (val) {
+              if (typeof(val) === 'undefined') {
+                console.log('No date selected');
+              } else {
+                $scope.datepickerObjectModal.inputDate = val;
+                console.log('Selected date is : ', val)
+              }
+            };
             $scope.rcbp3 = CONTACTS_ORM.CONTACTS_SUBDETAIL.Rcbp3;
             $scope.returnInfo = function () {
                 $state.go('contactsInfo', {}, { reload: true });
@@ -887,8 +919,9 @@ appControllers.controller('PaymentApprovalListCtrl',
         }]);
 
 appControllers.controller('VesselScheduleCtrl',
-        ['$scope', '$state', '$stateParams', 'WebApiService',
-        function ($scope, $state, $stateParams, WebApiService) {
+        ['$scope', '$state', '$stateParams', '$timeout', '$ionicFilterBar', 'WebApiService',
+        function ($scope, $state, $stateParams, $timeout, $ionicFilterBar, WebApiService) {
+            var filterBarInstance;
             $scope.rcvy = {
                 PortOfDischargeName: ''
             };
@@ -917,6 +950,27 @@ appControllers.controller('VesselScheduleCtrl',
                 }
             };
             getRcvy1(null);
+            $scope.showFilterBar = function () {
+              filterBarInstance = $ionicFilterBar.show({
+                items: $scope.PortOfDischargeNames,
+                update: function (filteredItems, filterText) {
+                  $scope.PortOfDischargeNames = filteredItems;
+                  if (filterText) {
+                    console.log(filterText);
+                  }
+                }
+              });
+            };
+            $scope.refreshItems = function () {
+              if (filterBarInstance) {
+                filterBarInstance();
+                filterBarInstance = null;
+              }
+              $timeout(function () {
+                getRcvy1(null);
+                $scope.$broadcast('scroll.refreshComplete');
+              }, 1000);
+            };
         }]);
 
 appControllers.controller('VesselScheduleDetailCtrl',
@@ -1188,7 +1242,9 @@ appControllers.controller('InvoiceCtrl',
                 window.open(url);
             };
             $scope.download = function (Ivcr1) {
-                DownloadFileService.Download('attach/' + Ivcr1.FilePath, 'application/pdf', onPlatformError, null, null);
+                var strFileName = Ivcr1.TrxNo + '-' + Ivcr1.FileName;
+                var strURL = '/api/freight/view/pdf/file?FolderName=ivcr1&Key=' + Ivcr1.TrxNo + '&FileName=' + Ivcr1.FileName + '&format=json';
+                DownloadFileService.Download(strURL, strFileName, 'application/pdf', onPlatformError, null, null);
             };
             var GetIvcr1s = function () {
                 var strUri = "/api/freight/view/pdf?FolderName=ivcr1";
@@ -1225,7 +1281,9 @@ appControllers.controller('BlCtrl',
                 window.open(url);
             };
             $scope.download = function (Jmjm1) {
-                DownloadFileService.Download('attach/' + Jmjm1.FilePath, 'application/pdf', onPlatformError, null, null);
+                var strFileName = Jmjm1.JobNo + '-' + Jmjm1.FileName;
+                var strURL = '/api/freight/view/pdf/file?FolderName=jmjm1&Key=' + Jmjm1.JobNo + '&FileName=' + Jmjm1.FileName + '&format=json';
+                DownloadFileService.Download(strURL, strFileName, 'application/pdf', onPlatformError, null, null);
             };
             var GetJmjm1s = function () {
                 var strUri = "/api/freight/view/pdf?FolderName=jmjm1";
@@ -1262,7 +1320,9 @@ appControllers.controller('AwbCtrl',
                 window.open(url);
             };
             $scope.download = function (Jmjm1) {
-                DownloadFileService.Download('attach/' + Jmjm1.FilePath, 'application/pdf', onPlatformError, null, null);
+                var strFileName = Jmjm1.JobNo + '-' + Jmjm1.FileName;
+                var strURL = '/api/freight/view/pdf/file?FolderName=jmjm1&Key=' + Jmjm1.JobNo + '&FileName=' + Jmjm1.FileName + '&format=json';
+                DownloadFileService.Download(strURL, strFileName, 'application/pdf', onPlatformError, null, null);
             };
             var GetJmjm1s = function () {
                 var strUri = "/api/freight/view/pdf?FolderName=jmjm1";
@@ -1299,7 +1359,9 @@ appControllers.controller('SOACtrl',
                 window.open(url);
             };
             $scope.download = function (Slcu1) {
-                DownloadFileService.Download('attach/' + Slcu1.FilePath, 'application/pdf', onPlatformError, null, null);
+                var strFileName = Slcu1.TrxNo + '-' + Slcu1.FileName;
+                var strURL = '/api/freight/view/pdf/file?FolderName=jmjm1&Key=' + Slcu1.TrxNo + '&FileName=' + Slcu1.FileName + '&format=json';
+                DownloadFileService.Download(strURL, strFileName, 'application/pdf', onPlatformError, null, null);
             };
             var GetJmjm1s = function () {
                 var strUri = "/api/freight/view/pdf?FolderName=slcu1";
