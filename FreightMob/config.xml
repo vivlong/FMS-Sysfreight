@@ -39,6 +39,9 @@
         <splash density="port-mdpi" src="res/screens/android/screen-mdpi-portrait.png" />
         <splash density="port-xhdpi" src="res/screens/android/screen-xhdpi-portrait.png" />
     </platform>
+	<platform name="ios">
+		<preference name="KeyboardDisplayRequiresUserAction" value="false"/>
+	</platform>
     <engine name="android" spec="~4.1.1" />
     <preference name="xwalkMultipleApk" value="true" />
 </widget>
