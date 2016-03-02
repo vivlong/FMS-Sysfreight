@@ -137,30 +137,6 @@ appService.service('DownloadFileService', ['$http', '$timeout', '$ionicLoading',
         };
     }]);
 
-appService.service('DateTimeService', [
-    function () {
-        this.ShowDate = function (utc) {
-            if (typeof (utc) === 'undefined') return ''
-            var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
-            var newDate = new Date(utcDate);
-            if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
-                return newDate.Format('dd-NNN-yyyy');
-            } else {
-                return '';
-            }
-        };
-        this.ShowDatetime = function (utc) {
-            if (typeof (utc) === 'undefined') return ''
-            var utcDate = Number(utc.substring(utc.indexOf('(') + 1, utc.lastIndexOf('-')));
-            var newDate = new Date(utcDate);
-            if (newDate.getUTCFullYear() < 2166 && newDate.getUTCFullYear() > 1899) {
-                return newDate.Format('dd-NNN-yyyy HH:mm');
-            } else {
-                return '';
-            }
-        };
-    }]);
-
 appService.service('OpenUrlService', ['$cordovaInAppBrowser',
     function ($cordovaInAppBrowser) {
         this.Open = function (url) {

@@ -9,7 +9,6 @@ var appControllers = angular.module('MobileAPP.controllers', [
     'ngCordova.plugins.file',
     'ngCordova.plugins.fileTransfer',
     'ngCordova.plugins.fileOpener2',
-    'ngCordova.plugins.barcodeScanner',
     'ngCordova.plugins.sms',
     'ngCordova.plugins.actionSheet',
     'MobileAPP.directives',
@@ -79,7 +78,7 @@ appControllers.controller('LoginCtrl',
                 if (window.cordova && window.cordova.plugins.Keyboard) {
                     cordova.plugins.Keyboard.close();
                 }
-                if ($scope.logininfo.strUserName == "") {
+                if (is.empty($scope.logininfo.strUserName)) {
                     alertPopup = $ionicPopup.alert({
                         title: 'Please Enter User Name.',
                         okType: 'button-assertive'
@@ -110,7 +109,7 @@ appControllers.controller('LoginCtrl',
                     });
                 }
             };
-            if (!blnMobilePlatform && $stateParams.CanCheckUpdate === 'Y') {
+            if (!blnMobilePlatform && is.equal($stateParams.CanCheckUpdate,'Y')) {
                 var url = strWebSiteURL + '/update.json';
                 $http.get(url)
                 .success(function (res) {
@@ -345,8 +344,8 @@ appControllers.controller('SalesmanActivityListCtrl',
         }]);
 
 appControllers.controller('SalesmanActivityDetailCtrl',
-        ['$scope', '$state', '$stateParams', 'DateTimeService', 'WebApiService', 'SALESMANACTIVITY_ORM',
-        function ($scope, $state, $stateParams, DateTimeService, WebApiService, SALESMANACTIVITY_ORM) {
+        ['$scope', '$state', '$stateParams', 'WebApiService', 'SALESMANACTIVITY_ORM',
+        function ($scope, $state, $stateParams, WebApiService, SALESMANACTIVITY_ORM) {
             $scope.Detail = {
                 TrxNo : SALESMANACTIVITY_ORM.DETAIL.TrxNo
             };
@@ -369,7 +368,7 @@ appControllers.controller('SalesmanActivityDetailCtrl',
                 //
             };
             $scope.ShowDate= function (utc) {
-                return DateTimeService.ShowDate(utc);
+                return moment(utc).format('DD-MMM-YYYY');
             };
             var GetSmsa2Detail = function (TrxNo) {
                 if (SALESMANACTIVITY_ORM.DETAIL.Smsa2s != null && SALESMANACTIVITY_ORM.DETAIL.Smsa2s.length > 0 && SALESMANACTIVITY_ORM.DETAIL.TrxNo === parseInt(TrxNo)) {
@@ -387,14 +386,14 @@ appControllers.controller('SalesmanActivityDetailCtrl',
         }]);
 
 appControllers.controller('SalesmanActivityDetailEditCtrl',
-        ['$scope', '$state', '$stateParams', 'DateTimeService', 'WebApiService', 'SALESMANACTIVITY_ORM',
-        function ($scope, $state, $stateParams, DateTimeService, WebApiService, SALESMANACTIVITY_ORM) {
+        ['$scope', '$state', '$stateParams', 'WebApiService', 'SALESMANACTIVITY_ORM',
+        function ($scope, $state, $stateParams, WebApiService, SALESMANACTIVITY_ORM) {
             $scope.Smsa2 = SALESMANACTIVITY_ORM.SUBDETAIL.Smsa2;
             $scope.returnDetail = function () {
                 $state.go('salesmanActivityDetail', { 'TrxNo': $scope.Smsa2.TrxNo, 'SalesmanNameLike': SALESMANACTIVITY_ORM.SEARCH.SalesmanNameLike }, { reload:true });
             };
             $scope.ShowDate= function (utc) {
-                return DateTimeService.ShowDate(utc);
+                return moment(utc).format('DD-MMM-YYYY');
             };
             $scope.returnUpdateSmsa2 = function () {
                 var jsonData = { "smsa2": $scope.Smsa2 };
@@ -406,8 +405,8 @@ appControllers.controller('SalesmanActivityDetailEditCtrl',
         }]);
 
 appControllers.controller('SalesmanActivityDetailAddCtrl',
-        ['$scope', '$state', '$stateParams', 'DateTimeService', 'WebApiService', 'SALESMANACTIVITY_ORM',
-        function ($scope, $state, $stateParams, DateTimeService, WebApiService, SALESMANACTIVITY_ORM) {
+        ['$scope', '$state', '$stateParams', 'WebApiService', 'SALESMANACTIVITY_ORM',
+        function ($scope, $state, $stateParams, WebApiService, SALESMANACTIVITY_ORM) {
             var currentDate = new Date();
             $scope.Smsa2 = {
                 TrxNo           : $stateParams.TrxNo,
@@ -428,7 +427,7 @@ appControllers.controller('SalesmanActivityDetailAddCtrl',
                 $state.go('salesmanActivityDetail', { 'TrxNo': $scope.Smsa2.TrxNo, 'SalesmanNameLike': SALESMANACTIVITY_ORM.SEARCH.SalesmanNameLike }, { reload:true });
             };
             $scope.ShowDate= function (utc) {
-                return DateTimeService.ShowDate(utc);
+                return moment(utc).format('DD-MMM-YYYY');
             };
             $scope.returnInsertSmsa2 = function () {
                 var jsonData = { "smsa2": $scope.Smsa2 };
@@ -518,10 +517,10 @@ appControllers.controller('ContactsListCtrl',
 
 appControllers.controller('ContactsDetailCtrl',
         ['$scope', '$stateParams', '$state', '$ionicTabsDelegate', '$ionicPopup',
-         '$cordovaActionSheet', '$cordovaToast', '$cordovaSms', 'DateTimeService', 'WebApiService',
+         '$cordovaActionSheet', '$cordovaToast', '$cordovaSms', 'WebApiService',
          'OpenUrlService', 'CONTACTS_ORM',
         function ($scope, $stateParams, $state, $ionicTabsDelegate, $ionicPopup,
-             $cordovaActionSheet, $cordovaToast, $cordovaSms, DateTimeService, WebApiService,
+             $cordovaActionSheet, $cordovaToast, $cordovaSms, WebApiService,
              OpenUrlService, CONTACTS_ORM) {
             $scope.ContactsDetail = {
                 TrxNo :     CONTACTS_ORM.CONTACTS_DETAIL.TrxNo,
@@ -618,7 +617,7 @@ appControllers.controller('ContactsDetailCtrl',
                 $state.go('contactsInfoAdd', { 'BusinessPartyCode': $scope.rcbp1.BusinessPartyCode, 'LineItemNo': rcbp3.length + 1 }, { reload: true });
             };
             $scope.ShowDate= function (utc) {
-                return DateTimeService.ShowDate(utc);
+                return moment(utc).format('DD-MMM-YYYY');
             };
             var GetRcbp3s = function (BusinessPartyCode) {
                 if(CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s != null && CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s.length > 0 && CONTACTS_ORM.CONTACTS_SUBLIST.BusinessPartyCode === CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s[0].BusinessPartyCode){
@@ -794,8 +793,8 @@ appControllers.controller('PaymentApprovalCtrl',
         }]);
 
 appControllers.controller('PaymentApprovalListCtrl',
-        ['$scope', '$state', '$stateParams', '$ionicPopup', 'DateTimeService', 'WebApiService',
-        function ($scope, $state, $stateParams, $ionicPopup, DateTimeService, WebApiService) {
+        ['$scope', '$state', '$stateParams', '$ionicPopup', 'WebApiService',
+        function ($scope, $state, $stateParams, $ionicPopup, WebApiService) {
             var RecordCount = 0;
             var dataResults = new Array();
             $scope.Filter = {
@@ -809,7 +808,7 @@ appControllers.controller('PaymentApprovalListCtrl',
                 $state.go('paymentApproval', {}, {});
             };
             $scope.funcShowDate = function (utc) {
-                return DateTimeService.ShowDate(utc);
+                return moment(utc).format('DD-MMM-YYYY');
             };
             $scope.showApproval = function () {
                 if($scope.plviStatus.text === 'USE'){
@@ -974,8 +973,8 @@ appControllers.controller('VesselScheduleCtrl',
         }]);
 
 appControllers.controller('VesselScheduleDetailCtrl',
-        ['$scope', '$state', '$stateParams', 'DateTimeService', 'WebApiService',
-        function ($scope, $state, $stateParams, DateTimeService, WebApiService) {
+        ['$scope', '$state', '$stateParams', 'WebApiService',
+        function ($scope, $state, $stateParams, WebApiService) {
             $scope.Rcvy1Detail = {
                 PortOfDischargeName : $stateParams.PortOfDischargeName
             };
@@ -983,9 +982,9 @@ appControllers.controller('VesselScheduleDetailCtrl',
                 $state.go('vesselSchedule', {}, {});
             };
             $scope.ShowDate= function (utc) {
-                return DateTimeService.ShowDate(utc);
+                return moment(utc).format('DD-MMM-YYYY');
             };$scope.ShowDatetime= function (utc) {
-                return DateTimeService.ShowDatetime(utc);
+                return moment(utc).format('DD-MMM-YYYY HH:mm');
             };
             var getRcvy1 = function (PortOfDischargeName) {
                 var strUri = "/api/freight/rcvy1/sps?PortOfDischargeName=" + PortOfDischargeName;
@@ -1123,8 +1122,8 @@ appControllers.controller('ShipmentStatusCtrl',
         }]);
 
 appControllers.controller('ShipmentStatusListCtrl',
-        ['$scope', '$state', '$stateParams', 'DateTimeService', 'WebApiService', 'TRACKING_ORM',
-        function ($scope, $state, $stateParams, DateTimeService, WebApiService, TRACKING_ORM) {
+        ['$scope', '$state', '$stateParams', 'WebApiService', 'TRACKING_ORM',
+        function ($scope, $state, $stateParams, WebApiService, TRACKING_ORM) {
             var RecordCount = 0;
             var dataResults = new Array();
             $scope.TrackingList = {
@@ -1144,10 +1143,10 @@ appControllers.controller('ShipmentStatusListCtrl',
                 $state.go('shipmentStatusDetail', { 'FilterName':$scope.TrackingList.FilterName, 'Key':Jmjm1.JobNo, 'ModuleCode':Jmjm1.ModuleCode }, { reload: true });
             };
             $scope.ShowDate= function (utc) {
-                return DateTimeService.ShowDate(utc);
+                return moment(utc).format('DD-MMM-YYYY');
             };
             $scope.ShowDatetime= function (utc) {
-                return DateTimeService.ShowDatetime(utc);
+                return moment(utc).format('DD-MMM-YYYY HH:mm');
             };
             $scope.funcShowLabel = function(FilterName){
                 if(FilterName === $scope.TrackingList.FilterName){
@@ -1178,8 +1177,8 @@ appControllers.controller('ShipmentStatusListCtrl',
         }]);
 
 appControllers.controller('ShipmentStatusDetailCtrl',
-        ['$scope', '$state', '$stateParams', '$ionicPopup', 'DateTimeService', 'WebApiService', 'TRACKING_ORM',
-        function ($scope, $state, $stateParams, $ionicPopup, DateTimeService, WebApiService, TRACKING_ORM) {
+        ['$scope', '$state', '$stateParams', '$ionicPopup', 'WebApiService', 'TRACKING_ORM',
+        function ($scope, $state, $stateParams, $ionicPopup, WebApiService, TRACKING_ORM) {
             $scope.Detail = {
                 FilterName :    TRACKING_ORM.TRACKING_SEARCH.FilterName,
                 Key :           TRACKING_ORM.TRACKING_DETAIL.Key,
@@ -1194,10 +1193,10 @@ appControllers.controller('ShipmentStatusDetailCtrl',
                 $state.go('shipmentStatusList', { 'FilterName':TRACKING_ORM.TRACKING_SEARCH.FilterName, 'FilterValue':TRACKING_ORM.TRACKING_SEARCH.FilterValue }, { reload:true });
             };
             $scope.ShowDate = function(utc){
-                return DateTimeService.ShowDate(utc);
+                return moment(utc).format('DD-MMM-YYYY');
             };
             $scope.ShowDatetime = function(utc){
-                return DateTimeService.ShowDatetime(utc);
+                return moment(utc).format('DD-MMM-YYYY HH:mm');
             };
             if($scope.Detail.FilterName === 'OrderNo'){
                 if(TRACKING_ORM.TRACKING_DETAIL.Omtx1 != null && TRACKING_ORM.TRACKING_DETAIL.Omtx1.OrderNo === $scope.Detail.Key){
@@ -1229,14 +1228,14 @@ appControllers.controller('ShipmentStatusDetailCtrl',
         }]);
 
 appControllers.controller('InvoiceCtrl',
-        ['$scope', '$state', '$ionicPopup', 'DateTimeService', 'DownloadFileService', 'WebApiService',
-        function ($scope, $state, $ionicPopup, DateTimeService, DownloadFileService, WebApiService) {
+        ['$scope', '$state', '$ionicPopup', 'DownloadFileService', 'WebApiService',
+        function ($scope, $state, $ionicPopup, DownloadFileService, WebApiService) {
             var alertPopup = null;
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
             $scope.ShowDate = function(utc){
-                return DateTimeService.ShowDate(utc);
+                return moment(utc).format('DD-MMM-YYYY');
             };
             var onPlatformError = function(url){
                 window.open(url);
@@ -1268,14 +1267,14 @@ appControllers.controller('InvoiceCtrl',
         }]);
 
 appControllers.controller('BlCtrl',
-        ['$scope', '$state', '$ionicPopup', 'DateTimeService', 'DownloadFileService', 'WebApiService',
-        function ($scope, $state, $ionicPopup, DateTimeService, DownloadFileService, WebApiService) {
+        ['$scope', '$state', '$ionicPopup', 'DownloadFileService', 'WebApiService',
+        function ($scope, $state, $ionicPopup, DownloadFileService, WebApiService) {
             var alertPopup = null;
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
             $scope.ShowDate = function(utc){
-                return DateTimeService.ShowDate(utc);
+                return moment(utc).format('DD-MMM-YYYY');
             };
             var onPlatformError = function(url){
                 window.open(url);
@@ -1307,14 +1306,14 @@ appControllers.controller('BlCtrl',
         }]);
 
 appControllers.controller('AwbCtrl',
-        ['$scope', '$state', '$ionicPopup', 'DateTimeService', 'DownloadFileService', 'WebApiService',
-        function ($scope, $state, $ionicPopup, DateTimeService, DownloadFileService, WebApiService) {
+        ['$scope', '$state', '$ionicPopup', 'DownloadFileService', 'WebApiService',
+        function ($scope, $state, $ionicPopup, DownloadFileService, WebApiService) {
             var alertPopup = null;
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
             $scope.ShowDate = function(utc){
-                return DateTimeService.ShowDate(utc);
+                return moment(utc).format('DD-MMM-YYYY');
             };
             var onPlatformError = function(url){
                 window.open(url);
@@ -1346,14 +1345,14 @@ appControllers.controller('AwbCtrl',
         }]);
 
 appControllers.controller('SOACtrl',
-        ['$scope', '$state', '$ionicPopup', 'DateTimeService', 'DownloadFileService', 'WebApiService',
-        function ($scope, $state, $ionicPopup, DateTimeService, DownloadFileService, WebApiService) {
+        ['$scope', '$state', '$ionicPopup', 'DownloadFileService', 'WebApiService',
+        function ($scope, $state, $ionicPopup, DownloadFileService, WebApiService) {
             var alertPopup = null;
             $scope.returnMain = function () {
                 $state.go('main', {}, {});
             };
             $scope.ShowDate = function(utc){
-                return DateTimeService.ShowDate(utc);
+                return moment(utc).format('DD-MMM-YYYY');
             };
             var onPlatformError = function(url){
                 window.open(url);

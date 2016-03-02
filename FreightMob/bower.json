@@ -8,7 +8,10 @@
     "ion-md-input": ">=1.0.4",
     "ionic-datepicker": "^0.9.0",
     "ionic-ion-header-shrink": "*",
-    "ionic-filter-bar": "^1.1.1"
+    "ionic-filter-bar": "^1.1.1",
+    "moment": "^2.11.2",
+    "numeral": "numeraljs#^1.5.3",
+    "is_js": "^0.7.6"
   },
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#master"

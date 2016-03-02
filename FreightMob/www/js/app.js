@@ -8,8 +8,6 @@ var app = angular.module('MobileAPP', [
     'ngCordova.plugins.file',
     'ngCordova.plugins.fileTransfer',
     'ngCordova.plugins.fileOpener2',
-    'ngCordova.plugins.datePicker',
-    'ngCordova.plugins.barcodeScanner',
     'MobileAPP.controllers'
 ]);
 
