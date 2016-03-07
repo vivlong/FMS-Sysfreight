@@ -1,16 +1,14 @@
 <ion-view title="SalesmanActivity-List">
 	<ion-header-bar align-title="center" no-tap-scroll=true class="bar-positive">
 		<div class="buttons">
-			<button class="button button-icon button-clear ion-navicon" ng-click="returnSearch()"></button>
+			<button class="button button-icon button-clear ion-android-arrow-back" ng-click="returnSearch()"></button>
 		</div>
 		<h1 class="title"><span ng-bind="List.SalesmanNameLike"></span></h1>
 	</ion-header-bar>
     <ion-content>
-        <div style="height: 50px;"></div>
+        <div style="height: 43px;"></div>
         <div class="list">
-            <ion-item class="item item-avatar" ng-repeat="Smsa1 in Smsa1s" ng-click="GoToDetail(Smsa1)">
-                <img src="./img/unknown.png">
-                <h2><span ng-bind="Smsa1.SalesmanName"></span></h2>
+            <ion-item class="item" ng-repeat="Smsa1 in Smsa1s" ng-click="GoToDetail(Smsa1)">
                 <p><span ng-bind="Smsa1.CustomerName"></span></p>
                 <p><i class="iconfont icon-phone3"></i>&nbsp;&nbsp;<span ng-bind="Smsa1.Telephone"></span></p>
 				<p><i class="iconfont icon-fax1"></i>&nbsp;&nbsp;<span ng-bind="Smsa1.Fax"></span></p>

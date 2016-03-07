@@ -4,14 +4,15 @@
 	</ion-header-bar>
 	<ion-tabs class="tabs-striped tabs-top tabs-background-positive tabs-color-light tabs-icon-left">
 		<ion-tab title="CRM" icon-on="ion-ios-people" icon-off="ion-ios-people-outline">
-			<div style="margin-top:8.0em;">
+            <div style="height: 8.0em;"></div>
+			<div>
 				<div class="row row-center">
 					<div class="col" style="text-align:center;">
-						<a style="width:70%;height:100%;"><img src="./img/free-60-icons-52.png" alt="" class="img-circle mainImg"></a>
+						<a style="width:70%;height:100%;" ng-click="GoToSales()"><img src="./img/free-60-icons-52.png" alt="" class="img-circle mainImg"></a>
 						<h5>Sales</h5>
 					</div>
 					<div class="col" style="text-align:center;">
-						<a style="width:70%;height:100%;"><img src="./img/free-60-icons-53.png" alt="" class="img-circle mainImg"></a>
+						<a style="width:70%;height:100%;" ng-click="GoToCost()"><img src="./img/free-60-icons-53.png" alt="" class="img-circle mainImg"></a>
 						<h5>Cost</h5>
 					</div>
 				</div>
@@ -28,7 +29,8 @@
 			</div>
 		</ion-tab>
 		<ion-tab title="Productivity" icon-on="ion-ios-speedometer" icon-off="ion-ios-speedometer-outline">
-			<div style="margin-top:8.0em;">
+            <div style="height: 8.0em;"></div>
+			<div>
 				<div class="row row-center">
 					<div class="col" style="text-align:center;">
 						<a style="width:70%;height:100%;" ng-click="GoToPa()"><img src="./img/free-60-icons-58.png" alt="" class="img-circle mainImg"></a>
@@ -45,13 +47,15 @@
 						<h5>Memo</h5>
 					</div>
 					<div class="col" style="text-align:center;">
-						<a style="width:70%;height:100%;"></a>
+                        <a style="width:70%;height:100%;" ng-click="GoToDocScan()"><img src="./img/free-60-icons-12.png" alt="" class="img-circle mainImg"></a>
+						<h5>Document Scan</h5>
 					</div>
 				</div>
 			</div>
 		</ion-tab>
 		<ion-tab title="Tracking" icon-on="ion-ios-navigate" icon-off="ion-ios-navigate-outline">
-			<div style="margin-top:8.0em;">
+            <div style="height: 8.0em;"></div>
+			<div>
 				<div class="list">
 					<div class="row row-center">
 						<div class="col" style="text-align:center;">
@@ -87,7 +91,7 @@
 			</div>
 		</ion-tab>
 	</ion-tabs>
-	<ion-footer-bar align-title="center" class="bar-positive" style="height:15%; padding:0px;">
+	<ion-footer-bar align-title="center" class="bar-positive" style="height:15%; padding:0px; border-top: 0px;">
         <img class="mainAds" src="./img/ad.png" alt="">
 	</ion-footer-bar>
 </ion-view>

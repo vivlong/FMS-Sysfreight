@@ -1,7 +1,7 @@
 ﻿<ion-view title="Contacts-Detail">
 	<ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
 		<div class="buttons">
-			<button class="button button-icon button-clear ion-navicon" ng-click="returnList()"></button>
+			<button class="button button-icon button-clear ion-android-arrow-back" ng-click="returnList()"></button>
 		</div>
 		<h1 class="title">Customer Detail</h1>
         <div class="buttons" >
@@ -11,7 +11,9 @@
 	</ion-header-bar>
 	<ion-tabs class="tabs-top tabs-background-positive tabs-color-light tabs-icon-left">
 		<ion-tab title="Customer" icon-on="ion-ios-world" icon-off="ion-ios-world-outline" on-select="TabClick(0)">
-			<ion-scroll style="padding-top:93px;">
+            <div style="height: 43px;"></div>
+            <div style="height: 38px;"></div>
+            <ion-scroll>
 				<div class="card customerDetail">
 					<div class="item item-avatar" style="min-height: 68px;">
 						<img src="./img/unknown.png">
@@ -42,9 +44,9 @@
 							</div>
 							<div class="item">
 								<i class="iconfont icon-phone3"></i>&nbsp;&nbsp;
-								<span ng-bind="rcbp1.Telephone"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        						<a ng-href="tel:{{rcbp1.Telephone}}" style="text-decoration: none;"><i class="icon iconfont ion-android-call"></i>&nbsp;Call</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                <a ng-click="ClickSendSMS(rcbp1.Telephone)"><i class="icon iconfont ion-android-textsms"></i>&nbsp;SMS</a>
+								<span ng-bind="rcbp1.Telephone"></span>&nbsp;&nbsp;&nbsp;
+        						<a ng-href="tel:{{rcbp1.Telephone}}" style="text-decoration: none;"><i class="icon iconfont ion-android-call"></i></a>&nbsp;&nbsp;&nbsp;
+                                <a ng-click="ClickSendSMS(rcbp1.Telephone)"><i class="icon iconfont ion-android-textsms"></i></a>
 							</div>
 							<div class="item">
 								<i class="iconfont icon-fax1"></i>&nbsp;&nbsp;
