@@ -1,7 +1,7 @@
 ﻿<ion-view title="VesselSchedule">
 	<ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
 		<div class="buttons">
-			<button class="button button-icon button-clear ion-navicon" ng-click="returnMain()"></button>
+			<button class="button button-icon button-clear ion-android-arrow-back" ng-click="returnMain()"></button>
 		</div>
 		<!--div class="item-input-inset" style="width:90%;">
 			<label class="item-input-wrapper">
@@ -15,7 +15,7 @@
 		</div>
 	</ion-header-bar>
     <ion-content header-shrink scroll-event-interval="5">
-        <div style="height: 50px;"></div>
+        <div style="height: 43px;"></div>
         <ion-refresher pulling-icon="ion-arrow-down-b" on-refresh="refreshItems()"></ion-refresher>
         <ion-list>
             <ion-item nav-clear menu-close class="item" ng-repeat="PortOfDischargeName in PortOfDischargeNames" ng-click="GoToDetail(PortOfDischargeName)">

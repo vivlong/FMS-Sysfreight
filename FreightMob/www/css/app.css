@@ -185,6 +185,17 @@ ion-content {
     }
 }
 
+.login {
+    background-color:rgba(55, 126, 180, 0.9);
+}
+.logo {
+    padding-top: 6em;
+    text-align:center;
+}
+.logo img {
+    height: 90px;
+}
+/*
 .material {
 }
 .material .login {
@@ -286,7 +297,7 @@ ion-content {
     transition: all 0.15s ease;
     z-index: 1;
 }
-
+*/
 .nav-info {
 	background-color: #387ef5;
 	height: 12em;
@@ -318,4 +329,48 @@ ion-content {
 }
 .activityDetail .item-body .item {
      padding: 1px;
+}
+
+.item-md-label input.used~.input-label, .item-md-label input:focus~.input-label {
+    -webkit-transform: translate3d(0,-60px,0) scale(1);
+    transform: translate3d(0,-60px,0) scale(1);
+    opacity: 1;
+}
+.itemNoBorder {
+    border-width: 0px;
+}
+.itemPadding {
+    padding: 4px;
+}
+
+.item-toggle .toggle {
+    top: 15px;
+    right: 16px;
+}
+.toggle .track {
+    width: 41px;
+    height: 21px;
+    border: solid 2px #e6e6e6;
+}
+.toggle .handle {
+    width: 17px;
+    height: 17px;
+    top: 7px;
+    left: 7px;
+}
+.toggle .handle:before {
+    top: -4px;
+    left: -21.5px;
+    padding: 18.5px 34px;
+}
+
+.showBorder{
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius:20px;
+}
+.showShadow {
+    -webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, .5);
+    -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, .5);
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, .5);
 }
