@@ -194,17 +194,23 @@ app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider', '$io
                 templateUrl:    'view/main.html',
                 controller:     'MainCtrl'
             })
-            .state('sales',{
-                url:            '/sales',
+            .state('salesCost',{
+                url:            '/salesCost',
                 cache:          'false',
-                templateUrl:    'view/crm/Sales.html',
-                controller:     'SalesCtrl'
+                templateUrl:    'view/crm/SalesCost.html',
+                controller:     'SalesCostCtrl'
             })
-            .state('cost',{
-                url:            '/cost',
+            .state('salesCostList',{
+                url:            '/salesCost/list',
                 cache:          'false',
-                templateUrl:    'view/crm/Cost.html',
-                controller:     'CostCtrl'
+                templateUrl:    'view/crm/SalesCost-list.html',
+                controller:     'SalesCostListCtrl'
+            })
+            .state('salesCostDetail',{
+                url:            '/salesCost/detail',
+                cache:          'false',
+                templateUrl:    'view/crm/SalesCost-Detail.html',
+                controller:     'SalesCostDetailCtrl'
             })
             .state('salesmanActivity', {
                 url:            '/salesmanActivity',

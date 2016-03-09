@@ -67,8 +67,8 @@ appControllers.controller('LoadingCtrl',
         }]);
 
 appControllers.controller('LoginCtrl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$cordovaToast', '$cordovaAppVersion', 'WebApiService',
-        function ($scope, $http, $state, $stateParams, $ionicPopup, $cordovaToast, $cordovaAppVersion, WebApiService) {
+        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$cordovaToast', '$cordovaAppVersion', 'WebApiService', 'SALES_ORM',
+        function ($scope, $http, $state, $stateParams, $ionicPopup, $cordovaToast, $cordovaAppVersion, WebApiService, SALES_ORM) {
             $scope.logininfo = {
                 strUserName: '',
                 strPassword: ''
@@ -96,6 +96,7 @@ appControllers.controller('LoginCtrl',
                             if (blnMobilePlatform) {
                                 window.plugins.jPushPlugin.getRegistrationID(onGetRegistradionID);
                             }
+                            SALES_ORM.init();
                             $state.go('main', {}, { reload: true });
                         }else{
                             alertPopup = $ionicPopup.alert({
@@ -103,7 +104,7 @@ appControllers.controller('LoginCtrl',
                                 okType: 'button-assertive'
                             });
                             alertPopup.then(function(res) {
-                                console.log('Invaild User');
+                                log4web.log('Invaild User');
                             });
                         }
                     });
@@ -205,13 +206,11 @@ appControllers.controller('UpdateCtrl',
         }]);
 
 appControllers.controller('MainCtrl',
-        ['$scope', '$state',
-        function ($scope, $state ) {
-            $scope.GoToSales = function(){
-                $state.go('sales', {}, { reload: true });
-            };
-            $scope.GoToCost = function(){
-                $state.go('cost', {}, { reload: true });
+        ['$scope', '$state', 'SALES_ORM',
+        function ($scope, $state, SALES_ORM) {
+            $scope.GoToSalesCost = function (Type) {
+                SALES_ORM.SEARCH.setType(Type);
+                $state.go('salesCost', {}, { reload: true });
             };
             $scope.GoToSA = function () {
                 $state.go('salesmanActivity', {}, { reload: true });

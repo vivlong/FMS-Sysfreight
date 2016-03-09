@@ -154,3 +154,56 @@ appFactory.factory('SALESMANACTIVITY_ORM',function(){
     };
     return SALESMANACTIVITY_ORM;
 });
+appFactory.factory('SALES_ORM',function(){
+    var SALES_ORM = {
+        SEARCH : {
+            Type                    :'',
+            setType:   function(value) {
+                this.Type = value;
+            },
+            Smct                    : {
+                PartyName           :'',
+                PortOfLoadingCode   :'',
+                PortOfDischargeCode :'',
+                EffectiveDate       :'',
+                ExpiryDate          :'',
+                ModuleCode          :'',
+                JobType             :''
+            },
+            setSmct:   function(obj) {
+                this.Smct = obj;
+            }
+        },
+        LIST : {
+            CanLoadedMoreData:      true,
+            Smct1s:                 {},
+            _set:   function(value) {
+                this.Smct1s = value;
+            }
+        },
+        DETAIL : {
+            TrxNo:                  '',
+            Smct1:                  {},
+            Smct2s:                 {},
+            _setKey:    function(value) {
+                this.TrxNo = value;
+            },
+            _setObj:    function(value) {
+                this.Smct1 = value;
+            },
+            _setObjs:    function(value) {
+                this.Smct2s = value;
+            }
+        }
+    };
+    SALES_ORM.init = function() {
+        this.SEARCH.Type                = '',
+        this.SEARCH.Smct                = {},
+        this.LIST.CanLoadedMoreData     = true;
+        this.LIST.Smct1s                = {};
+        this.DETAIL.TrxNo               = '';
+        this.DETAIL.Smct1               = {};
+        this.DETAIL.Smct2s              = {};
+    };
+    return SALES_ORM;
+});

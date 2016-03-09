@@ -1,8 +1,15 @@
 html {
-    background-color: #fff;
+    background-color: #EFEFEF;
 }
 ion-content {
     top: 0 !important;
+}
+.scroll-view.scroll-y {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+.pane {
+    background-color: #EFEFEF;
 }
 .app {
   position: relative;

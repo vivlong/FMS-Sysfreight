@@ -21,3 +21,12 @@ var onStrToURL = function(strURL){
     }
     return strURL;
 };
+
+log4web.config({
+    debug: 0,
+    level: "debug",
+    tagFilter: "",
+    post: 1,
+    postContextInfo: 1,
+    postUrl: "/api/exception"
+});

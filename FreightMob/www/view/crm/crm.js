@@ -7,7 +7,7 @@ appControllers.controller('SalesmanActivityCtrl',
         };
         var alertPopup = null;
         $scope.returnMain = function () {
-            $state.go('main', {}, {});
+            $state.go('main', {}, { relaod:true });
         };
         $scope.GoToList = function () {
             if (SALESMANACTIVITY_ORM.SEARCH.SalesmanNameLike != $scope.Rcsm1.SalesmanNameLike) {
@@ -75,28 +75,23 @@ appControllers.controller('SalesmanActivityListCtrl',
             $state.go('salesmanActivityDetail', { 'TrxNo': Smsa1.TrxNo, 'SalesmanNameLike': $scope.List.SalesmanNameLike }, { reload: true });
         };
         $scope.loadMore = function() {
-            if (SALESMANACTIVITY_ORM.LIST.Smsa1s != null && SALESMANACTIVITY_ORM.LIST.Smsa1s.length > 0) {
-                $scope.Smsa1s = SALESMANACTIVITY_ORM.LIST.Smsa1s;
-                $scope.List.CanLoadedMoreData = false;
-            } else {
-                var strUri = "/api/freight/smsa1/sps?RecordCount=" + RecordCount;
-                if ($scope.List.SalesmanNameLike != null && $scope.List.SalesmanNameLike.length > 0) {
-                    strUri = strUri + "&SalesmanName=" + $scope.List.SalesmanNameLike;
-                }
-                WebApiService.GetParam(strUri, false).then(function success(result){
-                    if(result.data.results.length > 0){
-                        dataResults = dataResults.concat(result.data.results);
-                        $scope.Smsa1s = dataResults;
-                        $scope.List.CanLoadedMoreData = true;
-                        RecordCount = RecordCount + 20;
-                        SALESMANACTIVITY_ORM.LIST._setObj($scope.Smsa1s);
-                    }else{
-                        $scope.List.CanLoadedMoreData = false;
-                        RecordCount = 0;
-                    }
-                    $scope.$broadcast('scroll.infiniteScrollComplete');
-                });
+            var strUri = "/api/freight/smsa1/sps?RecordCount=" + RecordCount;
+            if ($scope.List.SalesmanNameLike != null && $scope.List.SalesmanNameLike.length > 0) {
+                strUri = strUri + "&SalesmanName=" + $scope.List.SalesmanNameLike;
             }
+            WebApiService.GetParam(strUri, false).then(function success(result){
+                if(result.data.results.length > 0){
+                    dataResults = dataResults.concat(result.data.results);
+                    $scope.Smsa1s = dataResults;
+                    $scope.List.CanLoadedMoreData = true;
+                    RecordCount = RecordCount + 20;
+                    SALESMANACTIVITY_ORM.LIST._setObj($scope.Smsa1s);
+                }else{
+                    $scope.List.CanLoadedMoreData = false;
+                    RecordCount = 0;
+                }
+                $scope.$broadcast('scroll.infiniteScrollComplete');
+            });
         };
     }]);
 
@@ -246,29 +241,23 @@ appControllers.controller('ContactsListCtrl',
             $state.go('contactsDetail', { 'TrxNo': Rcbp1.TrxNo, 'BusinessPartyNameLike': $scope.ContactsList.BusinessPartyNameLike }, { reload: true });
         };
         $scope.loadMore = function() {
-            if(CONTACTS_ORM.CONTACTS_LIST.Rcbp1s != null && CONTACTS_ORM.CONTACTS_LIST.Rcbp1s.length > 0){
-                $scope.Rcbp1s = CONTACTS_ORM.CONTACTS_LIST.Rcbp1s;
-                $scope.ContactsList.CanLoadedMoreData = false;
+            var strUri = "/api/freight/rcbp1/sps?RecordCount=" + RecordCount;
+            if ($scope.ContactsList.BusinessPartyNameLike != null && $scope.ContactsList.BusinessPartyNameLike.length > 0) {
+                strUri = strUri + "&BusinessPartyName=" + $scope.ContactsList.BusinessPartyNameLike;
             }
-            else{
-                var strUri = "/api/freight/rcbp1/sps?RecordCount=" + RecordCount;
-                if ($scope.ContactsList.BusinessPartyNameLike != null && $scope.ContactsList.BusinessPartyNameLike.length > 0) {
-                    strUri = strUri + "&BusinessPartyName=" + $scope.ContactsList.BusinessPartyNameLike;
+            WebApiService.GetParam(strUri, false).then(function success(result){
+                if(result.data.results.length > 0){
+                    dataResults = dataResults.concat(result.data.results);
+                    $scope.Rcbp1s = dataResults;
+                    $scope.ContactsList.CanLoadedMoreData = true;
+                    RecordCount = RecordCount + 20;
+                    CONTACTS_ORM.CONTACTS_LIST._set($scope.Rcbp1s);
+                }else{
+                    $scope.ContactsList.CanLoadedMoreData = false;
+                    RecordCount = 0;
                 }
-                WebApiService.GetParam(strUri, false).then(function success(result){
-                    if(result.data.results.length > 0){
-                        dataResults = dataResults.concat(result.data.results);
-                        $scope.Rcbp1s = dataResults;
-                        $scope.ContactsList.CanLoadedMoreData = true;
-                        RecordCount = RecordCount + 20;
-                        CONTACTS_ORM.CONTACTS_LIST._set($scope.Rcbp1s);
-                    }else{
-                        $scope.ContactsList.CanLoadedMoreData = false;
-                        RecordCount = 0;
-                    }
-                    $scope.$broadcast('scroll.infiniteScrollComplete');
-                });
-            }
+                $scope.$broadcast('scroll.infiniteScrollComplete');
+            });
         };
     }]);
 
@@ -292,9 +281,6 @@ appControllers.controller('ContactsDetailCtrl',
         $scope.TabClick = function (index) {
             $scope.ContactsDetail.TabIndex = index;
             CONTACTS_ORM.CONTACTS_DETAIL._setTab(index);
-            if(index === 1){
-                GetRcbp3s($scope.rcbp1.BusinessPartyCode);
-            };
         };
         $scope.ClickWebUrl = function(url) {
             OpenUrlService.Open(url);
@@ -399,6 +385,7 @@ appControllers.controller('ContactsDetailCtrl',
                         $scope.rcbp1 = result.data.results[0];
                         CONTACTS_ORM.CONTACTS_DETAIL._setId(TrxNo);
                         CONTACTS_ORM.CONTACTS_DETAIL._setObj($scope.rcbp1);
+                        GetRcbp3s($scope.rcbp1.BusinessPartyCode);
                     }
                 });
             }
@@ -522,48 +509,178 @@ appControllers.controller('ContactsInfoEditCtrl',
         };
     }]);
 
-appControllers.controller('SalesCtrl',
-    ['$scope', '$state', '$stateParams', 'CONTACTS_ORM',
-    function ($scope, $state, $stateParams, CONTACTS_ORM) {
-        $scope.Rcbp = {
-            BusinessPartyNameLike: CONTACTS_ORM.CONTACTS_SEARCH.BusinessPartyNameLike
+appControllers.controller('SalesCostCtrl',
+    ['$scope', '$state', '$stateParams', '$ionicPopup', 'WebApiService', 'SALES_ORM',
+    function ($scope, $state, $stateParams, $ionicPopup, WebApiService, SALES_ORM) {
+        var alertPopup = null;
+        $scope.Search = {
+            Type                :SALES_ORM.SEARCH.Type,
+            PartyName           :SALES_ORM.SEARCH.Smct.PartyName,
+            PortOfLoadingCode   :SALES_ORM.SEARCH.Smct.PortOfLoadingCode,
+            PortOfDischargeCode :SALES_ORM.SEARCH.Smct.PortOfDischargeCode,
+            EffectiveDate       :SALES_ORM.SEARCH.Smct.EffectiveDate,
+            ExpiryDate          :SALES_ORM.SEARCH.Smct.ExpiryDate,
+            ModuleCode          :SALES_ORM.SEARCH.Smct.ModuleCode,
+            JobType             :SALES_ORM.SEARCH.Smct.JobType
         };
         $scope.returnMain = function () {
-            $state.go('main', {}, {});
+            $state.go('main', {}, { relaod:true });
         };
         $scope.GoToList = function () {
-            if(CONTACTS_ORM.CONTACTS_SEARCH.BusinessPartyNameLike != $scope.Rcbp.BusinessPartyNameLike){
-                CONTACTS_ORM.init();
-                CONTACTS_ORM.CONTACTS_SEARCH._set($scope.Rcbp.BusinessPartyNameLike);
+            if (
+                is.not.equal($scope.Search.PartyName, SALES_ORM.SEARCH.Smct.PartyName)||
+                is.not.equal($scope.Search.PortOfLoadingCode, SALES_ORM.SEARCH.Smct.PortOfLoadingCode)||
+                is.not.equal($scope.Search.PortOfDischargeCode, SALES_ORM.SEARCH.Smct.PortOfDischargeCode)||
+                is.not.equal($scope.Search.EffectiveDate, SALES_ORM.SEARCH.Smct.EffectiveDate)||
+                is.not.equal($scope.Search.ExpiryDate, SALES_ORM.SEARCH.Smct.ExpiryDate)||
+                is.not.equal($scope.Search.ModuleCode, SALES_ORM.SEARCH.Smct.ModuleCode)||
+                is.not.equal($scope.Search.JobType, SALES_ORM.SEARCH.Smct.JobType)
+            ) {
+                SALES_ORM.SEARCH.setSmct($scope.Search);
+                $state.go('salesCostList', {}, { reload: true });
+            } else {
+                if(is.not.empty(SALES_ORM.LIST.Smct1s)){
+                    $state.go('salesCostList', {}, { reload: true });
+                } else {
+                    alertPopup = $ionicPopup.alert({
+                            title: 'No Records Found.',
+                            okType: 'button-assertive'
+                    });
+                }
             }
-            $state.go('contactsList', { 'BusinessPartyNameLike': $scope.Rcbp.BusinessPartyNameLike }, { reload: true });
         };
-        $('#iBusinessPartyName').on('keydown', function (e) {
+        $('#iPartyName').on('keydown', function (e) {
             if (e.which === 9 || e.which === 13) {
-                $scope.GoToList();
+                $('#iPOL').focus();
+            }
+        });
+        $('#iPOL').on('keydown', function (e) {
+            if (e.which === 9 || e.which === 13) {
+                $('#iPOD').focus();
+            }
+        });
+        $('#iPOD').on('keydown', function (e) {
+            if (e.which === 9 || e.which === 13) {
+                $('#iEffectiveDate').focus();
+            }
+        });
+        $('#iEffectiveDate').on('keydown', function (e) {
+            if (e.which === 9 || e.which === 13) {
+                $('#iExpiryDate').focus();
+            }
+        });
+        $('#iExpiryDate').on('keydown', function (e) {
+            if (e.which === 9 || e.which === 13) {
+                $('#iModule').focus();
+            }
+        });
+        $('#iModule').on('keydown', function (e) {
+            if (e.which === 9 || e.which === 13) {
+                $('#iJobType').focus();
+            }
+        });
+        $('#iJobType').on('keydown', function (e) {
+            if (e.which === 9 || e.which === 13) {
+                if(alertPopup === null){
+                    $scope.GoToList();
+                }else{
+                    alertPopup.close();
+                    alertPopup = null;
+                }
             }
         });
     }]);
 
-appControllers.controller('CostCtrl',
-    ['$scope', '$state', '$stateParams', 'CONTACTS_ORM',
-    function ($scope, $state, $stateParams, CONTACTS_ORM) {
-        $scope.Rcbp = {
-            BusinessPartyNameLike: CONTACTS_ORM.CONTACTS_SEARCH.BusinessPartyNameLike
+appControllers.controller('SalesCostListCtrl',
+    ['$scope', '$state', '$stateParams', 'WebApiService', 'SALES_ORM',
+    function ($scope, $state, $stateParams, WebApiService, SALES_ORM) {
+        var RecordCount = 0;
+        var dataResults = new Array();
+        $scope.Search = {
+            PartyName           :SALES_ORM.SEARCH.Smct.PartyName,
+            PortOfLoadingCode   :SALES_ORM.SEARCH.Smct.PortOfLoadingCode,
+            PortOfDischargeCode :SALES_ORM.SEARCH.Smct.PortOfDischargeCode,
+            EffectiveDate       :SALES_ORM.SEARCH.Smct.EffectiveDate,
+            ExpiryDate          :SALES_ORM.SEARCH.Smct.ExpiryDate,
+            ModuleCode          :SALES_ORM.SEARCH.Smct.ModuleCode,
+            JobType             :SALES_ORM.SEARCH.Smct.JobType
         };
-        $scope.returnMain = function () {
-            $state.go('main', {}, {});
+        $scope.List = {
+            CanLoadedMoreData : true
         };
-        $scope.GoToList = function () {
-            if(CONTACTS_ORM.CONTACTS_SEARCH.BusinessPartyNameLike != $scope.Rcbp.BusinessPartyNameLike){
-                CONTACTS_ORM.init();
-                CONTACTS_ORM.CONTACTS_SEARCH._set($scope.Rcbp.BusinessPartyNameLike);
+        $scope.ShowDate= function (utc) {
+            return moment(utc).format('DD-MMM-YYYY');
+        };
+        $scope.returnSearch = function () {
+            $state.go('salesCost', {}, { reload:true });
+        };
+        $scope.GoToDetail = function (Smct1) {
+            SALES_ORM.DETAIL._setKey(Smct1.TrxNo);
+            SALES_ORM.DETAIL._setObj(Smct1);
+            $state.go('salesCostDetail', {}, { reload: true });
+        };
+        $scope.loadMore = function() {
+            var strUri = "/api/freight/smct1/sps?RecordCount=" + RecordCount;
+            if (is.not.empty($scope.Search.PartyName)) {
+                strUri = strUri + "&PartyName=" + $scope.Search.PartyName;
             }
-            $state.go('contactsList', { 'BusinessPartyNameLike': $scope.Rcbp.BusinessPartyNameLike }, { reload: true });
-        };
-        $('#iBusinessPartyName').on('keydown', function (e) {
-            if (e.which === 9 || e.which === 13) {
-                $scope.GoToList();
+            if (is.not.empty($scope.Search.PortOfLoadingCode)) {
+                strUri = strUri + "&PortOfLoadingCode=" + $scope.Search.PortOfLoadingCode;
             }
-        });
+            if (is.not.empty($scope.Search.PortOfDischargeCode)) {
+                strUri = strUri + "&PortOfDischargeCode=" + $scope.Search.PortOfDischargeCode;
+            }
+            if (is.not.empty($scope.Search.EffectiveDate)) {
+                strUri = strUri + "&EffectiveDate=" + $scope.Search.EffectiveDate;
+            }
+            if (is.not.empty($scope.Search.ExpiryDate)) {
+                strUri = strUri + "&ExpiryDate=" + $scope.Search.ExpiryDate;
+            }
+            if (is.not.empty($scope.Search.ModuleCode)) {
+                strUri = strUri + "&ModuleCode=" + $scope.Search.ModuleCode;
+            }
+            if (is.not.empty($scope.Search.JobType)) {
+                strUri = strUri + "&JobType=" + $scope.Search.JobType;
+            }
+            WebApiService.GetParam(strUri, false).then(function success(result){
+                if(result.data.results.length > 0){
+                    dataResults = dataResults.concat(result.data.results);
+                    $scope.Smct1s = dataResults;
+                    $scope.List.CanLoadedMoreData = true;
+                    RecordCount = RecordCount + 20;
+                    SALES_ORM.LIST._set($scope.Smct1s);
+                }else{
+                    $scope.List.CanLoadedMoreData = false;
+                    RecordCount = 0;
+                }
+                $scope.$broadcast('scroll.infiniteScrollComplete');
+            });
+        };
+    }]);
+
+appControllers.controller('SalesCostDetailCtrl',
+    ['$scope', '$state', '$stateParams', 'WebApiService', 'SALES_ORM',
+    function ($scope, $state, $stateParams, WebApiService, SALES_ORM) {
+        $scope.Smct1 = SALES_ORM.DETAIL.Smct1;
+        $scope.Detail = {
+            TrxNo : SALES_ORM.DETAIL.TrxNo
+        };
+        $scope.returnList = function () {
+            $state.go('salesCostList', {}, { reload:true });
+        };
+        $scope.ShowDate= function (utc) {
+            return moment(utc).format('DD-MMM-YYYY');
+        };
+        var GetSmct2Detail = function (TrxNo) {
+            if (is.not.empty(SALES_ORM.DETAIL.Smct2s) && SALES_ORM.DETAIL.TrxNo === parseInt(TrxNo)) {
+                $scope.Smct2s = SALES_ORM.DETAIL.Smct2s;
+            } else {
+                var strUri = "/api/freight/smct2?TrxNo=" + TrxNo;
+                WebApiService.GetParam(strUri, true).then(function success(result){
+                    $scope.Smct2s = result.data.results;
+                    SALES_ORM.DETAIL._setObjs($scope.Smct2s);
+                });
+            }
+        };
+        GetSmct2Detail($scope.Detail.TrxNo);
     }]);
