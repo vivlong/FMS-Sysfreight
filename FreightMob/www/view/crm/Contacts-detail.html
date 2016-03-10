@@ -21,19 +21,26 @@
 					</div>
 					<div class="item item-body">
 						<div class="list">
-							<div class="item" style="border-width: 0px;">
-								<i class="iconfont ion-android-map"></i>&nbsp;&nbsp;&nbsp;&nbsp;
-								<span ng-bind="rcbp1.Address1"></span>
-							</div>
-							<div class="item" style="border-width: 0px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								<span ng-bind="rcbp1.Address2"></span>
-							</div>
-							<div class="item" style="border-width: 0px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								<span ng-bind="rcbp1.Address3"></span>
-							</div>
-							<div class="item" style="border-width: 0px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								<span ng-bind="rcbp1.Address4"></span>
-							</div>
+                            <div style="overflow:auto;_height:1%">
+                                <div style="float:left;">
+                                    <div class="item" style="border-width: 0px;">
+        								<i class="iconfont ion-ios-location"></i>&nbsp;&nbsp;&nbsp;&nbsp;
+        								<span ng-bind="rcbp1.Address1"></span>
+        							</div>
+        							<div class="item" style="border-width: 0px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        								<span ng-bind="rcbp1.Address2"></span>
+        							</div>
+        							<div class="item" style="border-width: 0px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        								<span ng-bind="rcbp1.Address3"></span>
+        							</div>
+        							<div class="item" style="border-width: 0px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        								<span ng-bind="rcbp1.Address4"></span>
+        							</div>
+                                </div>
+                                <div style="float:right;margin-top: 3em;margin-right: 1em;">
+                                    <a style="text-decoration: none;" ng-click="showMap()"><i class="iconfont ion-ios-navigate" style="font-size: 2em;"></i></a>
+                                </div>
+                            </div>
 							<div class="item">
 								<i class="iconfont icon-accountcity"></i>&nbsp;&nbsp;
 								<span ng-bind="rcbp1.CityCode"></span>&nbsp;&nbsp;|&nbsp;&nbsp;<span ng-bind="rcbp1.CityName"></span>
@@ -101,4 +108,26 @@
 			</ion-scroll>
 		</ion-tab>
 	</ion-tabs>
+    <script id="map.html" type="text/ng-template">
+        <ion-modal-view>
+            <ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
+                <div class="buttons">
+                	<button class="button button-icon button-clear ion-android-arrow-back" ng-click="closeMap()"></button>
+                </div>
+                <h1 class="title">Map</h1>
+            </ion-header-bar>
+            <ion-pane>
+                <div style="height: 43px;"></div>
+                <div id="map" style="height:480px;width:100%;"></div>
+            </ion-pane>
+            <ion-footer-bar align-title="center" class="bar-positive">
+        		<h1 class="title"> </h1>
+        		<div class="buttons">
+        			<button class="button" ng-click="closeMap()">
+                        <i class="icon ion-arrow-return-right"></i>&nbsp;&nbsp;Return
+                    </button>
+        		</div>
+        	</ion-footer-bar>
+        </ion-modal-view>
+    </script>
 </ion-view>

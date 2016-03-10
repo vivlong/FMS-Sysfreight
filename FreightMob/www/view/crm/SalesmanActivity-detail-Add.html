@@ -11,11 +11,11 @@
 			<div class="item item-body">
 				<label class="item item-input item-md-label ng-valid" id="iDateTime" highlight-color="balanced" type="text">
 					<span class="input-label">Date</span>
-    				<span class="h5" ng-bind="Smsa2.DateTime.Format('dd-NNN-yyyy')"></span>
+    				<span class="h5" ng-bind="ShowDate(Smsa2.DateTime)"></span>
 					<div class="highlight highlight-balanced"></div>
 				</label>
 				<label class="item item-input item-md-label ng-valid" id="iCustomerName" highlight-color="balanced">
-					<input type="text" class="md-input ng-pristine ng-valid used ng-touched" ng-model="Smsa2.CustomerName">
+					<input type="text" class="md-input ng-pristine ng-valid used ng-touched" ng-model="Smsa2.CustomerName" readonly="true">
 					<span class="input-label">Customer</span>
 					<div class="highlight highlight-balanced"></div>
 				</label>

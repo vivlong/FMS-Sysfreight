@@ -207,3 +207,24 @@ appFactory.factory('SALES_ORM',function(){
     };
     return SALES_ORM;
 });
+appFactory.factory('GEO_CONSTANT',function(){
+    var GEO_CONSTANT = {
+        Baidu:{
+            point: {},
+            set:   function(value) {
+                this.point = value;
+            }
+        },
+        Google:{
+            point: {},
+            set:   function(value) {
+                this.point = value;
+            }
+        }
+    };
+    GEO_CONSTANT.init = function() {
+        this.Baidu.point = {};
+        this.Google.point = {};
+    };
+    return GEO_CONSTANT;
+});

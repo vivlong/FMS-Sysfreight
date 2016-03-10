@@ -8,16 +8,21 @@ var app = angular.module('MobileAPP', [
     'ngCordova.plugins.file',
     'ngCordova.plugins.fileTransfer',
     'ngCordova.plugins.fileOpener2',
+    'MobileAPP.config',
+    'MobileAPP.factories',
+    'MobileAPP.services',
     'MobileAPP.controllers'
 ]);
 
-app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$ionicPopup', '$ionicHistory', '$ionicLoading', '$cordovaToast', '$cordovaFile',
-    function ($ionicPlatform, $rootScope, $state, $location, $timeout, $ionicPopup, $ionicHistory, $ionicLoading, $cordovaToast, $cordovaFile) {
+app.run(['ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$ionicPopup',
+'$ionicHistory', '$ionicLoading', '$cordovaToast', '$cordovaFile', 'GeoService', 'GEO_CONSTANT',
+    function (ENV, $ionicPlatform, $rootScope, $state, $location, $timeout, $ionicPopup,
+    $ionicHistory, $ionicLoading, $cordovaToast, $cordovaFile, GeoService, GEO_CONSTANT) {
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
             if (window.cordova && window.cordova.plugins.Keyboard) {
-				blnMobilePlatform = true;
+                ENV.fromWeb = false;
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
                 cordova.plugins.Keyboard.disableScroll(true);
                 /*
@@ -30,26 +35,15 @@ app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$io
                     //window.plugins.jPushPlugin.receiveMessageInAndroidCallback = function(data);
                 }
                 */
-                var data = 'BaseUrl=' + strBaseUrl + '##WebServiceURL=' + strWebServiceURL + '##WebSiteURL=' + strWebSiteURL;
+                var data = 'website=' + ENV.website + '##api=' + ENV.api + '##map=' + ENV.mapProvider;
                 var path = cordova.file.externalRootDirectory;
-                var directory = strAppRootPath;
-                var file = directory + "/" + strAppConfigFileName;
+                var directory = ENV.rootPath;
+                var file = directory + "/" + ENV.configFile;
                 $cordovaFile.createDir(path, directory, false)
                     .then(function (success) {
                         $cordovaFile.writeFile(path, file, data, true)
                             .then(function (success) {
                                 //
-                                if (strBaseUrl.length > 0) {
-                                    strBaseUrl = "/" + strBaseUrl;
-                                }
-                                strWebServiceURL = onStrToURL(strWebServiceURL);
-                                //if (strWebServiceURL.length > 0) {
-                                //    strWebServiceURL = "http://" + strWebServiceURL;
-                                //}
-                                strWebSiteURL = onStrToURL(strWebSiteURL);
-                                //if (strWebSiteURL.length > 0) {
-                                //    strWebSiteURL = "http://" + strWebSiteURL;
-                                //}
                             }, function (error) {
                                 $cordovaToast.showShortBottom(error);
                             });
@@ -59,31 +53,19 @@ app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$io
                             .then(function (success) {
                                 $cordovaFile.readAsText(path, file)
                                     .then(function (success) {
-                                        var arConf = success.split("##");
-                                        var arBaseUrl = arConf[0].split("=");
-                                        if (arBaseUrl[1].length > 0) {
-                                            strBaseUrl = arBaseUrl[1];
+                                        var arConf = success.split('##');
+                                        var arWebServiceURL = arConf[0].split('=');
+                                        if (is.not.empty(arWebServiceURL[1])) {
+                                            ENV.website = arWebServiceURL[1];
                                         }
-                                        var arWebServiceURL = arConf[1].split("=");
-                                        if (arWebServiceURL[1].length > 0) {
-                                            strWebServiceURL = arWebServiceURL[1];
+                                        var arWebSiteURL = arConf[1].split('=');
+                                        if (is.not.empty(arWebSiteURL[1])) {
+                                            ENV.api = arWebSiteURL[1];
                                         }
-                                        var arWebSiteURL = arConf[2].split("=");
-                                        if (arWebSiteURL[1].length > 0) {
-                                            strWebSiteURL = arWebSiteURL[1];
+                                        var arMapProvider = arConf[2].split('=');
+                                        if (is.not.empty(arMapProvider[1])) {
+                                            ENV.mapProvider = arMapProvider[1];
                                         }
-                                        //
-                                        if (strBaseUrl.length > 0) {
-                                            strBaseUrl = "/" + strBaseUrl;
-                                        }
-                                        strWebServiceURL = onStrToURL(strWebServiceURL);
-                                        //if (strWebServiceURL.length > 0) {
-                                        //    strWebServiceURL = "http://" + strWebServiceURL;
-                                        //}
-                                        strWebSiteURL = onStrToURL(strWebSiteURL);
-                                        //if (strWebSiteURL.length > 0) {
-                                        //    strWebSiteURL = "http://" + strWebSiteURL;
-                                        //}
                                     }, function (error) {
                                         $cordovaToast.showShortBottom(error);
                                     });
@@ -92,28 +74,11 @@ app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$io
                                 $cordovaFile.writeFile(path, file, data, true)
                                     .then(function (success) {
                                         //
-                                        if (strBaseUrl.length > 0) {
-                                            strBaseUrl = "/" + strBaseUrl;
-                                        }
-                                        strWebServiceURL = onStrToURL(strWebServiceURL);
-                                        //if (strWebServiceURL.length > 0) {
-                                        //    strWebServiceURL = "http://" + strWebServiceURL;
-                                        //}
-                                        strWebSiteURL = onStrToURL(strWebSiteURL);
-                                        //if (strWebSiteURL.length > 0) {
-                                        //    strWebSiteURL = "http://" + strWebSiteURL;
-                                        //}
                                     }, function (error) {
                                         $cordovaToast.showShortBottom(error);
                                     });
                             });
                     });
-            } else {
-                if (strBaseUrl.length > 0) {
-                    strBaseUrl = "/" + strBaseUrl;
-                }
-                strWebServiceURL = onStrToURL(strWebServiceURL);
-                strWebSiteURL = onStrToURL(strWebSiteURL);
             }
             if (window.StatusBar) {
                 // org.apache.cordova.statusbar required
@@ -159,11 +124,77 @@ app.run(['$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$io
             }
             return false;
         }, 101);
+
+        function getJS(url) {
+            return new Promise(function(resolve, reject) {
+                var script = document.createElement('script');
+                script.type = "text/javascript";
+                if (script.readyState){  //IE
+                    script.onreadystatechange = function() {
+                        if (script.readyState == "loaded" ||
+                                script.readyState == "complete") {
+                            script.onreadystatechange = null;
+                            resolve('success');
+                        }
+                    };
+                } else {  //Others
+                    script.onload = function(){
+                        resolve('success');
+                    };
+                }
+                script.onerror = function() {
+                    reject(Error('load error!'));
+                };
+                script.src = url;
+                document.body.appendChild(script);
+            });
+        }
+        GEO_CONSTANT.init();
+        if(is.equal(ENV.mapProvider,'baidu')){
+            var baiduJs = 'http://api.map.baidu.com/api?v=2.0&ak=94415618dfaa9ff5987dd07983f25159';
+            getJS(baiduJs).then(function(msg){
+                GeoService.BaiduGetCurrentPosition().then(function onSuccess(point){
+                    var pos = {
+                        lat: point.lat,
+                        lng: point.lng
+                    };
+                    GEO_CONSTANT.Baidu.set(pos);
+                }, function onError(msg){
+                });
+            });
+        }else if(is.equal(ENV.mapProvider,'google')){
+            var googleJs = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
+            getJS(googleJs).then(function(msg){
+                GeoService.GoogleGetCurrentPosition().then(function onSuccess(point){
+                    var pos = {
+                        lat: point.coords.latitude,
+                        lng: point.coords.longitude
+                    };
+                    GEO_CONSTANT.Google.set(pos);
+                }, function onError(msg){
+                });
+            });
+        }
     }]);
 
-app.config(['$stateProvider', '$urlRouterProvider', '$ionicConfigProvider', '$ionicFilterBarConfigProvider',
-    function ($stateProvider, $urlRouterProvider, $ionicConfigProvider, $ionicFilterBarConfigProvider) {
+app.config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$ionicConfigProvider', '$ionicFilterBarConfigProvider',
+    function ($httpProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider, $ionicFilterBarConfigProvider) {
+        /*
+        $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+        */
         $ionicConfigProvider.backButton.previousTitleText(false);
+        /*
+        $ionicConfigProvider.platform.ios.tabs.style('standard');
+        $ionicConfigProvider.platform.ios.tabs.position('bottom');
+        $ionicConfigProvider.platform.android.tabs.style('standard');
+        $ionicConfigProvider.platform.android.tabs.position('bottom');
+        $ionicConfigProvider.platform.ios.navBar.alignTitle('center');
+        $ionicConfigProvider.platform.android.navBar.alignTitle('center');
+        $ionicConfigProvider.platform.ios.backButton.previousTitleText('').icon('ion-ios-arrow-thin-left');
+        $ionicConfigProvider.platform.android.backButton.previousTitleText('').icon('ion-android-arrow-back');
+        $ionicConfigProvider.platform.ios.views.transition('ios');
+        $ionicConfigProvider.platform.android.views.transition('android');
+        */
         $stateProvider
             .state('loading', {
                 url:            '/loading',

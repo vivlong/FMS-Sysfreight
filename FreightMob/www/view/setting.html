@@ -7,16 +7,20 @@
         <div style="height: 43px;"></div>
 		<div class="list list-inset">
 			<label class="item item-input item-stacked-label">
-				<span class="input-label">Server URL</span>
-				<input type="text" placeholder="www.sysfreight.com" ng-model="Setting.WebServiceURL">
-			</label>
-			<label class="item item-input item-stacked-label">
-				<span class="input-label">Web Service Name</span>
-				<input type="text" placeholder="WebApi" ng-model="Setting.BaseUrl">
+				<span class="input-label">API URL</span>
+				<input type="text" placeholder="www.sysfreight.com:8081" ng-model="Setting.WebApiURL">
 			</label>
             <label class="item item-input item-stacked-label">
                 <span class="input-label">Web Site URL</span>
                 <input type="text" placeholder="www.sysfreight.net:8081/mobileapp" ng-model="Setting.WebSiteUrl">
+            </label>
+            <label class="item item-input item-select">
+                <div class="input-label">
+                    Map Provider
+                </div>
+                <select ng-model="Setting.MapProvider" ng-options="v.name for v in Setting.MapProviderOptions">
+                    <option value="">None</option>
+                </select>
             </label>
 			<button class="button button-block button-positive" ng-click="saveSetting()">
 				Save

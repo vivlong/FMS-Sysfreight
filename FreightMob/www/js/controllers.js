@@ -11,14 +11,15 @@ var appControllers = angular.module('MobileAPP.controllers', [
     'ngCordova.plugins.fileOpener2',
     'ngCordova.plugins.sms',
     'ngCordova.plugins.actionSheet',
+    'MobileAPP.config',
     'MobileAPP.directives',
     'MobileAPP.services',
     'MobileAPP.factories'
 ]);
 
 appControllers.controller('IndexCtrl',
-        ['$scope', '$state', '$http', '$ionicPopup', '$cordovaAppVersion',
-        function ($scope, $state, $http, $ionicPopup, $cordovaAppVersion) {
+        ['ENV', '$scope', '$state', '$http', '$ionicPopup', '$cordovaAppVersion',
+        function (ENV, $scope, $state, $http, $ionicPopup, $cordovaAppVersion) {
             $scope.GoToLogin = function () {
                 $state.go('login', { 'CanCheckUpdate': 'N' }, { reload: true });
             };
@@ -26,8 +27,8 @@ appControllers.controller('IndexCtrl',
                 $state.go('setting', {}, { reload: true });
             };
             $scope.GoToUpdate = function () {
-                if(blnMobilePlatform){
-                    var url = strWebSiteURL + '/update.json';
+                if(!ENV.fromWeb){
+                    var url = ENV.website + '/update.json';
                     $http.get(url)
                     .success(function (res) {
                             var serverAppVersion = res.version;
@@ -67,24 +68,28 @@ appControllers.controller('LoadingCtrl',
         }]);
 
 appControllers.controller('LoginCtrl',
-        ['$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$cordovaToast', '$cordovaAppVersion', 'WebApiService', 'SALES_ORM',
-        function ($scope, $http, $state, $stateParams, $ionicPopup, $cordovaToast, $cordovaAppVersion, WebApiService, SALES_ORM) {
+        ['ENV', '$scope', '$http', '$state', '$stateParams', '$ionicPopup', '$cordovaToast',
+        '$cordovaAppVersion', 'WebApiService', 'SALES_ORM',
+        function (ENV, $scope, $http, $state, $stateParams, $ionicPopup, $cordovaToast,
+        $cordovaAppVersion, WebApiService, SALES_ORM) {
             $scope.logininfo = {
                 strUserName: '',
                 strPassword: ''
             };
             var alertPopup = null;
+            var alertTitle = '';
             $scope.login = function () {
                 if (window.cordova && window.cordova.plugins.Keyboard) {
                     cordova.plugins.Keyboard.close();
                 }
                 if (is.empty($scope.logininfo.strUserName)) {
+                    alertTitle = 'Please Enter User Name.';
                     alertPopup = $ionicPopup.alert({
-                        title: 'Please Enter User Name.',
+                        title: alertTitle,
                         okType: 'button-assertive'
                     });
                     alertPopup.then(function(res) {
-                        console.log('Please Enter User Name.');
+                        log4web.log(alertTitle);
                     });
                 }else{
                     var strUri = '/api/freight/login/check?UserId=' + $scope.logininfo.strUserName + '&Md5Stamp=' + hex_md5($scope.logininfo.strPassword);
@@ -93,25 +98,26 @@ appControllers.controller('LoginCtrl',
                             sessionStorage.clear();
                             sessionStorage.setItem("UserId", $scope.logininfo.strUserName);
                             //Add JPush RegistradionID
-                            if (blnMobilePlatform) {
+                            if (!ENV.fromWeb) {
                                 window.plugins.jPushPlugin.getRegistrationID(onGetRegistradionID);
                             }
                             SALES_ORM.init();
                             $state.go('main', {}, { reload: true });
                         }else{
+                            alertTitle = 'Invaild User';
                             alertPopup = $ionicPopup.alert({
-                                title: 'Invaild User',
+                                title: alertTitle,
                                 okType: 'button-assertive'
                             });
                             alertPopup.then(function(res) {
-                                log4web.log('Invaild User');
+                                log4web.log(alertTitle);
                             });
                         }
                     });
                 }
             };
-            if (!blnMobilePlatform && is.equal($stateParams.CanCheckUpdate,'Y')) {
-                var url = strWebSiteURL + '/update.json';
+            if (!ENV.fromWeb && is.equal($stateParams.CanCheckUpdate,'Y')) {
+                var url = ENV.website + '/update.json';
                 $http.get(url)
                 .success(function (res) {
                         var serverAppVersion = res.version;
@@ -142,32 +148,30 @@ appControllers.controller('LoginCtrl',
         }]);
 
 appControllers.controller('SettingCtrl',
-        ['$scope', '$state', '$ionicPopup', '$cordovaToast', '$cordovaFile',
-        function ($scope, $state, $ionicPopup, $cordovaToast, $cordovaFile) {
+        ['ENV', '$scope', '$state', '$ionicPopup', '$cordovaToast', '$cordovaFile',
+        function (ENV, $scope, $state, $ionicPopup, $cordovaToast, $cordovaFile) {
             $scope.Setting = {
-                WebServiceURL: strWebServiceURL.replace('http://', ''),
-                BaseUrl: strBaseUrl.replace('/', ''),
-                WebSiteUrl: strWebSiteURL.replace('http://', '')
+                WebApiURL:          ENV.api.replace('http://', ''),
+                WebSiteUrl:         ENV.website.replace('http://', ''),
+                MapProviderOptions:  [{'value':'google','name':'Google'},{'value':'baidu','name':'Baidu'}],
+                MapProvider:        ''
             };
             $scope.returnLogin = function () {
                 $state.go('login', { 'CanCheckUpdate': 'Y' }, { reload: true });
             };
             $scope.saveSetting = function () {
-                if ($scope.Setting.WebServiceURL.length > 0) {
-                    strWebServiceURL = onStrToURL($scope.Setting.WebServiceURL);
-                } else { $scope.Setting.WebServiceURL = strWebServiceURL }
-                if ($scope.Setting.BaseUrl.length > 0) {
-                    strBaseUrl = $scope.Setting.BaseUrl;
-                    if (strBaseUrl.length > 0) {
-                        strBaseUrl = "/" + strBaseUrl;
-                    }
-                } else { $scope.Setting.BaseUrl = strBaseUrl }
-                if ($scope.Setting.WebSiteUrl.length > 0) {
-                    strWebSiteURL = onStrToURL($scope.Setting.WebSiteUrl);
-                } else { $scope.Setting.WebSiteUrl = strWebSiteURL }
-                var data = 'BaseUrl=' + $scope.Setting.BaseUrl + '##WebServiceURL=' + $scope.Setting.WebServiceURL + '##WebSiteURL=' + strWebSiteURL;
+                if (is.not.empty($scope.Setting.WebApiURL)) {
+                    ENV.api = onStrToURL($scope.Setting.WebApiURL);
+                } else { $scope.Setting.WebApiURL = ENV.website }
+                if (is.not.empty($scope.Setting.WebSiteUrl)) {
+                    ENV.website = onStrToURL($scope.Setting.WebSiteUrl);
+                } else { $scope.Setting.WebSiteUrl = ENV.api }
+                if (is.not.empty($scope.Setting.MapProvider)) {
+                    ENV.mapProvider = $scope.Setting.MapProvider.value;
+                } else { $scope.Setting.MapProvider = ENV.mapProvider }
+                var data = 'website=' + $scope.Setting.WebSiteUrl + '##api=' + $scope.Setting.WebApiURL + '##map=' + $scope.Setting.MapProvider;
                 var path = cordova.file.externalRootDirectory;
-                var file = strAppRootPath + "/" + strAppConfigFileName;
+                var file = ENV.rootPath + '/' + ENV.configFile;
                 $cordovaFile.writeFile(path, file, data, true)
                 .then(function (success) {
                     $state.go('login', { 'CanCheckUpdate': 'Y' }, { reload: true });
@@ -177,7 +181,7 @@ appControllers.controller('SettingCtrl',
             };
             $scope.delSetting = function () {
                 var path = cordova.file.externalRootDirectory;
-                var file = strAppRootPath + "/" + strAppConfigFileName;
+                var file = ENV.rootPath + '/' + ENV.configFile;
                 $cordovaFile.removeFile(path, file)
                 .then(function (success) {
                     var alertPopup = $ionicPopup.alert({
