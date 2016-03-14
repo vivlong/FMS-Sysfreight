@@ -6,7 +6,7 @@ appControllers.controller('PaymentApprovalCtrl',
             VendorName: ''
         };
         $scope.returnMain = function () {
-            $state.go('main', {}, {});
+            $state.go('index.main', {}, {});
         };
         $scope.GoToList = function (TypeName) {
             var FilterName = '';
@@ -162,7 +162,7 @@ appControllers.controller('MemoCtrl',
         if($scope.Saus1.UserID === null){ $scope.Saus1.UserID='s'; }
         var alertPopup = null;
         $scope.returnMain = function () {
-            $state.go('main', {}, {});
+            $state.go('index.main', {}, {});
         };
         $scope.returnUpdateMemo = function(){
             if(alertPopup === null){
@@ -192,7 +192,7 @@ appControllers.controller('ReminderCtrl',
     ['$scope', '$state', '$stateParams', 'WebApiService',
     function ($scope, $state, $stateParams, WebApiService) {
         $scope.returnMain = function () {
-            $state.go('main', {}, {});
+            $state.go('index.main', {}, {});
         };
         $scope.items = [
             { id: 1, Subject: 'Payment Voucher need Approve', Message: 'Please help to approve the ref no : PV15031841', CreateBy: 'S', UserID: 'S', DueDate: 'Nov 14,2015', DueTime: '11:20' },
@@ -204,7 +204,7 @@ appControllers.controller('DocumentScanCtrl',
     ['$scope', '$state', '$stateParams', 'WebApiService',
     function ($scope, $state, $stateParams, WebApiService) {
         $scope.returnMain = function () {
-            $state.go('main', {}, {});
+            $state.go('index.main', {}, {});
         };
 
     }]);

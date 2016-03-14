@@ -1,4 +1,9 @@
 <ion-view title="Login">
+    <ion-nav-buttons>
+        <button class="button button-icon icon ion-navicon" menu-toggle="left"></button>
+    </ion-nav-buttons>
+    <ion-nav-title>
+    </ion-nav-title>
 	<ion-pane class="login">
         <div class="logo">
             <img src="./img/login.png">
@@ -14,15 +19,15 @@
                 <input type="password" id="iPassword" placeholder="Password" ng-model="logininfo.strPassword">
             </label>
             <br/>
-            <button class="button button-full button-positive showBorder" ng-click="login()" style="background-color:rgb(119,179,215);">Sign in</button>
+            <button class="button button-full button-stable showBorder" ng-click="login()">Sign in</button>
             <button class="button button-full button-small button-clear" style="background-color:transparent;">
                 <span style="color:#fff;">Forgot password ?</span>
             </button>
+        </div>        
+        <div class="bar bar-footer" style="background-color:transparent;">
+            <div class="title">
+                <span class="h6" style="color:#fff;">&copy; 2016 SysMagic</span>
+            </div>
         </div>
 	</ion-pane>
-    <div class="bar bar-footer" style="background-color:transparent;">
-        <div class="title">
-            <span class="h6" style="color:#fff;">&copy; 2016 SysMagic</span>
-        </div>
-    </div>
 </ion-view>

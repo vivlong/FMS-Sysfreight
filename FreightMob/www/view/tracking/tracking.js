@@ -7,7 +7,7 @@ appControllers.controller('VesselScheduleCtrl',
             PortOfDischargeName: ''
         };
         $scope.returnMain = function () {
-            $state.go('main', {}, {});
+            $state.go('index.main', {}, {});
         };
         $scope.GoToDetail = function (PortOfDischargeName) {
             $state.go('vesselScheduleDetail', { 'PortOfDischargeName': PortOfDischargeName }, { reload: true });
@@ -112,7 +112,7 @@ appControllers.controller('ShipmentStatusCtrl',
         }
         var alertPopup = null;
         $scope.returnMain = function () {
-            $state.go('main', {}, {});
+            $state.go('index.main', {}, {});
         };
         var getSearchResult = function (FilterName, FilterValue) {
             var strUri = '/api/freight/tracking/count?FilterName=' + FilterName + '&FilterValue=' + FilterValue;
@@ -310,11 +310,11 @@ appControllers.controller('ShipmentStatusDetailCtrl',
     }]);
 
 appControllers.controller('InvoiceCtrl',
-    ['$scope', '$state', '$ionicPopup', 'DownloadFileService', 'WebApiService',
-    function ($scope, $state, $ionicPopup, DownloadFileService, WebApiService) {
+    ['ENV', '$scope', '$state', '$ionicPopup', 'DownloadFileService', 'WebApiService',
+    function (ENV, $scope, $state, $ionicPopup, DownloadFileService, WebApiService) {
         var alertPopup = null;
         $scope.returnMain = function () {
-            $state.go('main', {}, {});
+            $state.go('index.main', {}, {});
         };
         $scope.ShowDate = function(utc){
             return moment(utc).format('DD-MMM-YYYY');
@@ -324,7 +324,7 @@ appControllers.controller('InvoiceCtrl',
         };
         $scope.download = function (Ivcr1) {
             var strFileName = Ivcr1.TrxNo + '-' + Ivcr1.FileName;
-            var strURL = '/api/freight/view/pdf/file?FolderName=ivcr1&Key=' + Ivcr1.TrxNo + '&FileName=' + Ivcr1.FileName + '&format=json';
+            var strURL = ENV.api + '/api/freight/view/pdf/file?FolderName=ivcr1&Key=' + Ivcr1.TrxNo + '&FileName=' + Ivcr1.FileName + '&format=json';
             DownloadFileService.Download(strURL, strFileName, 'application/pdf', onPlatformError, null, null);
         };
         var GetIvcr1s = function () {
@@ -349,11 +349,11 @@ appControllers.controller('InvoiceCtrl',
     }]);
 
 appControllers.controller('BlCtrl',
-    ['$scope', '$state', '$ionicPopup', 'DownloadFileService', 'WebApiService',
-    function ($scope, $state, $ionicPopup, DownloadFileService, WebApiService) {
+    ['ENV', '$scope', '$state', '$ionicPopup', 'DownloadFileService', 'WebApiService',
+    function (ENV, $scope, $state, $ionicPopup, DownloadFileService, WebApiService) {
         var alertPopup = null;
         $scope.returnMain = function () {
-            $state.go('main', {}, {});
+            $state.go('index.main', {}, {});
         };
         $scope.ShowDate = function(utc){
             return moment(utc).format('DD-MMM-YYYY');
@@ -363,7 +363,7 @@ appControllers.controller('BlCtrl',
         };
         $scope.download = function (Jmjm1) {
             var strFileName = Jmjm1.JobNo + '-' + Jmjm1.FileName;
-            var strURL = '/api/freight/view/pdf/file?FolderName=jmjm1&Key=' + Jmjm1.JobNo + '&FileName=' + Jmjm1.FileName + '&format=json';
+            var strURL = ENV.api + '/api/freight/view/pdf/file?FolderName=jmjm1&Key=' + Jmjm1.JobNo + '&FileName=' + Jmjm1.FileName + '&format=json';
             DownloadFileService.Download(strURL, strFileName, 'application/pdf', onPlatformError, null, null);
         };
         var GetJmjm1s = function () {
@@ -388,11 +388,11 @@ appControllers.controller('BlCtrl',
     }]);
 
 appControllers.controller('AwbCtrl',
-    ['$scope', '$state', '$ionicPopup', 'DownloadFileService', 'WebApiService',
-    function ($scope, $state, $ionicPopup, DownloadFileService, WebApiService) {
+    ['ENV', '$scope', '$state', '$ionicPopup', 'DownloadFileService', 'WebApiService',
+    function (ENV, $scope, $state, $ionicPopup, DownloadFileService, WebApiService) {
         var alertPopup = null;
         $scope.returnMain = function () {
-            $state.go('main', {}, {});
+            $state.go('index.main', {}, {});
         };
         $scope.ShowDate = function(utc){
             return moment(utc).format('DD-MMM-YYYY');
@@ -402,7 +402,7 @@ appControllers.controller('AwbCtrl',
         };
         $scope.download = function (Jmjm1) {
             var strFileName = Jmjm1.JobNo + '-' + Jmjm1.FileName;
-            var strURL = '/api/freight/view/pdf/file?FolderName=jmjm1&Key=' + Jmjm1.JobNo + '&FileName=' + Jmjm1.FileName + '&format=json';
+            var strURL = ENV.api + '/api/freight/view/pdf/file?FolderName=jmjm1&Key=' + Jmjm1.JobNo + '&FileName=' + Jmjm1.FileName + '&format=json';
             DownloadFileService.Download(strURL, strFileName, 'application/pdf', onPlatformError, null, null);
         };
         var GetJmjm1s = function () {
@@ -427,11 +427,11 @@ appControllers.controller('AwbCtrl',
     }]);
 
 appControllers.controller('SOACtrl',
-    ['$scope', '$state', '$ionicPopup', 'DownloadFileService', 'WebApiService',
-    function ($scope, $state, $ionicPopup, DownloadFileService, WebApiService) {
+    ['ENV', '$scope', '$state', '$ionicPopup', 'DownloadFileService', 'WebApiService',
+    function (ENV, $scope, $state, $ionicPopup, DownloadFileService, WebApiService) {
         var alertPopup = null;
         $scope.returnMain = function () {
-            $state.go('main', {}, {});
+            $state.go('index.main', {}, {});
         };
         $scope.ShowDate = function(utc){
             return moment(utc).format('DD-MMM-YYYY');
@@ -441,7 +441,7 @@ appControllers.controller('SOACtrl',
         };
         $scope.download = function (Slcu1) {
             var strFileName = Slcu1.TrxNo + '-' + Slcu1.FileName;
-            var strURL = '/api/freight/view/pdf/file?FolderName=jmjm1&Key=' + Slcu1.TrxNo + '&FileName=' + Slcu1.FileName + '&format=json';
+            var strURL = ENV.api + '/api/freight/view/pdf/file?FolderName=jmjm1&Key=' + Slcu1.TrxNo + '&FileName=' + Slcu1.FileName + '&format=json';
             DownloadFileService.Download(strURL, strFileName, 'application/pdf', onPlatformError, null, null);
         };
         var GetJmjm1s = function () {

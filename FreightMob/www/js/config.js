@@ -9,7 +9,7 @@ appConfig.value('ENV', {
     'appId':        '9CBA0A78-7D1D-49D3-BA71-C72E93F9E48F',
     'rootPath':     'FreightApp',
     'configFile':   'config.txt',
-    'mapProvider':  'google',
+    'mapProvider':  'baidu',
     'version':      '1.0.24'
 });
 

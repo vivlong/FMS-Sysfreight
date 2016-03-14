@@ -65,11 +65,10 @@ appService.service('WebApiService', ['$q', 'ENV', '$http', '$ionicLoading', '$io
 
 appService.service('DownloadFileService', ['ENV', '$http', '$timeout', '$ionicLoading', '$cordovaToast', '$cordovaFile', '$cordovaFileTransfer', '$cordovaFileOpener2',
     function (ENV, $http, $timeout, $ionicLoading, $cordovaToast, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2) {
-        this.Download = function(urlPath, fileName, fileType, onPlatformError, onCheckError, onDownloadError){
+        this.Download = function(url, fileName, fileType, onPlatformError, onCheckError, onDownloadError){
             $ionicLoading.show({
                 template: "Download  0%"
             });
-            var url = ENV.api + urlPath;
             var blnError = false;
             if (ENV.fromWeb) {
                 $cordovaFile.checkFile(cordova.file.externalRootDirectory + '/' + ENV.rootPath, fileName)

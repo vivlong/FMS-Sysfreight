@@ -15,9 +15,9 @@ var app = angular.module('MobileAPP', [
 ]);
 
 app.run(['ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$ionicPopup',
-'$ionicHistory', '$ionicLoading', '$cordovaToast', '$cordovaFile', 'GeoService', 'GEO_CONSTANT',
+'$ionicHistory', '$ionicLoading', '$cordovaToast', '$cordovaFile', 'GEO_CONSTANT',
     function (ENV, $ionicPlatform, $rootScope, $state, $location, $timeout, $ionicPopup,
-    $ionicHistory, $ionicLoading, $cordovaToast, $cordovaFile, GeoService, GEO_CONSTANT) {
+    $ionicHistory, $ionicLoading, $cordovaToast, $cordovaFile, GEO_CONSTANT) {
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
@@ -88,7 +88,7 @@ app.run(['ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeout
         $ionicPlatform.registerBackButtonAction(function (e) {
             e.preventDefault();
             // Is there a page to go back to?  $state.include ??
-            if ($state.includes('main') || $state.includes('login') || $state.includes('loading')) {
+            if ($state.includes('index.main') || $state.includes('index.login') || $state.includes('loading')) {
                 if ($rootScope.backButtonPressedOnceToExit) {
                     ionic.Platform.exitApp();
                 } else {
@@ -98,20 +98,34 @@ app.run(['ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeout
                         $rootScope.backButtonPressedOnceToExit = false;
                     }, 2000);
                 }
-            } else if ($state.includes('setting')) {
+            } else if ($state.includes('index.setting')) {
                 if ($ionicHistory.backView()) {
                     $ionicHistory.goBack();
                 }else{
-                    $state.go('login', { 'CanCheckUpdate': 'Y' }, { reload: true });
+                    $state.go('index.login', {}, { reload: true });
                 }
-            } else if ($state.includes('update')) {
+            } else if ($state.includes('index.update')) {
                 if ($ionicHistory.backView()) {
                     $ionicHistory.goBack();
                 }else{
-                    $state.go('login', { 'CanCheckUpdate': 'N' }, { reload: true });
+                    $state.go('index.login', {}, { reload: true });
                 }
-            } else if ($state.includes('contacts' || $state.includes('paymentApproval') || $state.includes('vesselSchedule') || $state.includes('shipmentStatus') || $state.includes('invoice') || $state.includes('bl') || $state.includes('awb'))) {
-                $state.go('main', { }, { });
+            } else if (
+                $state.includes('salesCost') ||
+                $state.includes('salesmanActivity') ||
+                $state.includes('contacts') ||
+                $state.includes('paymentApproval') ||
+                $state.includes('reminder') ||
+                $state.includes('memo') ||
+                $state.includes('documentScan') ||
+                $state.includes('vesselSchedule') ||
+                $state.includes('shipmentStatus') ||
+                $state.includes('invoice') ||
+                $state.includes('bl') ||
+                $state.includes('awb') ||
+                $state.includes('soa')
+                ) {
+                $state.go('index.main', {}, {reload: true});
             } else if ($ionicHistory.backView()) {
                 $ionicHistory.goBack();
             } else {
@@ -124,57 +138,8 @@ app.run(['ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeout
             }
             return false;
         }, 101);
-
-        function getJS(url) {
-            return new Promise(function(resolve, reject) {
-                var script = document.createElement('script');
-                script.type = "text/javascript";
-                if (script.readyState){  //IE
-                    script.onreadystatechange = function() {
-                        if (script.readyState == "loaded" ||
-                                script.readyState == "complete") {
-                            script.onreadystatechange = null;
-                            resolve('success');
-                        }
-                    };
-                } else {  //Others
-                    script.onload = function(){
-                        resolve('success');
-                    };
-                }
-                script.onerror = function() {
-                    reject(Error('load error!'));
-                };
-                script.src = url;
-                document.body.appendChild(script);
-            });
-        }
+        //GEO
         GEO_CONSTANT.init();
-        if(is.equal(ENV.mapProvider,'baidu')){
-            var baiduJs = 'http://api.map.baidu.com/api?v=2.0&ak=94415618dfaa9ff5987dd07983f25159';
-            getJS(baiduJs).then(function(msg){
-                GeoService.BaiduGetCurrentPosition().then(function onSuccess(point){
-                    var pos = {
-                        lat: point.lat,
-                        lng: point.lng
-                    };
-                    GEO_CONSTANT.Baidu.set(pos);
-                }, function onError(msg){
-                });
-            });
-        }else if(is.equal(ENV.mapProvider,'google')){
-            var googleJs = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
-            getJS(googleJs).then(function(msg){
-                GeoService.GoogleGetCurrentPosition().then(function onSuccess(point){
-                    var pos = {
-                        lat: point.coords.latitude,
-                        lng: point.coords.longitude
-                    };
-                    GEO_CONSTANT.Google.set(pos);
-                }, function onError(msg){
-                });
-            });
-        }
     }]);
 
 app.config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$ionicConfigProvider', '$ionicFilterBarConfigProvider',
@@ -196,34 +161,53 @@ app.config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$ionicConf
         $ionicConfigProvider.platform.android.views.transition('android');
         */
         $stateProvider
+            .state('index', {
+                url:            '',
+                abstract:       true,
+                templateUrl:    'view/menu.html',
+                controller:     'IndexCtrl'
+            })
             .state('loading', {
                 url:            '/loading',
                 cache:          'false',
                 templateUrl:    'view/loading.html',
                 controller:     'LoadingCtrl'
             })
-            .state('login', {
-                url:            '/login/:CanCheckUpdate',
-                cache:          'false',
-                templateUrl:    'view/login.html',
-                controller:     'LoginCtrl'
+            .state('index.login', {
+                url:            '/login',
+                views: {
+                    'menuContent': {
+                        templateUrl:    'view/login.html',
+                        controller:     'LoginCtrl'
+                    }
+                }
             })
-            .state('setting', {
+            .state('index.setting', {
                 url:            '/setting',
-                cache:          'false',
-                templateUrl:    'view/setting.html',
-                controller:     'SettingCtrl'
+                views: {
+                    'menuContent': {
+                        templateUrl:    'view/setting.html',
+                        controller:     'SettingCtrl'
+                    }
+                }
             })
-            .state('update', {
+            .state('index.update', {
                 url:            '/update/:Version',
-                cache:          'false',
-                templateUrl:    'view/update.html',
-                controller:     'UpdateCtrl'
+                views: {
+                    'menuContent': {
+                        templateUrl:    'view/update.html',
+                        controller:     'UpdateCtrl'
+                    }
+                }
             })
-            .state('main', {
+            .state('index.main', {
                 url:            '/main',
-                templateUrl:    'view/main.html',
-                controller:     'MainCtrl'
+                views: {
+                    'menuContent': {
+                        templateUrl:    'view/main.html',
+                        controller:     'MainCtrl'
+                    }
+                }
             })
             .state('salesCost',{
                 url:            '/salesCost',
@@ -396,7 +380,7 @@ app.config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$ionicConf
                 templateUrl:    'view/productivity/DocumentScan.html',
                 controller:     'DocumentScanCtrl'
             });
-        $urlRouterProvider.otherwise('/login/N');
+        $urlRouterProvider.otherwise('/login');
         /*
         $ionicFilterBarConfigProvider.theme('calm');
         $ionicFilterBarConfigProvider.clear('ion-close');

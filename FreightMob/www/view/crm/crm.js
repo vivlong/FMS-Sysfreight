@@ -5,7 +5,7 @@ appControllers.controller('SalesmanActivityCtrl', ['$scope', '$state', '$ionicPo
         };
         var alertPopup = null;
         $scope.returnMain = function() {
-            $state.go('main', {}, {
+            $state.go('index.main', {}, {
                 relaod: true
             });
         };
@@ -245,7 +245,7 @@ appControllers.controller('ContactsCtrl', ['$scope', '$state', '$stateParams', '
             BusinessPartyNameLike: CONTACTS_ORM.CONTACTS_SEARCH.BusinessPartyNameLike
         };
         $scope.returnMain = function() {
-            $state.go('main', {}, {});
+            $state.go('index.main', {}, {});
         };
         $scope.GoToList = function() {
             if (CONTACTS_ORM.CONTACTS_SEARCH.BusinessPartyNameLike != $scope.Rcbp.BusinessPartyNameLike) {
@@ -313,11 +313,12 @@ appControllers.controller('ContactsListCtrl', ['$scope', '$state', '$stateParams
 ]);
 
 appControllers.controller('ContactsDetailCtrl', ['ENV', '$scope', '$stateParams', '$state', '$ionicTabsDelegate', '$ionicPopup', '$ionicModal',
-    '$cordovaActionSheet', '$cordovaToast', '$cordovaSms', 'WebApiService',
+    '$cordovaActionSheet', '$cordovaToast', '$cordovaSms', 'WebApiService', 'GeoService',
     'OpenUrlService', 'CONTACTS_ORM', 'GEO_CONSTANT',
     function(ENV, $scope, $stateParams, $state, $ionicTabsDelegate, $ionicPopup, $ionicModal,
-        $cordovaActionSheet, $cordovaToast, $cordovaSms, WebApiService,
-        OpenUrlService, CONTACTS_ORM, GEO_CONSTANT) {
+    $cordovaActionSheet, $cordovaToast, $cordovaSms, WebApiService, GeoService,
+    OpenUrlService, CONTACTS_ORM, GEO_CONSTANT) {
+        var strmarkerLabel = '';
         $scope.ContactsDetail = {
             TrxNo: CONTACTS_ORM.CONTACTS_DETAIL.TrxNo,
             TabIndex: CONTACTS_ORM.CONTACTS_DETAIL.TabIndex
@@ -346,7 +347,6 @@ appControllers.controller('ContactsDetailCtrl', ['ENV', '$scope', '$stateParams'
             $scope.modal.show();
             var height = document.body.scrollHeight - 44 - 44;
             document.getElementById('map').style.height = height + 'px';
-            var strmarkerLabel = '';
             if (is.not.empty($scope.rcbp1.Address1)) {
                 strmarkerLabel = $scope.rcbp1.Address1;
             }
@@ -360,35 +360,9 @@ appControllers.controller('ContactsDetailCtrl', ['ENV', '$scope', '$stateParams'
                 strmarkerLabel = strmarkerLabel + '<br/>' + $scope.rcbp1.Address4;
             }
             if (is.equal(ENV.mapProvider,'baidu') && is.not.empty(GEO_CONSTANT.Baidu.point)) {
-                var map = new BMap.Map('map', {
-                    minZoom: 8,
-                    maxZoom: 20
-                });
-                map.centerAndZoom(new BMap.Point(116.400244, 39.92556), 16);
-                var mk = new BMap.Marker(GEO_CONSTANT.Baidu.point);
-                if (is.not.empty(strmarkerLabel)) {
-                    var label = new BMap.Label(strmarkerLabel, {
-                        offset: new BMap.Size(20, -20)
-                    });
-                    mk.setLabel(label);
-                }
-                map.addOverlay(mk);
-                map.panTo(GEO_CONSTANT.Baidu.point);
-                map.enableScrollWheelZoom(true);
+                loadBaidu();
             } else if(is.equal(ENV.mapProvider,'google') && is.not.empty(GEO_CONSTANT.Google.point)){
-                var pos = {
-                    lat: GEO_CONSTANT.Google.point.lat,
-                    lng: GEO_CONSTANT.Google.point.lng
-                };
-                var mapOptions = {
-                    zoom: 14,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                };
-                var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-                var infoWindow = new google.maps.InfoWindow({map: map});
-                infoWindow.setPosition(pos);
-                infoWindow.setContent(strmarkerLabel);
-                map.setCenter(pos);
+                loadGoogle();
             }
         };
         $scope.TabClick = function(index) {
@@ -515,6 +489,42 @@ appControllers.controller('ContactsDetailCtrl', ['ENV', '$scope', '$stateParams'
             }
         };
         GetRcbp1($scope.ContactsDetail.TrxNo);
+        //
+    	function loadBaidu() {
+            var map = new BMap.Map('map', {
+                minZoom: 8,
+                maxZoom: 20
+            });
+            var point = new BMap.Point(GEO_CONSTANT.Baidu.point.lat, GEO_CONSTANT.Baidu.point.lng);
+            map.centerAndZoom(point, 16);
+            var mk = new BMap.Marker(point);
+            if (is.not.empty(strmarkerLabel)) {
+                var opts = {
+                    position : point,
+                    offset: new BMap.Size(20, -20)
+                }
+                var label = new BMap.Label(strmarkerLabel,opts);
+                mk.setLabel(label);
+            }
+            map.addOverlay(mk);
+            map.panTo(point);
+            map.enableScrollWheelZoom(true);
+    	}
+        function loadGoogle() {
+            var pos = {
+                lat: GEO_CONSTANT.Google.point.lat,
+                lng: GEO_CONSTANT.Google.point.lng
+            };
+            var mapOptions = {
+                zoom: 14,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+            var infoWindow = new google.maps.InfoWindow({map: map});
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(strmarkerLabel);
+            map.setCenter(pos);
+    	}
     }
 ]);
 
@@ -672,7 +682,7 @@ appControllers.controller('SalesCostCtrl', ['$scope', '$state', '$stateParams', 
             JobType: SALES_ORM.SEARCH.Smct.JobType
         };
         $scope.returnMain = function() {
-            $state.go('main', {}, {
+            $state.go('index.main', {}, {
                 relaod: true
             });
         };
