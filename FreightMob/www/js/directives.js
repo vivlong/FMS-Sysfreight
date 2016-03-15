@@ -1,13 +1,14 @@
 var appDirectives = angular.module('MobileAPP.directives', []);
 
-appDirectives.directive('dateFormat', ['$filter', function ($filter) {
+appDirectives.directive('dateFormat', ['$filter', function($filter) {
     var dateFilter = $filter('date');
     return {
         require: 'ngModel',
-        link: function (scope, element, attrs,ctrl) {
+        link: function(scope, element, attrs, ctrl) {
             function formatter(value) {
                 return dateFilter(value, "yyyy-MM-dd HH:mm");
             }
+
             function parser() {
                 return ctrl.$modelValue;
             }

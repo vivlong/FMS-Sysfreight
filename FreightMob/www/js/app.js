@@ -15,10 +15,10 @@ var app = angular.module('MobileAPP', [
 ]);
 
 app.run(['ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$ionicPopup',
-'$ionicHistory', '$ionicLoading', '$cordovaToast', '$cordovaFile', 'GEO_CONSTANT',
-    function (ENV, $ionicPlatform, $rootScope, $state, $location, $timeout, $ionicPopup,
-    $ionicHistory, $ionicLoading, $cordovaToast, $cordovaFile, GEO_CONSTANT) {
-        $ionicPlatform.ready(function () {
+    '$ionicHistory', '$ionicLoading', '$cordovaToast', '$cordovaFile', 'GEO_CONSTANT',
+    function(ENV, $ionicPlatform, $rootScope, $state, $location, $timeout, $ionicPopup,
+        $ionicHistory, $ionicLoading, $cordovaToast, $cordovaFile, GEO_CONSTANT) {
+        $ionicPlatform.ready(function() {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
             if (window.cordova && window.cordova.plugins.Keyboard) {
@@ -40,19 +40,20 @@ app.run(['ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeout
                 var directory = ENV.rootPath;
                 var file = directory + "/" + ENV.configFile;
                 $cordovaFile.createDir(path, directory, false)
-                    .then(function (success) {
+                    .then(function(success) {
                         $cordovaFile.writeFile(path, file, data, true)
-                            .then(function (success) {
+                            .then(function(success) {
                                 //
-                            }, function (error) {
+                            }, function(error) {
+                                console.error(error);
                                 $cordovaToast.showShortBottom(error);
                             });
-                    }, function (error) {
+                    }, function(error) {
                         // If an existing directory exists
                         $cordovaFile.checkFile(path, file)
-                            .then(function (success) {
+                            .then(function(success) {
                                 $cordovaFile.readAsText(path, file)
-                                    .then(function (success) {
+                                    .then(function(success) {
                                         var arConf = success.split('##');
                                         var arWebServiceURL = arConf[0].split('=');
                                         if (is.not.empty(arWebServiceURL[1])) {
@@ -66,15 +67,15 @@ app.run(['ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeout
                                         if (is.not.empty(arMapProvider[1])) {
                                             ENV.mapProvider = arMapProvider[1];
                                         }
-                                    }, function (error) {
+                                    }, function(error) {
                                         $cordovaToast.showShortBottom(error);
                                     });
-                            }, function (error) {
+                            }, function(error) {
                                 // If file not exists
                                 $cordovaFile.writeFile(path, file, data, true)
-                                    .then(function (success) {
+                                    .then(function(success) {
                                         //
-                                    }, function (error) {
+                                    }, function(error) {
                                         $cordovaToast.showShortBottom(error);
                                     });
                             });
@@ -85,7 +86,7 @@ app.run(['ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeout
                 StatusBar.styleDefault();
             }
         });
-        $ionicPlatform.registerBackButtonAction(function (e) {
+        $ionicPlatform.registerBackButtonAction(function(e) {
             e.preventDefault();
             // Is there a page to go back to?  $state.include ??
             if ($state.includes('index.main') || $state.includes('index.login') || $state.includes('loading')) {
@@ -94,21 +95,25 @@ app.run(['ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeout
                 } else {
                     $rootScope.backButtonPressedOnceToExit = true;
                     $cordovaToast.showShortBottom('Press again to exit.');
-                    setTimeout(function () {
+                    setTimeout(function() {
                         $rootScope.backButtonPressedOnceToExit = false;
                     }, 2000);
                 }
             } else if ($state.includes('index.setting')) {
                 if ($ionicHistory.backView()) {
                     $ionicHistory.goBack();
-                }else{
-                    $state.go('index.login', {}, { reload: true });
+                } else {
+                    $state.go('index.login', {}, {
+                        reload: true
+                    });
                 }
             } else if ($state.includes('index.update')) {
                 if ($ionicHistory.backView()) {
                     $ionicHistory.goBack();
-                }else{
-                    $state.go('index.login', {}, { reload: true });
+                } else {
+                    $state.go('index.login', {}, {
+                        reload: true
+                    });
                 }
             } else if (
                 $state.includes('salesCost') ||
@@ -124,15 +129,17 @@ app.run(['ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeout
                 $state.includes('bl') ||
                 $state.includes('awb') ||
                 $state.includes('soa')
-                ) {
-                $state.go('index.main', {}, {reload: true});
+            ) {
+                $state.go('index.main', {}, {
+                    reload: true
+                });
             } else if ($ionicHistory.backView()) {
                 $ionicHistory.goBack();
             } else {
                 // This is the last page: Show confirmation popup
                 $rootScope.backButtonPressedOnceToExit = true;
                 $cordovaToast.showShortBottom('Press again to exit.');
-                setTimeout(function () {
+                setTimeout(function() {
                     $rootScope.backButtonPressedOnceToExit = false;
                 }, 2000);
             }
@@ -140,10 +147,11 @@ app.run(['ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeout
         }, 101);
         //GEO
         GEO_CONSTANT.init();
-    }]);
+    }
+]);
 
 app.config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$ionicConfigProvider', '$ionicFilterBarConfigProvider',
-    function ($httpProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider, $ionicFilterBarConfigProvider) {
+    function($httpProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider, $ionicFilterBarConfigProvider) {
         /*
         $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
         */
@@ -162,223 +170,223 @@ app.config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$ionicConf
         */
         $stateProvider
             .state('index', {
-                url:            '',
-                abstract:       true,
-                templateUrl:    'view/menu.html',
-                controller:     'IndexCtrl'
+                url: '',
+                abstract: true,
+                templateUrl: 'view/menu.html',
+                controller: 'IndexCtrl'
             })
             .state('loading', {
-                url:            '/loading',
-                cache:          'false',
-                templateUrl:    'view/loading.html',
-                controller:     'LoadingCtrl'
+                url: '/loading',
+                cache: 'false',
+                templateUrl: 'view/loading.html',
+                controller: 'LoadingCtrl'
             })
             .state('index.login', {
-                url:            '/login',
+                url: '/login',
                 views: {
                     'menuContent': {
-                        templateUrl:    'view/login.html',
-                        controller:     'LoginCtrl'
+                        templateUrl: 'view/login.html',
+                        controller: 'LoginCtrl'
                     }
                 }
             })
             .state('index.setting', {
-                url:            '/setting',
+                url: '/setting',
                 views: {
                     'menuContent': {
-                        templateUrl:    'view/setting.html',
-                        controller:     'SettingCtrl'
+                        templateUrl: 'view/setting.html',
+                        controller: 'SettingCtrl'
                     }
                 }
             })
             .state('index.update', {
-                url:            '/update/:Version',
+                url: '/update/:Version',
                 views: {
                     'menuContent': {
-                        templateUrl:    'view/update.html',
-                        controller:     'UpdateCtrl'
+                        templateUrl: 'view/update.html',
+                        controller: 'UpdateCtrl'
                     }
                 }
             })
             .state('index.main', {
-                url:            '/main',
+                url: '/main',
                 views: {
                     'menuContent': {
-                        templateUrl:    'view/main.html',
-                        controller:     'MainCtrl'
+                        templateUrl: 'view/main.html',
+                        controller: 'MainCtrl'
                     }
                 }
             })
-            .state('salesCost',{
-                url:            '/salesCost',
-                cache:          'false',
-                templateUrl:    'view/crm/SalesCost.html',
-                controller:     'SalesCostCtrl'
+            .state('salesCost', {
+                url: '/salesCost',
+                cache: 'false',
+                templateUrl: 'view/crm/SalesCost.html',
+                controller: 'SalesCostCtrl'
             })
-            .state('salesCostList',{
-                url:            '/salesCost/list',
-                cache:          'false',
-                templateUrl:    'view/crm/SalesCost-list.html',
-                controller:     'SalesCostListCtrl'
+            .state('salesCostList', {
+                url: '/salesCost/list',
+                cache: 'false',
+                templateUrl: 'view/crm/SalesCost-list.html',
+                controller: 'SalesCostListCtrl'
             })
-            .state('salesCostDetail',{
-                url:            '/salesCost/detail',
-                cache:          'false',
-                templateUrl:    'view/crm/SalesCost-Detail.html',
-                controller:     'SalesCostDetailCtrl'
+            .state('salesCostDetail', {
+                url: '/salesCost/detail',
+                cache: 'false',
+                templateUrl: 'view/crm/SalesCost-Detail.html',
+                controller: 'SalesCostDetailCtrl'
             })
             .state('salesmanActivity', {
-                url:            '/salesmanActivity',
-                cache:          'false',
-                templateUrl:    'view/crm/SalesmanActivity.html',
-                controller:     'SalesmanActivityCtrl'
+                url: '/salesmanActivity',
+                cache: 'false',
+                templateUrl: 'view/crm/SalesmanActivity.html',
+                controller: 'SalesmanActivityCtrl'
             })
             .state('salesmanActivityList', {
-            url:                '/salesmanActivity/list/:SalesmanNameLike',
-                cache:          'false',
-                templateUrl:    'view/crm/SalesmanActivity-list.html',
-                controller:     'SalesmanActivityListCtrl'
+                url: '/salesmanActivity/list/:SalesmanNameLike',
+                cache: 'false',
+                templateUrl: 'view/crm/SalesmanActivity-list.html',
+                controller: 'SalesmanActivityListCtrl'
             })
             .state('salesmanActivityDetail', {
-                url:            '/salesmanActivity/detail/:SalesmanNameLike/:TrxNo',
-                cache:          'false',
-                templateUrl:    'view/crm/SalesmanActivity-detail.html',
-                controller:     'SalesmanActivityDetailCtrl'
+                url: '/salesmanActivity/detail/:SalesmanNameLike/:TrxNo',
+                cache: 'false',
+                templateUrl: 'view/crm/SalesmanActivity-detail.html',
+                controller: 'SalesmanActivityDetailCtrl'
             })
             .state('salesmanActivityDetailEdit', {
-                url:            '/salesmanActivity/detail/edit/:TrxNo/:LineItemNo',
-                cache:          'false',
-                templateUrl:    'view/crm/SalesmanActivity-detail-Edit.html',
-                controller:     'SalesmanActivityDetailEditCtrl'
+                url: '/salesmanActivity/detail/edit/:TrxNo/:LineItemNo',
+                cache: 'false',
+                templateUrl: 'view/crm/SalesmanActivity-detail-Edit.html',
+                controller: 'SalesmanActivityDetailEditCtrl'
             })
             .state('salesmanActivityDetailAdd', {
-                url:            '/salesmanActivity/detail/add/:TrxNo/:LineItemNo',
-                cache:          'false',
-                templateUrl:    'view/crm/SalesmanActivity-detail-Add.html',
-                controller:     'SalesmanActivityDetailAddCtrl'
+                url: '/salesmanActivity/detail/add/:TrxNo/:LineItemNo',
+                cache: 'false',
+                templateUrl: 'view/crm/SalesmanActivity-detail-Add.html',
+                controller: 'SalesmanActivityDetailAddCtrl'
             })
             .state('contacts', {
-                url:            '/contacts',
-                cache:          'false',
-                templateUrl:    'view/crm/Contacts.html',
-                controller:     'ContactsCtrl'
+                url: '/contacts',
+                cache: 'false',
+                templateUrl: 'view/crm/Contacts.html',
+                controller: 'ContactsCtrl'
             })
-			.state('contactsList', {
-                url:            '/contacts/list/:BusinessPartyNameLike',
-                cache:          'false',
-                templateUrl:    'view/crm/Contacts-list.html',
-                controller:     'ContactsListCtrl'
+            .state('contactsList', {
+                url: '/contacts/list/:BusinessPartyNameLike',
+                cache: 'false',
+                templateUrl: 'view/crm/Contacts-list.html',
+                controller: 'ContactsListCtrl'
             })
             .state('contactsDetail', {
-                url:            '/contacts/detail/:TrxNo',
-                templateUrl:    'view/crm/Contacts-detail.html',
-                controller:     'ContactsDetailCtrl'
+                url: '/contacts/detail/:TrxNo',
+                templateUrl: 'view/crm/Contacts-detail.html',
+                controller: 'ContactsDetailCtrl'
             })
             .state('contactsDetailEdit', {
-                url:            '/contacts/detail/Edit',
-                cache:          'false',
-                templateUrl:    'view/crm/Contacts-detail-Edit.html',
-                controller:     'ContactsDetailEditCtrl'
+                url: '/contacts/detail/Edit',
+                cache: 'false',
+                templateUrl: 'view/crm/Contacts-detail-Edit.html',
+                controller: 'ContactsDetailEditCtrl'
             })
             .state('contactsInfo', {
-                url:            '/contacts/info',
-                cache:          'false',
-                templateUrl:    'view/crm/Contacts-info.html',
-                controller:     'ContactsInfoCtrl'
+                url: '/contacts/info',
+                cache: 'false',
+                templateUrl: 'view/crm/Contacts-info.html',
+                controller: 'ContactsInfoCtrl'
             })
             .state('contactsInfoEdit', {
-                url:            '/contacts/info/Edit',
-                cache:          'false',
-                templateUrl:    'view/crm/Contacts-info-Edit.html',
-                controller:     'ContactsInfoEditCtrl'
+                url: '/contacts/info/Edit',
+                cache: 'false',
+                templateUrl: 'view/crm/Contacts-info-Edit.html',
+                controller: 'ContactsInfoEditCtrl'
             })
             .state('contactsInfoAdd', {
-                url:            '/contacts/info/Add/:BusinessPartyCode/:LineItemNo',
-                cache:          'false',
-                templateUrl:    'view/crm/Contacts-info-Add.html',
-                controller:     'ContactsInfoAddCtrl'
+                url: '/contacts/info/Add/:BusinessPartyCode/:LineItemNo',
+                cache: 'false',
+                templateUrl: 'view/crm/Contacts-info-Add.html',
+                controller: 'ContactsInfoAddCtrl'
             })
             .state('vesselSchedule', {
-                url:            '/vesselSchedule',
+                url: '/vesselSchedule',
                 //cache:        'false',
-                templateUrl:    'view/tracking/VesselSchedule.html',
-                controller:     'VesselScheduleCtrl'
+                templateUrl: 'view/tracking/VesselSchedule.html',
+                controller: 'VesselScheduleCtrl'
             })
             .state('vesselScheduleDetail', {
-                url:            '/vesselSchedule/detail/:PortOfDischargeName',
-                cache:          'false',
-                templateUrl:    'view/tracking/VesselSchedule-detail.html',
-                controller:     'VesselScheduleDetailCtrl'
+                url: '/vesselSchedule/detail/:PortOfDischargeName',
+                cache: 'false',
+                templateUrl: 'view/tracking/VesselSchedule-detail.html',
+                controller: 'VesselScheduleDetailCtrl'
             })
             .state('shipmentStatus', {
-                url:            '/shipmentStatus',
-                templateUrl:    'view/tracking/ShipmentStatus.html',
-                controller:     'ShipmentStatusCtrl'
+                url: '/shipmentStatus',
+                templateUrl: 'view/tracking/ShipmentStatus.html',
+                controller: 'ShipmentStatusCtrl'
             })
             .state('shipmentStatusList', {
-                url:            '/shipmentStatus/list/:FilterName/:FilterValue',
-                cache:          'false',
-                templateUrl:    'view/tracking/ShipmentStatus-list.html',
-                controller:     'ShipmentStatusListCtrl'
+                url: '/shipmentStatus/list/:FilterName/:FilterValue',
+                cache: 'false',
+                templateUrl: 'view/tracking/ShipmentStatus-list.html',
+                controller: 'ShipmentStatusListCtrl'
             })
             .state('shipmentStatusDetail', {
-                url:            '/shipmentStatus/detail/:FilterName/:Key/:ModuleCode',
-                cache:          'false',
-                templateUrl:    'view/tracking/ShipmentStatus-detail.html',
-                controller:     'ShipmentStatusDetailCtrl'
+                url: '/shipmentStatus/detail/:FilterName/:Key/:ModuleCode',
+                cache: 'false',
+                templateUrl: 'view/tracking/ShipmentStatus-detail.html',
+                controller: 'ShipmentStatusDetailCtrl'
             })
             .state('invoice', {
-                url:            '/invoice',
-                cache:          'false',
-                templateUrl:    'view/tracking/Invoice.html',
-                controller:     'InvoiceCtrl'
+                url: '/invoice',
+                cache: 'false',
+                templateUrl: 'view/tracking/Invoice.html',
+                controller: 'InvoiceCtrl'
             })
             .state('bl', {
-                url:            '/bl',
-                cache:          'false',
-                templateUrl:    'view/tracking/BL.html',
-                controller:     'BlCtrl'
+                url: '/bl',
+                cache: 'false',
+                templateUrl: 'view/tracking/BL.html',
+                controller: 'BlCtrl'
             })
             .state('awb', {
-                url:            '/awb',
-                cache:          'false',
-                templateUrl:    'view/tracking/AWB.html',
-                controller:     'AwbCtrl'
+                url: '/awb',
+                cache: 'false',
+                templateUrl: 'view/tracking/AWB.html',
+                controller: 'AwbCtrl'
             })
             .state('soa', {
-                url:            '/soa',
-                cache:          'false',
-                templateUrl:    'view/tracking/SOA.html',
-                controller:     'SOACtrl'
+                url: '/soa',
+                cache: 'false',
+                templateUrl: 'view/tracking/SOA.html',
+                controller: 'SOACtrl'
             })
             .state('paymentApproval', {
-                url:            '/paymentApproval',
-                templateUrl:    'view/productivity/PaymentApproval.html',
-                controller:     'PaymentApprovalCtrl'
+                url: '/paymentApproval',
+                templateUrl: 'view/productivity/PaymentApproval.html',
+                controller: 'PaymentApprovalCtrl'
             })
             .state('paymentApprovalList', {
-                url:            '/paymentApproval/list/:FilterName/:FilterValue',
-                cache:          'false',
-                templateUrl:    'view/productivity/PaymentApproval-list.html',
-                controller:     'PaymentApprovalListCtrl'
+                url: '/paymentApproval/list/:FilterName/:FilterValue',
+                cache: 'false',
+                templateUrl: 'view/productivity/PaymentApproval-list.html',
+                controller: 'PaymentApprovalListCtrl'
             })
             .state('memo', {
-                url:            '/Memo',
-                cache:          'false',
-                templateUrl:    'view/productivity/Memo.html',
-                controller:     'MemoCtrl'
+                url: '/Memo',
+                cache: 'false',
+                templateUrl: 'view/productivity/Memo.html',
+                controller: 'MemoCtrl'
             })
             .state('reminder', {
-                url:            '/Reminder',
-                cache:          'false',
-                templateUrl:    'view/productivity/Reminder.html',
-                controller:     'ReminderCtrl'
+                url: '/Reminder',
+                cache: 'false',
+                templateUrl: 'view/productivity/Reminder.html',
+                controller: 'ReminderCtrl'
             })
             .state('documentScan', {
-                url:            '/DocumentScan',
-                cache:          'false',
-                templateUrl:    'view/productivity/DocumentScan.html',
-                controller:     'DocumentScanCtrl'
+                url: '/DocumentScan',
+                cache: 'false',
+                templateUrl: 'view/productivity/DocumentScan.html',
+                controller: 'DocumentScanCtrl'
             });
         $urlRouterProvider.otherwise('/login');
         /*
@@ -389,7 +397,8 @@ app.config(['$httpProvider', '$stateProvider', '$urlRouterProvider', '$ionicConf
         $ionicFilterBarConfigProvider.transition('vertical');
         $ionicFilterBarConfigProvider.placeholder('Filter');
         */
-    }]);
+    }
+]);
 
 app.constant('$ionicLoadingConfig', {
     template: '<div class="loader"><svg class="circular"><circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/></svg></div>'

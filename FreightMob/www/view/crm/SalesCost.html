@@ -1,20 +1,20 @@
 <ion-view title="SalesCost">
-	<ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
-		<div class="buttons">
-			<button class="button button-icon button-clear ion-android-arrow-back" ng-click="returnMain()"></button>
-		</div>
-		<h1 class="title">
+    <ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
+        <div class="buttons">
+            <button class="button button-icon button-clear ion-android-arrow-back" ng-click="returnMain()"></button>
+        </div>
+        <h1 class="title">
             <span ng-if="Search.Type==='Sales'">Sales</span>
             <span ng-if="Search.Type==='Cost'">Cost</span>
             &nbsp;Activity Search
          </h1>
-	</ion-header-bar>
+    </ion-header-bar>
     <ion-content>
         <div style="height: 43px;"></div>
-		<ion-list>
+        <ion-list>
             <div class="card">
                 <div class="item">
-					<ion-md-input type="text" id="iPartyName" placeholder="Customer" highlight-color="balanced" ng-model="Search.PartyName"></ion-md-input>
+                    <ion-md-input type="text" id="iPartyName" placeholder="Customer" highlight-color="balanced" ng-model="Search.PartyName"></ion-md-input>
                     <ion-md-input type="text" id="iPOL" placeholder="POL" highlight-color="balanced" ng-model="Search.PortOfLoadingCode"></ion-md-input>
                     <ion-md-input type="text" id="iPOD" placeholder="POD" highlight-color="balanced" ng-model="Search.PortOfDischargeCode"></ion-md-input>
                     <ion-md-input type="text" id="iEffectiveDate" placeholder="Effective Date" highlight-color="balanced" ng-model="Search.EffectiveDate"></ion-md-input>
@@ -26,6 +26,6 @@
                     <i class="icon iconfont ion-android-search"></i>
                 </button>
             </div>
-		</ion-list>
-	</ion-content>
+        </ion-list>
+    </ion-content>
 </ion-view>

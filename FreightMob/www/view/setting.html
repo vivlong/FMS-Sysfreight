@@ -5,7 +5,7 @@
     <ion-nav-title align-title="center">
         Setting
     </ion-nav-title>
-	<ion-pane>
+    <ion-pane>
         <div style="height: 43px;"></div>
         <ion-list>
             <ion-item class="item-divider item-gap">
@@ -15,11 +15,11 @@
                 <span class="item-note" ng-bind="Setting.Version"></span>
             </ion-item>
         </ion-list>
-		<div class="list list-inset">
-			<label class="item item-input item-stacked-label">
-				<span class="input-label">API URL</span>
-				<input type="text" placeholder="www.sysfreight.com:8081/WebApi" ng-model="Setting.WebApiURL">
-			</label>
+        <div class="list list-inset">
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">API URL</span>
+                <input type="text" placeholder="www.sysfreight.com:8081/WebApi" ng-model="Setting.WebApiURL">
+            </label>
             <label class="item item-input item-stacked-label">
                 <span class="input-label">Web Site URL</span>
                 <input type="text" placeholder="www.sysfreight.net:8081/mobileapp" ng-model="Setting.WebSiteUrl">
@@ -34,8 +34,8 @@
                     <option value="baidu">Baidu</option>
                 </select>
             </label>
-		</div>
-	</ion-pane>
+        </div>
+    </ion-pane>
     <ion-footer-bar class="bar-positive">
         <div class="row" style="padding: 0px;">
             <button class="col button" ng-click="save()">
@@ -48,5 +48,5 @@
                 <i class="icon ion-arrow-return-right"></i>&nbsp;&nbsp;Cancel
             </button>
         </div>
-	</ion-footer-bar>
+    </ion-footer-bar>
 </ion-view>

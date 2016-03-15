@@ -1,10 +1,11 @@
-﻿<ion-view title="BL">
+
+<ion-view title="BL">
     <ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
-		<div class="buttons">
-			<button class="button button-icon button-clear ion-android-arrow-back" ng-click="returnMain()"></button>
-		</div>
-		<h1 class="title">BL</h1>
-	</ion-header-bar>
+        <div class="buttons">
+            <button class="button button-icon button-clear ion-android-arrow-back" ng-click="returnMain()"></button>
+        </div>
+        <h1 class="title">BL</h1>
+    </ion-header-bar>
     <ion-content>
         <div style="height: 43px;"></div>
         <div class="card" ng-repeat="Jmjm1 in Jmjm1s">
@@ -14,7 +15,7 @@
                         <h2>Job  No&nbsp;:&nbsp;<span ng-bind="Jmjm1.JobNo"></span></h2>
                         <p>Job Date&nbsp;:&nbsp;<span ng-bind="ShowDate(Jmjm1.JobDate)"></span></p>
                         <p>Customer Name&nbsp;:&nbsp;<span ng-bind="Jmjm1.CustomerName"></span></p>
-						<p>Amt&nbsp;:&nbsp;<span ng-bind="Jmjm1.InvoiceLocalAmt"></span></p>
+                        <p>Amt&nbsp;:&nbsp;<span ng-bind="Jmjm1.InvoiceLocalAmt"></span></p>
                     </div>
                     <button class="button button-clear" ng-click="download(Jmjm1)"><i class="iconfont icon-pdf"></i></button>
                 </ion-item>

@@ -1,10 +1,11 @@
-﻿<ion-view title="SOA">
-	<ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
-		<div class="buttons">
-			<button class="button button-icon button-clear ion-android-arrow-back" ng-click="returnMain()"></button>
-		</div>
-		<h1 class="title">STATEMENT OF ACCOUNTS</h1>
-	</ion-header-bar>
+
+<ion-view title="SOA">
+    <ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
+        <div class="buttons">
+            <button class="button button-icon button-clear ion-android-arrow-back" ng-click="returnMain()"></button>
+        </div>
+        <h1 class="title">STATEMENT OF ACCOUNTS</h1>
+    </ion-header-bar>
     <ion-content>
         <div style="height: 43px;"></div>
         <div class="card" ng-repeat="Slcu1 in Slcu1s">
@@ -14,7 +15,7 @@
                         <h2>Invoice  No&nbsp;:&nbsp;<span ng-bind="Slcu1.InvoiceNo"></span></h2>
                         <p>Invoice Date&nbsp;:&nbsp;<span ng-bind="ShowDate(Slcu1.InvoiceDate)"></span></p>
                         <p>Customer Name&nbsp;:&nbsp;<span ng-bind="Slcu1.CustomerName"></span></p>
-						<p>Amt&nbsp;:&nbsp;<span ng-bind="Slcu1.InvoiceAmt"></span></p>
+                        <p>Amt&nbsp;:&nbsp;<span ng-bind="Slcu1.InvoiceAmt"></span></p>
                     </div>
                     <button class="button button-clear" ng-click="download(Slcu1)"><i class="iconfont icon-pdf"></i></button>
                 </ion-item>

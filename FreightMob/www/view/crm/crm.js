@@ -316,8 +316,8 @@ appControllers.controller('ContactsDetailCtrl', ['ENV', '$scope', '$stateParams'
     '$cordovaActionSheet', '$cordovaToast', '$cordovaSms', 'WebApiService', 'GeoService',
     'OpenUrlService', 'CONTACTS_ORM', 'GEO_CONSTANT',
     function(ENV, $scope, $stateParams, $state, $ionicTabsDelegate, $ionicPopup, $ionicModal,
-    $cordovaActionSheet, $cordovaToast, $cordovaSms, WebApiService, GeoService,
-    OpenUrlService, CONTACTS_ORM, GEO_CONSTANT) {
+        $cordovaActionSheet, $cordovaToast, $cordovaSms, WebApiService, GeoService,
+        OpenUrlService, CONTACTS_ORM, GEO_CONSTANT) {
         var strmarkerLabel = '';
         $scope.ContactsDetail = {
             TrxNo: CONTACTS_ORM.CONTACTS_DETAIL.TrxNo,
@@ -359,9 +359,9 @@ appControllers.controller('ContactsDetailCtrl', ['ENV', '$scope', '$stateParams'
             if (is.not.empty($scope.rcbp1.Address4)) {
                 strmarkerLabel = strmarkerLabel + '<br/>' + $scope.rcbp1.Address4;
             }
-            if (is.equal(ENV.mapProvider,'baidu') && is.not.empty(GEO_CONSTANT.Baidu.point)) {
+            if (is.equal(ENV.mapProvider, 'baidu') && is.not.empty(GEO_CONSTANT.Baidu.point)) {
                 loadBaidu();
-            } else if(is.equal(ENV.mapProvider,'google') && is.not.empty(GEO_CONSTANT.Google.point)){
+            } else if (is.equal(ENV.mapProvider, 'google') && is.not.empty(GEO_CONSTANT.Google.point)) {
                 loadGoogle();
             }
         };
@@ -490,7 +490,7 @@ appControllers.controller('ContactsDetailCtrl', ['ENV', '$scope', '$stateParams'
         };
         GetRcbp1($scope.ContactsDetail.TrxNo);
         //
-    	function loadBaidu() {
+        function loadBaidu() {
             var map = new BMap.Map('map', {
                 minZoom: 8,
                 maxZoom: 20
@@ -500,16 +500,17 @@ appControllers.controller('ContactsDetailCtrl', ['ENV', '$scope', '$stateParams'
             var mk = new BMap.Marker(point);
             if (is.not.empty(strmarkerLabel)) {
                 var opts = {
-                    position : point,
+                    position: point,
                     offset: new BMap.Size(20, -20)
                 }
-                var label = new BMap.Label(strmarkerLabel,opts);
+                var label = new BMap.Label(strmarkerLabel, opts);
                 mk.setLabel(label);
             }
             map.addOverlay(mk);
             map.panTo(point);
             map.enableScrollWheelZoom(true);
-    	}
+        }
+
         function loadGoogle() {
             var pos = {
                 lat: GEO_CONSTANT.Google.point.lat,
@@ -520,11 +521,13 @@ appControllers.controller('ContactsDetailCtrl', ['ENV', '$scope', '$stateParams'
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
             var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-            var infoWindow = new google.maps.InfoWindow({map: map});
+            var infoWindow = new google.maps.InfoWindow({
+                map: map
+            });
             infoWindow.setPosition(pos);
             infoWindow.setContent(strmarkerLabel);
             map.setCenter(pos);
-    	}
+        }
     }
 ]);
 

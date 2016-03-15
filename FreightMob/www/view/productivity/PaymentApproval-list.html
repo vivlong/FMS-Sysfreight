@@ -1,15 +1,16 @@
-﻿<ion-view title="PaymentApproval-List">
-	<ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
-		<div class="buttons">
-			<button class="button button-icon button-clear ion-android-arrow-back" ng-click="returnSearch()"></button>
-		</div>
-		<h1 class="title">Payment</h1>
+
+<ion-view title="PaymentApproval-List">
+    <ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
+        <div class="buttons">
+            <button class="button button-icon button-clear ion-android-arrow-back" ng-click="returnSearch()"></button>
+        </div>
+        <h1 class="title">Payment</h1>
         <div class="buttons">
             <ion-toggle ng-model="plviStatus.checked" toggle-class="toggle-calm" ng-change="plviStatusChange()" style="color:#fff;margin:-8px;border-width:0px;background-color:transparent;">
                 <span ng-bind="plviStatus.text" style="margin-right:-20px;"></span>
             </ion-toggle>
         </div>
-	</ion-header-bar>
+    </ion-header-bar>
     <ion-content>
         <div style="height: 43px;"></div>
         <div class="list">
@@ -47,5 +48,5 @@
                 <i class="icon ion-arrow-return-right"></i>&nbsp;&nbsp;Return
             </button>
         </div>
-	</ion-footer-bar>
+    </ion-footer-bar>
 </ion-view>

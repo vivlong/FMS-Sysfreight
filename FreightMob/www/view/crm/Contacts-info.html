@@ -1,10 +1,11 @@
-﻿<ion-view title="Contacts-Info">
+
+<ion-view title="Contacts-Info">
     <ion-header-bar class="bar-positive" align-title="center">
         <div class="buttons">
-			<button class="button button-icon button-clear ion-android-arrow-back" ng-click="returnDetail()"></button>
-		</div>
+            <button class="button button-icon button-clear ion-android-arrow-back" ng-click="returnDetail()"></button>
+        </div>
         <div class="title">Contact Info</div>
-        <div class="buttons" >
+        <div class="buttons">
             <button class="button button-icon button-small button-clear ion-android-create" ng-click="GoToContactEdit()"></button>
         </div>
     </ion-header-bar>
@@ -36,7 +37,7 @@
                 </p>
             </div>
             <div class="item item-body">
-                <img class="full-image" ng-show="blnContainNameCard(rcbp3)" ng-src="data:image/png;base64,{{rcbp3.NameCard}}"/>
+                <img class="full-image" ng-show="blnContainNameCard(rcbp3)" ng-src="data:image/png;base64,{{rcbp3.NameCard}}" />
                 <p>
                     <i class="iconfont icon-birthdaycake"></i>&nbsp;&nbsp;
                     <span ng-bind="ShowDate(rcbp3.Birthday)"></span>
