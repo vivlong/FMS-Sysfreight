@@ -5,6 +5,7 @@ var appService = angular.module('MobileAPP.services', [
     'ngCordova.plugins.fileTransfer',
     'ngCordova.plugins.fileOpener2',
     'ngCordova.plugins.inAppBrowser',
+    'ngCordova.plugins.geolocation',
     'MobileAPP.config'
 ]);
 
@@ -165,7 +166,7 @@ appService.service('OpenUrlService', ['ENV', '$cordovaInAppBrowser',
     }
 ]);
 
-appService.service('GeoService', ['$q', function($q) {
+appService.service('GeoService', ['$q', '$cordovaGeolocation', function($q, $cordovaGeolocation) {
     this.BaiduGetCurrentPosition = function() {
         var deferred = $q.defer();
         var geolocation = new BMap.Geolocation();
@@ -191,6 +192,24 @@ appService.service('GeoService', ['$q', function($q) {
     };
     this.GoogleGetCurrentPosition = function() {
         var deferred = $q.defer();
+        var options = {
+            maximumAge: 60000,
+            timeout: 10000,
+            enableHighAccuracy: true
+        };
+        $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
+            deferred.resolve(position);
+            var pos = {
+                type: 'Google',
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+            console.log(pos);
+        }, function(error) {
+            deferred.reject(error);
+            console.log(error);
+        });
+        /*
         // Try HTML5 geolocation.
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
@@ -213,6 +232,7 @@ appService.service('GeoService', ['$q', function($q) {
             deferred.reject('Browser does not support Geolocation');
             console.log('Browser does not support Geolocation');
         }
+        */
         return deferred.promise;
     };
 }]);

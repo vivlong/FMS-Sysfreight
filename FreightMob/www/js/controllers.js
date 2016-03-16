@@ -21,26 +21,31 @@ appControllers.controller('GeoCtrl', ['ENV', '$scope',
     function(ENV, $scope) {
         function loadJScript() {
             var uri = '';
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
             if (is.equal(ENV.mapProvider, 'baidu')) {
-                uri = 'http://api.map.baidu.com/getscript?v=2.0&ak=94415618dfaa9ff5987dd07983f25159';
+                script.src = 'http://api.map.baidu.com/getscript?v=2.0&ak=94415618dfaa9ff5987dd07983f25159';
+                document.body.appendChild(script);
             } else if (is.equal(ENV.mapProvider, 'google')) {
+                script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
+                document.body.appendChild(script);
+                /*
                 uri = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
-            }
-            $.ajax({
-                url: uri,
-                type: 'GET',
-                timeout: 10000,
-                complete: function(response) {
-                    if (response.status == 200) {
-                        var script = document.createElement('script');
-                        script.type = 'text/javascript';
-                        script.src = uri;
-                        document.body.appendChild(script);
-                    } else {
-                        console.log('Load Map ' + response.status);
+                $.ajax({
+                    url: uri,
+                    type: 'GET',
+                    timeout: 10000,
+                    complete: function(response) {
+                        if (response.status == 200) {
+                            script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
+                            document.body.appendChild(script);
+                        } else {
+                            console.log('Load Map ' + response.status);
+                        }
                     }
-                }
-            });
+                });
+                */
+            }
         }
         $scope.$watch('$viewContentLoaded', function() {
             loadJScript();
@@ -72,6 +77,7 @@ appControllers.controller('IndexCtrl', ['ENV', '$scope', '$state', '$rootScope',
                         var serverAppVersion = res.version;
                         $cordovaAppVersion.getVersionNumber().then(function(version) {
                             if (version != serverAppVersion) {
+                                $ionicSideMenuDelegate.toggleLeft();
                                 $state.go('index.update', {
                                     'Version': serverAppVersion
                                 });

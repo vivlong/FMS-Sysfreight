@@ -16,8 +16,7 @@
             <div style="height: 38px;"></div>
             <ion-scroll>
                 <div class="card customerDetail">
-                    <div class="item item-avatar" style="min-height: 68px;">
-                        <img src="./img/unknown.png">
+                    <div class="item" style="min-height: 68px;">
                         <h2><span ng-bind="rcbp1.BusinessPartyName"></span></h2>
                     </div>
                     <div class="item item-body">
@@ -25,17 +24,8 @@
                             <div style="overflow:auto;_height:1%">
                                 <div style="float:left;">
                                     <div class="item" style="border-width: 0px;">
-                                        <i class="iconfont ion-ios-location"></i>&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <span ng-bind="rcbp1.Address1"></span>
-                                    </div>
-                                    <div class="item" style="border-width: 0px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <span ng-bind="rcbp1.Address2"></span>
-                                    </div>
-                                    <div class="item" style="border-width: 0px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <span ng-bind="rcbp1.Address3"></span>
-                                    </div>
-                                    <div class="item" style="border-width: 0px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <span ng-bind="rcbp1.Address4"></span>
+                                        <textarea  rows="6" cols="42" ng-bind="rcbp1.Address1 + '\r\n' + rcbp1.Address2 + '\r\n' + rcbp1.Address3 + '\r\n' + rcbp1.Address4" readonly="true">
+                                        </textarea>
                                     </div>
                                 </div>
                                 <div style="float:right;margin-top: 3em;margin-right: 1em;">

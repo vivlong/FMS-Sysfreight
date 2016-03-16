@@ -15,9 +15,9 @@ var app = angular.module('MobileAPP', [
 ]);
 
 app.run(['ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$ionicPopup',
-    '$ionicHistory', '$ionicLoading', '$cordovaToast', '$cordovaFile', 'GEO_CONSTANT',
+    '$ionicHistory', '$ionicLoading', '$cordovaToast', '$cordovaFile',
     function(ENV, $ionicPlatform, $rootScope, $state, $location, $timeout, $ionicPopup,
-        $ionicHistory, $ionicLoading, $cordovaToast, $cordovaFile, GEO_CONSTANT) {
+        $ionicHistory, $ionicLoading, $cordovaToast, $cordovaFile) {
         $ionicPlatform.ready(function() {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
@@ -145,8 +145,6 @@ app.run(['ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeout
             }
             return false;
         }, 101);
-        //GEO
-        GEO_CONSTANT.init();
     }
 ]);
 
