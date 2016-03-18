@@ -90,7 +90,7 @@ appService.service('DownloadFileService', ['ENV', '$http', '$timeout', '$ionicLo
                 template: "Download  0%"
             });
             var blnError = false;
-            if (ENV.fromWeb) {
+            if (!ENV.fromWeb) {
                 $cordovaFile.checkFile(cordova.file.externalRootDirectory + '/' + ENV.rootPath, fileName)
                     .then(function(success) {
                         //

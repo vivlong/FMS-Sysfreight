@@ -89,7 +89,7 @@ app.run(['ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeout
         $ionicPlatform.registerBackButtonAction(function(e) {
             e.preventDefault();
             // Is there a page to go back to?  $state.include ??
-            if ($state.includes('index.main') || $state.includes('index.login') || $state.includes('loading')) {
+            if ($state.includes('index') || $state.includes('index.main') || $state.includes('index.login') || $state.includes('loading')) {
                 if ($rootScope.backButtonPressedOnceToExit) {
                     ionic.Platform.exitApp();
                 } else {
