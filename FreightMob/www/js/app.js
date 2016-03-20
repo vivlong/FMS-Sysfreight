@@ -2,6 +2,7 @@ var app = angular.module('MobileAPP', [
     'ionic',
     'jett.ionic.filter.bar',
     'ionic-datepicker',
+    'ionicLazyLoad',
     'ngCordova.plugins.toast',
     'ngCordova.plugins.dialogs',
     'ngCordova.plugins.appVersion',
