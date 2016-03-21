@@ -739,32 +739,62 @@ appControllers.controller('SalesCostCtrl', ['$scope', '$state', '$stateParams', 
         };
         $('#iPartyName').on('keydown', function(e) {
             if (e.which === 9 || e.which === 13) {
-                $('#iPOL').focus();
+                if (alertPopup === null) {
+                    $scope.GoToList();
+                } else {
+                    alertPopup.close();
+                    alertPopup = null;
+                }
             }
         });
         $('#iPOL').on('keydown', function(e) {
             if (e.which === 9 || e.which === 13) {
-                $('#iPOD').focus();
+                if (alertPopup === null) {
+                    $scope.GoToList();
+                } else {
+                    alertPopup.close();
+                    alertPopup = null;
+                }
             }
         });
         $('#iPOD').on('keydown', function(e) {
             if (e.which === 9 || e.which === 13) {
-                $('#iEffectiveDate').focus();
+                if (alertPopup === null) {
+                    $scope.GoToList();
+                } else {
+                    alertPopup.close();
+                    alertPopup = null;
+                }
             }
         });
         $('#iEffectiveDate').on('keydown', function(e) {
             if (e.which === 9 || e.which === 13) {
-                $('#iExpiryDate').focus();
+                if (alertPopup === null) {
+                    $scope.GoToList();
+                } else {
+                    alertPopup.close();
+                    alertPopup = null;
+                }
             }
         });
         $('#iExpiryDate').on('keydown', function(e) {
             if (e.which === 9 || e.which === 13) {
-                $('#iModule').focus();
+                if (alertPopup === null) {
+                    $scope.GoToList();
+                } else {
+                    alertPopup.close();
+                    alertPopup = null;
+                }
             }
         });
         $('#iModule').on('keydown', function(e) {
             if (e.which === 9 || e.which === 13) {
-                $('#iJobType').focus();
+                if (alertPopup === null) {
+                    $scope.GoToList();
+                } else {
+                    alertPopup.close();
+                    alertPopup = null;
+                }
             }
         });
         $('#iJobType').on('keydown', function(e) {
