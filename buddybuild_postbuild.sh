@@ -2,6 +2,8 @@
 
 cd /Users/buddybuild/workspace
 
+cd /FreightMob
+
 if [ -z ${PLATFORM+x} ]; then 
 	echo '=== Detected Environmental Variable PLATFORM is set : $PLATFORM'
 	ionic prepare $PLATFORM

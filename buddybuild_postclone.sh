@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 cd /Users/buddybuild/workspace
+
+cd /FreightMob
+
 echo '=== Start to run : npm install npm -g'
 npm install npm -g
 
