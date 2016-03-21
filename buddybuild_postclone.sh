@@ -29,7 +29,7 @@ bower install
 
 echo '=== Start to run : ionic info'
 ionic info
-ionic platform add android#4.1.1
+ionic platform add android
 
 echo '=== Start to run : ionic state restore'
 ionic state restore
