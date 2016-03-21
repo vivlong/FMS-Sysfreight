@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-cd /Users/buddybuild/workspace
-
-cd /FreightMob
+cd /Users/buddybuild/workspace/FreightMob
 
 if [ -z ${PLATFORM+x} ]; then 
 	echo '=== Detected Environmental Variable PLATFORM is set : $PLATFORM'
