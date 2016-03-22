@@ -88,9 +88,9 @@ appControllers.controller('SalesmanActivityListCtrl', ['$scope', '$state', '$sta
             });
         };
         $scope.loadMore = function() {
-            var strUri = "/api/freight/smsa1/sps?RecordCount=" + RecordCount;
+            var strUri = '/api/freight/smsa1/sps?RecordCount=' + RecordCount;
             if ($scope.List.SalesmanNameLike != null && $scope.List.SalesmanNameLike.length > 0) {
-                strUri = strUri + "&SalesmanName=" + $scope.List.SalesmanNameLike;
+                strUri = strUri + '&SalesmanName=' + $scope.List.SalesmanNameLike;
             }
             WebApiService.GetParam(strUri, false).then(function success(result) {
                 if (result.data.results.length > 0) {
