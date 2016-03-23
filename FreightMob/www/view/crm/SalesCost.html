@@ -15,9 +15,16 @@
             <div class="card">
                 <!--ion-md-input type="text" id="iEffectiveDate" placeholder="Effective Date" highlight-color="balanced" ng-model="Search.EffectiveDate"></ion-md-input>
                 <ion-md-input type="text" id="iExpiryDate" placeholder="Expiry Date" highlight-color="balanced" ng-model="Search.ExpiryDate"></ion-md-input-->
-                <div class="item">
-                    <ion-md-input type="text" id="iPartyNameSales" class="pull-left" style="width:80%;" placeholder="Customer" highlight-color="balanced" ng-model="Search.PartyName" ng-if="Search.Type==='Sales'"></ion-md-input>
-                    <ion-md-input type="text" id="iPartyNameCost" class="pull-left" style="width:80%;" placeholder="Vendor" highlight-color="balanced" ng-model="Search.PartyName" ng-if="Search.Type==='Cost'"></ion-md-input>
+                <div class="item" ng-show="Search.Type==='Sales'">
+                    <ion-md-input type="text" id="iPNS" class="pull-left" style="width:80%;" placeholder="Customer" highlight-color="balanced" ng-model="Search.PartyNameSales"></ion-md-input>
+                    <div style="width:20%;position:relative;">
+                        <button class="button button-clear" style="position:absolute; top:50%; margin-top:12px;" ng-click="GoToList()">
+                            <i class="icon iconfont ion-android-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="item" ng-show="Search.Type==='Cost'">
+                    <ion-md-input type="text" id="iPNC" class="pull-left" style="width:80%;" placeholder="Vendor" highlight-color="balanced" ng-model="Search.PartyNameCost"></ion-md-input>
                     <div style="width:20%;position:relative;">
                         <button class="button button-clear" style="position:absolute; top:50%; margin-top:12px;" ng-click="GoToList()">
                             <i class="icon iconfont ion-android-search"></i>

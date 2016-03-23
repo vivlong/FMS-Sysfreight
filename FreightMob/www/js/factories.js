@@ -84,11 +84,11 @@ appFactory.factory('CONTACTS_ORM', function() {
         },
         CONTACTS_SUBLIST: {
             BusinessPartyCode: '',
-            Rcbp3s: {},
+            Rcbp3s: [],
             _setId: function(value) {
                 CONTACTS_ORM.CONTACTS_SUBLIST.BusinessPartyCode = value;
             },
-            _setObj: function(value) {
+            _setArr: function(value) {
                 CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s = value;
             }
         },
@@ -107,7 +107,7 @@ appFactory.factory('CONTACTS_ORM', function() {
         CONTACTS_ORM.CONTACTS_DETAIL.TabIndex = 0;
         CONTACTS_ORM.CONTACTS_DETAIL.Rcbp1 = {};
         CONTACTS_ORM.CONTACTS_SUBLIST.BusinessPartyCode = '';
-        CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s = {};
+        CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s = [];
         CONTACTS_ORM.CONTACTS_SUBDETAIL.Rcbp3 = {};
     };
     return CONTACTS_ORM;
