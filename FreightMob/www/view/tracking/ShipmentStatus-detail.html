@@ -1,11 +1,11 @@
 <ion-view title="ShipmentStatusDetail">
     <ion-header-bar align-title="center" no-tap-scroll=false class="bar-positive">
         <div class="buttons">
-            <button class="button button-icon button-clear ion-android-arrow-back" ng-click="returnList()"></button>
+            <button class="button button-icon button-clear ion-android-arrow-back" ng-click="return()"></button>
         </div>
         <h1 class="title">Tracking</h1>
     </ion-header-bar>
-    <ion-tabs class="tabs-top tabs-background-positive tabs-color-light" ng-show="Detail.FilterName === 'OrderNo'">
+    <ion-tabs class="tabs-top tabs-background-positive tabs-color-light" ng-if="Detail.FilterName === 'OrderNo'">
         <ion-tab title="Booking Info">
             <ion-scroll style="padding-top:93px;">
                 <div class="card" ng-repeat="Omtx1 in Omtx1s">
@@ -40,7 +40,7 @@
             </ion-scroll>
         </ion-tab>
     </ion-tabs>
-    <ion-content class="has-header" ng-show="Detail.FilterName != 'OrderNo'">
+    <ion-content class="has-header" ng-if="Detail.FilterName != 'OrderNo'">
         <div style="height: 43px;"></div>
         <div class="card">
             <div class="list">
@@ -63,7 +63,12 @@
                     </div>
                     <div class="row nopadding">
                         <div class="col nopadding">
-                            <p>B/L No</p>
+                            <p ng-if="jmjm1.ModuleCode === 'AE' || jmjm1.ModuleCode === 'AI'">
+                                AWB No
+                            </p>
+                            <p ng-if="jmjm1.ModuleCode != 'AE' && jmjm1.ModuleCode != 'AI'">
+                                B/L No
+                            </p>
                         </div>
                         <div class="col col-67 nopadding">
                             <p>:&nbsp;&nbsp;<span class="h4" ng-bind="jmjm1.AwbBlNo"></span></p>
@@ -71,7 +76,12 @@
                     </div>
                     <div class="row nopadding">
                         <div class="col nopadding">
-                            <p>OBL No</p>
+                            <p ng-if="jmjm1.ModuleCode === 'AE' || jmjm1.ModuleCode === 'AI'">
+                                MAWB No
+                            </p>
+                            <p ng-if="jmjm1.ModuleCode != 'AE' && jmjm1.ModuleCode != 'AI'">
+                                OBL No
+                            </p>
                         </div>
                         <div class="col col-67 nopadding">
                             <p>:&nbsp;&nbsp;<span class="h4" ng-bind="jmjm1.MawbOBLNo"></span></p>
@@ -116,7 +126,8 @@
                         <div class="col col-67 nopadding">
                             <p>:&nbsp;
                                 <span class="h4" ng-if="jmjm1.ModuleCode === 'SE' || jmjm1.ModuleCode === 'SI'" ng-bind="jmjm1.PortOfLoadingName"></span>
-                                <span class="h4" ng-if="jmjm1.ModuleCode != 'SE' && jmjm1.ModuleCode != 'SI'" ng-bind="jmjm1.OriginName"></span></p>
+                                <span class="h4" ng-if="jmjm1.ModuleCode != 'SE' && jmjm1.ModuleCode != 'SI'" ng-bind="jmjm1.OriginName"></span>
+                            </p>
                         </div>
                     </div>
                     <div class="row nopadding">
@@ -126,15 +137,28 @@
                         <div class="col col-67 nopadding">
                             <p>:&nbsp;
                                 <span class="h4" ng-if="jmjm1.ModuleCode === 'SE' || jmjm1.ModuleCode === 'SI'" ng-bind="jmjm1.PortOfDischargeName"></span>
-                                <span class="h4" ng-if="jmjm1.ModuleCode != 'SE' && jmjm1.ModuleCode != 'SI'" ng-bind="jmjm1.DestName"></span></p>
+                                <span class="h4" ng-if="jmjm1.ModuleCode != 'SE' && jmjm1.ModuleCode != 'SI'" ng-bind="jmjm1.DestName"></span>
+                            </p>
                         </div>
                     </div>
                     <div class="row nopadding">
                         <div class="col nopadding">
-                            <p>Vessel</p>
+                            <p ng-if="jmjm1.ModuleCode === 'AE' || jmjm1.ModuleCode === 'AI'">
+                                Flight No
+                            </p>
+                            <p ng-if="jmjm1.ModuleCode != 'AE' && jmjm1.ModuleCode != 'AI'">
+                                Vessel
+                            </p>
                         </div>
                         <div class="col col-67 nopadding">
-                            <p>:&nbsp;&nbsp;<span class="h4"><span ng-bind="jmjm1.VesselName"></span>&nbsp;V.&nbsp;<span ng-bind="jmjm1.VoyageNo"></span></span>
+                            <p>:&nbsp;&nbsp;
+                                <span class="h4">
+                                    <span ng-bind="jmjm1.VesselName"></span>
+                                    &nbsp;
+                                    <span ng-if="jmjm1.ModuleCode != 'AE' && jmjm1.ModuleCode != 'AI'">V.</span>
+                                    &nbsp;
+                                    <span ng-bind="jmjm1.VoyageNo"></span>
+                                </span>
                             </p>
                         </div>
                     </div>

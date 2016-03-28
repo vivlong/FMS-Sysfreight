@@ -311,13 +311,17 @@ appControllers.controller('ShipmentStatusDetailCtrl', ['$scope', '$state', '$sta
             $scope.Detail.Key = $stateParams.Key;
             $scope.Detail.ModuleCode = $stateParams.ModuleCode;
         }
-        $scope.returnList = function() {
-            $state.go('shipmentStatusList', {
-                'FilterName': TRACKING_ORM.TRACKING_SEARCH.FilterName,
-                'FilterValue': TRACKING_ORM.TRACKING_SEARCH.FilterValue
-            }, {
-                reload: true
-            });
+        $scope.return = function() {
+            if(is.equal($scope.Detail.FilterName,'ContainerNo')){
+                $state.go('shipmentStatusList', {
+                    'FilterName': TRACKING_ORM.TRACKING_SEARCH.FilterName,
+                    'FilterValue': TRACKING_ORM.TRACKING_SEARCH.FilterValue
+                }, {
+                    reload: true
+                });
+            }else{
+                $state.go('shipmentStatus', {}, {});
+            }
         };
         $scope.ShowDate = function(utc) {
             return moment(utc).format('DD-MMM-YYYY');
