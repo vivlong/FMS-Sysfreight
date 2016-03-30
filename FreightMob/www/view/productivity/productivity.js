@@ -234,9 +234,26 @@ appControllers.controller('ReminderCtrl', ['$scope', '$state', '$stateParams', '
 
 appControllers.controller('DocumentScanCtrl', ['$scope', '$state', '$stateParams', 'WebApiService',
     function($scope, $state, $stateParams, WebApiService) {
+        $scope.capture = null;
+        var canvas = document.getElementById('canvas1');
+        var context = canvas.getContext('2d');
         $scope.returnMain = function() {
             $state.go('index.main', {}, {});
         };
-
-    }
-]);
+        $scope.myChannel = {
+            // the fields below are all optional
+            videoHeight: 480,
+            videoWidth: 320,
+            video: null // Will reference the video element on success
+        };
+        $scope.takePhoto = function(){
+            var video = document.getElementById('videoS');
+            context.drawImage(video,0,0,320,480);
+            $scope.capture = canvas.toDataURL();
+        };
+        $scope.reCapture = function(){
+            var video = document.getElementById('videoS');
+            context.clearRect(0,0,320,480);
+            $scope.capture = null;
+        };
+    }]);

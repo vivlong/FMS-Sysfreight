@@ -5,18 +5,20 @@
         </div>
         <h1 class="title">Document Scan</h1>
     </ion-header-bar>
-    <ion-content>
+    <ion-pane>
         <div style="height: 43px;"></div>
-        <div style="background:#000;">
-
-        </div>
-    </ion-content>
+        <webcam channel="myChannel" ng-show="capture==null"></webcam>
+        <canvas id="canvas1" width="320" height="480" visble="false"></canvas>
+        <img width="320" ng-src='{{capture}}' ng-show="capture!=null"/>
+    </ion-pane>
     <ion-footer-bar align-title="center" class="bar-positive">
-        <h1 class="title"></h1>
-        <div class="buttons">
-            <button class="button" ng-click="returnMain()">
-                <i class="icon ion-arrow-return-right"></i>&nbsp;&nbsp;Back
+        <button class="button" ng-click="reCapture()">
+            <i class="icon ion-android-refresh"></i>&nbsp;&nbsp;Restore
+        </button>
+        <h1 class="title">
+            <button class="button" ng-click="takePhoto()">
+                <i class="icon ion-android-camera"></i>&nbsp;&nbsp;
             </button>
-        </div>
+        </h1>
     </ion-footer-bar>
 </ion-view>
