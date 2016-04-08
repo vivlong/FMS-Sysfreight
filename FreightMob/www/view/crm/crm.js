@@ -1,5 +1,5 @@
-appControllers.controller( 'SalesmanActivityCtrl', [ '$scope', '$state', '$ionicPopup', 'WebApiService', 'SALESMANACTIVITY_ORM',
-    function( $scope, $state, $ionicPopup, WebApiService, SALESMANACTIVITY_ORM ) {
+appControllers.controller( 'SalesmanActivityCtrl', [ '$scope', '$state', '$ionicPopup', 'ApiService', 'SALESMANACTIVITY_ORM',
+    function( $scope, $state, $ionicPopup, ApiService, SALESMANACTIVITY_ORM ) {
         $scope.Rcsm1 = {
             SalesmanNameLike: SALESMANACTIVITY_ORM.SEARCH.SalesmanNameLike
         };
@@ -14,7 +14,7 @@ appControllers.controller( 'SalesmanActivityCtrl', [ '$scope', '$state', '$ionic
                 SALESMANACTIVITY_ORM.init();
                 SALESMANACTIVITY_ORM.SEARCH._setKey( $scope.Rcsm1.SalesmanNameLike );
                 var strUri = '/api/freight/smsa1/count?SalesmanName=' + $scope.Rcsm1.SalesmanNameLike;
-                WebApiService.GetParam( strUri, true ).then( function success( result ) {
+                ApiService.GetParam( strUri, true ).then( function success( result ) {
                     if ( result.data.results > 0 ) {
                         $state.go( 'salesmanActivityList', {
                             'SalesmanNameLike': $scope.Rcsm1.SalesmanNameLike
@@ -64,8 +64,8 @@ appControllers.controller( 'SalesmanActivityCtrl', [ '$scope', '$state', '$ionic
     }
 ] );
 
-appControllers.controller( 'SalesmanActivityListCtrl', [ '$scope', '$state', '$stateParams', 'WebApiService', 'SALESMANACTIVITY_ORM',
-    function( $scope, $state, $stateParams, WebApiService, SALESMANACTIVITY_ORM ) {
+appControllers.controller( 'SalesmanActivityListCtrl', [ '$scope', '$state', '$stateParams', 'ApiService', 'SALESMANACTIVITY_ORM',
+    function( $scope, $state, $stateParams, ApiService, SALESMANACTIVITY_ORM ) {
         var RecordCount = 0;
         var dataResults = new Array();
         $scope.List = {
@@ -92,7 +92,7 @@ appControllers.controller( 'SalesmanActivityListCtrl', [ '$scope', '$state', '$s
             if ( $scope.List.SalesmanNameLike != null && $scope.List.SalesmanNameLike.length > 0 ) {
                 strUri = strUri + '&SalesmanName=' + $scope.List.SalesmanNameLike;
             }
-            WebApiService.GetParam( strUri, false ).then( function success( result ) {
+            ApiService.GetParam( strUri, false ).then( function success( result ) {
                 if ( result.data.results.length > 0 ) {
                     dataResults = dataResults.concat( result.data.results );
                     $scope.Smsa1s = dataResults;
@@ -109,8 +109,8 @@ appControllers.controller( 'SalesmanActivityListCtrl', [ '$scope', '$state', '$s
     }
 ] );
 
-appControllers.controller( 'SalesmanActivityDetailCtrl', [ '$scope', '$state', '$stateParams', 'WebApiService', 'SALESMANACTIVITY_ORM',
-    function( $scope, $state, $stateParams, WebApiService, SALESMANACTIVITY_ORM ) {
+appControllers.controller( 'SalesmanActivityDetailCtrl', [ '$scope', '$state', '$stateParams', 'ApiService', 'SALESMANACTIVITY_ORM',
+    function( $scope, $state, $stateParams, ApiService, SALESMANACTIVITY_ORM ) {
         $scope.Detail = {
             TrxNo: SALESMANACTIVITY_ORM.DETAIL.TrxNo
         };
@@ -154,7 +154,7 @@ appControllers.controller( 'SalesmanActivityDetailCtrl', [ '$scope', '$state', '
                 $scope.Smsa2s = SALESMANACTIVITY_ORM.DETAIL.Smsa2s;
             } else {
                 var strUri = "/api/freight/smsa2/read?TrxNo=" + TrxNo;
-                WebApiService.GetParam( strUri, true ).then( function success( result ) {
+                ApiService.GetParam( strUri, true ).then( function success( result ) {
                     $scope.Smsa2s = result.data.results;
                     SALESMANACTIVITY_ORM.DETAIL._setKey( TrxNo );
                     SALESMANACTIVITY_ORM.DETAIL._setObj( $scope.Smsa2s );
@@ -165,8 +165,8 @@ appControllers.controller( 'SalesmanActivityDetailCtrl', [ '$scope', '$state', '
     }
 ] );
 
-appControllers.controller( 'SalesmanActivityDetailEditCtrl', [ '$scope', '$state', '$stateParams', 'WebApiService', 'SALESMANACTIVITY_ORM',
-    function( $scope, $state, $stateParams, WebApiService, SALESMANACTIVITY_ORM ) {
+appControllers.controller( 'SalesmanActivityDetailEditCtrl', [ '$scope', '$state', '$stateParams', 'ApiService', 'SALESMANACTIVITY_ORM',
+    function( $scope, $state, $stateParams, ApiService, SALESMANACTIVITY_ORM ) {
         $scope.Smsa2 = SALESMANACTIVITY_ORM.SUBDETAIL.Smsa2;
         $scope.returnDetail = function() {
             $state.go( 'salesmanActivityDetail', {
@@ -184,15 +184,15 @@ appControllers.controller( 'SalesmanActivityDetailEditCtrl', [ '$scope', '$state
                 "smsa2": $scope.Smsa2
             };
             var strUri = "/api/freight/smsa2/update";
-            WebApiService.Post( strUri, jsonData, true ).then( function success( result ) {
+            ApiService.Post( strUri, jsonData, true ).then( function success( result ) {
                 $scope.returnDetail();
             } );
         };
     }
 ] );
 
-appControllers.controller( 'SalesmanActivityDetailAddCtrl', [ '$scope', '$state', '$stateParams', 'WebApiService', 'SALESMANACTIVITY_ORM',
-    function( $scope, $state, $stateParams, WebApiService, SALESMANACTIVITY_ORM ) {
+appControllers.controller( 'SalesmanActivityDetailAddCtrl', [ '$scope', '$state', '$stateParams', 'ApiService', 'SALESMANACTIVITY_ORM',
+    function( $scope, $state, $stateParams, ApiService, SALESMANACTIVITY_ORM ) {
         var currentDate = new Date();
         $scope.Smsa2 = {
             TrxNo: $stateParams.TrxNo,
@@ -225,7 +225,7 @@ appControllers.controller( 'SalesmanActivityDetailAddCtrl', [ '$scope', '$state'
                 "smsa2": $scope.Smsa2
             };
             var strUri = "/api/freight/smsa2/create";
-            WebApiService.Post( strUri, jsonData, true ).then( function success( result ) {
+            ApiService.Post( strUri, jsonData, true ).then( function success( result ) {
                 if ( SALESMANACTIVITY_ORM.DETAIL.Smsa2s != null && SALESMANACTIVITY_ORM.DETAIL.Smsa2s.length > 0 ) {
                     SALESMANACTIVITY_ORM.DETAIL.Smsa2s.push( $scope.Smsa2 );
                 } else {
@@ -267,8 +267,8 @@ appControllers.controller( 'ContactsCtrl', [ '$scope', '$state', '$stateParams',
     }
 ] );
 
-appControllers.controller( 'ContactsListCtrl', [ '$scope', '$state', '$stateParams', '$location', '$ionicScrollDelegate', 'WebApiService', 'CONTACTS_ORM',
-    function( $scope, $state, $stateParams, $location, $ionicScrollDelegate, WebApiService, CONTACTS_ORM ) {
+appControllers.controller( 'ContactsListCtrl', [ '$scope', '$state', '$stateParams', '$location', '$ionicScrollDelegate', 'ApiService', 'CONTACTS_ORM',
+    function( $scope, $state, $stateParams, $location, $ionicScrollDelegate, ApiService, CONTACTS_ORM ) {
         var RecordCount = 0;
         var dataResults = new Array();
         $scope.ContactsList = {
@@ -295,7 +295,7 @@ appControllers.controller( 'ContactsListCtrl', [ '$scope', '$state', '$statePara
             if ( $scope.ContactsList.BusinessPartyNameLike != null && $scope.ContactsList.BusinessPartyNameLike.length > 0 ) {
                 strUri = strUri + "&BusinessPartyName=" + $scope.ContactsList.BusinessPartyNameLike;
             }
-            WebApiService.GetParam( strUri, false ).then( function success( result ) {
+            ApiService.GetParam( strUri, false ).then( function success( result ) {
                 if ( result.data.results.length > 0 ) {
                     dataResults = dataResults.concat( result.data.results );
                     $scope.Rcbp1s = dataResults;
@@ -313,10 +313,10 @@ appControllers.controller( 'ContactsListCtrl', [ '$scope', '$state', '$statePara
 ] );
 
 appControllers.controller( 'ContactsDetailCtrl', [ 'ENV', '$rootScope', '$scope', '$stateParams', '$state', '$ionicTabsDelegate', '$ionicPopup', '$ionicModal',
-    '$cordovaActionSheet', '$cordovaToast', '$cordovaSms', 'WebApiService', 'GeoService',
+    '$cordovaActionSheet', '$cordovaToast', '$cordovaSms', 'ApiService', 'GeoService',
     'OpenUrlService', 'CONTACTS_ORM', 'GEO_CONSTANT',
     function( ENV, $rootScope, $scope, $stateParams, $state, $ionicTabsDelegate, $ionicPopup, $ionicModal,
-        $cordovaActionSheet, $cordovaToast, $cordovaSms, WebApiService, GeoService,
+        $cordovaActionSheet, $cordovaToast, $cordovaSms, ApiService, GeoService,
         OpenUrlService, CONTACTS_ORM, GEO_CONSTANT ) {
         var strmarkerLabel = '';
         $scope.ContactsDetail = {
@@ -441,7 +441,7 @@ appControllers.controller( 'ContactsDetailCtrl', [ 'ENV', '$rootScope', '$scope'
             confirmPopup.then( function( res ) {
                 if ( res ) {
                     var strUri = "/api/freight/rcbp3/delete?BusinessPartyCode=" + rcbp3.BusinessPartyCode + "&LineItemNo=" + rcbp3.LineItemNo;
-                    WebApiService.GetParam( strUri, true ).then( function success( result ) {
+                    ApiService.GetParam( strUri, true ).then( function success( result ) {
                         if ( result.data.results > 0 ) {
                             $scope.rcbp3s.splice( index, 1 );
                         }
@@ -470,7 +470,7 @@ appControllers.controller( 'ContactsDetailCtrl', [ 'ENV', '$rootScope', '$scope'
                 $scope.rcbp3s = CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s;
             } else {
                 var strUri = '/api/freight/rcbp3/read?BusinessPartyCode=' + BusinessPartyCode;
-                WebApiService.GetParam( strUri, false ).then( function success( result ) {
+                ApiService.GetParam( strUri, false ).then( function success( result ) {
                     $scope.rcbp3s = result.data.results;
                     CONTACTS_ORM.CONTACTS_SUBLIST._setId( BusinessPartyCode );
                     CONTACTS_ORM.CONTACTS_SUBLIST._setArr( $scope.rcbp3s );
@@ -483,7 +483,7 @@ appControllers.controller( 'ContactsDetailCtrl', [ 'ENV', '$rootScope', '$scope'
                 GetRcbp3s( $scope.rcbp1.BusinessPartyCode );
             } else {
                 var strUri = '/api/freight/rcbp1/read?TrxNo=' + TrxNo;
-                WebApiService.GetParam( strUri, true ).then( function success( result ) {
+                ApiService.GetParam( strUri, true ).then( function success( result ) {
                     if ( is.not.undefined( result ) ) {
                         $scope.rcbp1 = result.data.results[ 0 ];
                         CONTACTS_ORM.CONTACTS_DETAIL._setId( TrxNo );
@@ -539,8 +539,8 @@ appControllers.controller( 'ContactsDetailCtrl', [ 'ENV', '$rootScope', '$scope'
     }
 ] );
 
-appControllers.controller( 'ContactsDetailEditCtrl', [ '$scope', '$stateParams', '$state', 'WebApiService', 'CONTACTS_ORM',
-    function( $scope, $stateParams, $state, WebApiService, CONTACTS_ORM ) {
+appControllers.controller( 'ContactsDetailEditCtrl', [ '$scope', '$stateParams', '$state', 'ApiService', 'CONTACTS_ORM',
+    function( $scope, $stateParams, $state, ApiService, CONTACTS_ORM ) {
         $scope.rcbp1 = CONTACTS_ORM.CONTACTS_DETAIL.Rcbp1;
         $scope.returnDetail = function() {
             $state.go( 'contactsDetail', {
@@ -554,7 +554,7 @@ appControllers.controller( 'ContactsDetailEditCtrl', [ '$scope', '$stateParams',
                 "rcbp1": $scope.rcbp1
             };
             var strUri = "/api/freight/rcbp1/update";
-            WebApiService.Post( strUri, jsonData, true ).then( function success( result ) {
+            ApiService.Post( strUri, jsonData, true ).then( function success( result ) {
                 $scope.returnDetail();
             } );
         };
@@ -588,8 +588,8 @@ appControllers.controller( 'ContactsInfoCtrl', [ '$scope', '$state', '$statePara
     }
 ] );
 
-appControllers.controller( 'ContactsInfoAddCtrl', [ '$rootScope', '$scope', '$state', '$stateParams', 'WebApiService', 'CONTACTS_ORM',
-    function( $rootScope, $scope, $state, $stateParams, WebApiService, CONTACTS_ORM ) {
+appControllers.controller( 'ContactsInfoAddCtrl', [ '$rootScope', '$scope', '$state', '$stateParams', 'ApiService', 'CONTACTS_ORM',
+    function( $rootScope, $scope, $state, $stateParams, ApiService, CONTACTS_ORM ) {
         $scope.rcbp3 = {
             BusinessPartyCode: $stateParams.BusinessPartyCode,
             LineItemNo: $stateParams.LineItemNo,
@@ -630,7 +630,7 @@ appControllers.controller( 'ContactsInfoAddCtrl', [ '$rootScope', '$scope', '$st
                 "rcbp3": $scope.rcbp3
             };
             var strUri = "/api/freight/rcbp3/create";
-            WebApiService.Post( strUri, jsonData, true ).then( function success( result ) {
+            ApiService.Post( strUri, jsonData, true ).then( function success( result ) {
                 if ( CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s != null && CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s.length > 0 ) {
                     CONTACTS_ORM.CONTACTS_SUBLIST.Rcbp3s.push( $scope.rcbp3 );
                 } else {
@@ -646,8 +646,8 @@ appControllers.controller( 'ContactsInfoAddCtrl', [ '$rootScope', '$scope', '$st
     }
 ] );
 
-appControllers.controller( 'ContactsInfoEditCtrl', [ '$scope', '$state', '$stateParams', 'WebApiService', 'CONTACTS_ORM',
-    function( $scope, $state, $stateParams, WebApiService, CONTACTS_ORM ) {
+appControllers.controller( 'ContactsInfoEditCtrl', [ '$scope', '$state', '$stateParams', 'ApiService', 'CONTACTS_ORM',
+    function( $scope, $state, $stateParams, ApiService, CONTACTS_ORM ) {
         var weekDaysList = [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ];
         $scope.datepickerObject = {};
         $scope.datepickerObject.inputDate = new Date();
@@ -683,15 +683,15 @@ appControllers.controller( 'ContactsInfoEditCtrl', [ '$scope', '$state', '$state
                 "rcbp3": $scope.rcbp3
             };
             var strUri = "/api/freight/rcbp3/update";
-            WebApiService.Post( strUri, jsonData, true ).then( function success( result ) {
+            ApiService.Post( strUri, jsonData, true ).then( function success( result ) {
                 $scope.returnInfo();
             } );
         };
     }
 ] );
 
-appControllers.controller( 'SalesCostCtrl', [ '$scope', '$state', '$stateParams', '$ionicPopup', 'WebApiService', 'SALES_ORM',
-    function( $scope, $state, $stateParams, $ionicPopup, WebApiService, SALES_ORM ) {
+appControllers.controller( 'SalesCostCtrl', [ '$scope', '$state', '$stateParams', '$ionicPopup', 'ApiService', 'SALES_ORM',
+    function( $scope, $state, $stateParams, $ionicPopup, ApiService, SALES_ORM ) {
         var alertPopup = null;
         $scope.Search = {
             Type: SALES_ORM.SEARCH.Type,
@@ -846,8 +846,8 @@ appControllers.controller( 'SalesCostCtrl', [ '$scope', '$state', '$stateParams'
     }
 ] );
 
-appControllers.controller( 'SalesCostListCtrl', [ '$scope', '$state', '$stateParams', 'WebApiService', 'SALES_ORM',
-    function( $scope, $state, $stateParams, WebApiService, SALES_ORM ) {
+appControllers.controller( 'SalesCostListCtrl', [ '$scope', '$state', '$stateParams', 'ApiService', 'SALES_ORM',
+    function( $scope, $state, $stateParams, ApiService, SALES_ORM ) {
         var RecordCount = 0;
         var dataResults = new Array();
         $scope.Search = {
@@ -908,7 +908,7 @@ appControllers.controller( 'SalesCostListCtrl', [ '$scope', '$state', '$statePar
             if ( is.not.empty( $scope.Search.JobType ) ) {
                 strUri = strUri + "&JobType=" + $scope.Search.JobType;
             }
-            WebApiService.GetParam( strUri, false ).then( function success( result ) {
+            ApiService.GetParam( strUri, false ).then( function success( result ) {
                 if ( result.data.results.length > 0 ) {
                     dataResults = dataResults.concat( result.data.results );
                     $scope.Smct1s = dataResults;
@@ -925,8 +925,8 @@ appControllers.controller( 'SalesCostListCtrl', [ '$scope', '$state', '$statePar
     }
 ] );
 
-appControllers.controller( 'SalesCostDetailCtrl', [ '$scope', '$state', '$stateParams', '$ionicPopup', 'WebApiService', 'SALES_ORM',
-    function( $scope, $state, $stateParams, $ionicPopup, WebApiService, SALES_ORM ) {
+appControllers.controller( 'SalesCostDetailCtrl', [ '$scope', '$state', '$stateParams', '$ionicPopup', 'ApiService', 'SALES_ORM',
+    function( $scope, $state, $stateParams, $ionicPopup, ApiService, SALES_ORM ) {
         var alertPopup = null;
         $scope.Smct1 = SALES_ORM.DETAIL.Smct1;
         $scope.Detail = {
@@ -945,7 +945,7 @@ appControllers.controller( 'SalesCostDetailCtrl', [ '$scope', '$state', '$stateP
             //    $scope.Smct2s = SALES_ORM.DETAIL.Smct2s;
             //} else {
                 var strUri = "/api/freight/smct2?TrxNo=" + TrxNo;
-                WebApiService.GetParam( strUri, true ).then( function success( result ) {
+                ApiService.GetParam( strUri, true ).then( function success( result ) {
                     $scope.Smct2s = result.data.results;
                     if ( is.empty( $scope.Smct2s ) ) {
                         alertPopup = $ionicPopup.alert( {

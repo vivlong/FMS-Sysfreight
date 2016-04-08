@@ -123,9 +123,9 @@ appControllers.controller('LoadingCtrl', ['$state', '$timeout',
 ]);
 
 appControllers.controller('LoginCtrl', ['ENV', '$scope', '$rootScope', '$http', '$state', '$stateParams', '$ionicPopup', '$cordovaToast',
-    '$cordovaAppVersion', 'WebApiService', 'SALES_ORM',
+    '$cordovaAppVersion', 'ApiService', 'SALES_ORM',
     function(ENV, $scope, $rootScope, $http, $state, $stateParams, $ionicPopup, $cordovaToast,
-        $cordovaAppVersion, WebApiService, SALES_ORM) {
+        $cordovaAppVersion, ApiService, SALES_ORM) {
         $scope.logininfo = {
             strUserName: '',
             strPassword: ''
@@ -147,7 +147,7 @@ appControllers.controller('LoginCtrl', ['ENV', '$scope', '$rootScope', '$http', 
                 });
             } else {
                 var strUri = '/api/freight/login/check?UserId=' + $scope.logininfo.strUserName + '&Md5Stamp=' + hex_md5($scope.logininfo.strPassword);
-                WebApiService.GetParam(strUri, true).then(function success(result) {
+                ApiService.GetParam(strUri, true).then(function success(result) {
                     if (result.data.results > 0) {
                         $rootScope.$broadcast('login');
                         sessionStorage.clear();

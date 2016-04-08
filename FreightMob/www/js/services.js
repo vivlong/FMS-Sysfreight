@@ -9,7 +9,7 @@ var appService = angular.module('MobileAPP.services', [
     'MobileAPP.config'
 ]);
 
-appService.service('WebApiService', ['$q', 'ENV', '$http', '$ionicLoading', '$ionicPopup', '$timeout',
+appService.service('ApiService', ['$q', 'ENV', '$http', '$ionicLoading', '$ionicPopup', '$timeout',
     function($q, ENV, $http, $ionicLoading, $ionicPopup, $timeout) {
         this.Post = function(requestUrl, requestData, blnShowLoad) {
             if (blnShowLoad) {

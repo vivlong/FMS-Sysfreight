@@ -1,5 +1,5 @@
-appControllers.controller('VesselScheduleCtrl', ['$scope', '$state', '$stateParams', '$timeout', '$ionicFilterBar', 'WebApiService',
-    function($scope, $state, $stateParams, $timeout, $ionicFilterBar, WebApiService) {
+appControllers.controller('VesselScheduleCtrl', ['$scope', '$state', '$stateParams', '$timeout', '$ionicFilterBar', 'ApiService',
+    function($scope, $state, $stateParams, $timeout, $ionicFilterBar, ApiService) {
         var filterBarInstance;
         $scope.rcvy = {
             PortOfDischargeName: ''
@@ -23,11 +23,11 @@ appControllers.controller('VesselScheduleCtrl', ['$scope', '$state', '$statePara
             var strUri = "/api/freight/rcvy1";
             if (PortOfDischargeName != null && PortOfDischargeName.length > 0) {
                 strUri = strUri + "?PortOfDischargeName=" + PortOfDischargeName;
-                WebApiService.GetParam(strUri, true).then(function success(result) {
+                ApiService.GetParam(strUri, true).then(function success(result) {
                     $scope.PortOfDischargeNames = result.data.results;
                 });
             } else {
-                WebApiService.Get(strUri, true).then(function success(result) {
+                ApiService.Get(strUri, true).then(function success(result) {
                     $scope.PortOfDischargeNames = result.data.results;
                 });
             }
@@ -57,8 +57,8 @@ appControllers.controller('VesselScheduleCtrl', ['$scope', '$state', '$statePara
     }
 ]);
 
-appControllers.controller('VesselScheduleDetailCtrl', ['$scope', '$state', '$stateParams', 'WebApiService',
-    function($scope, $state, $stateParams, WebApiService) {
+appControllers.controller('VesselScheduleDetailCtrl', ['$scope', '$state', '$stateParams', 'ApiService',
+    function($scope, $state, $stateParams, ApiService) {
         $scope.Rcvy1Detail = {
             PortOfDischargeName: $stateParams.PortOfDischargeName
         };
@@ -73,7 +73,7 @@ appControllers.controller('VesselScheduleDetailCtrl', ['$scope', '$state', '$sta
         };
         var getRcvy1 = function(PortOfDischargeName) {
             var strUri = "/api/freight/rcvy1/sps?PortOfDischargeName=" + PortOfDischargeName;
-            WebApiService.GetParam(strUri, true).then(function success(result) {
+            ApiService.GetParam(strUri, true).then(function success(result) {
                 $scope.Rcvy1s = result.data.results;
             });
         };
@@ -81,8 +81,8 @@ appControllers.controller('VesselScheduleDetailCtrl', ['$scope', '$state', '$sta
     }
 ]);
 
-appControllers.controller('ShipmentStatusCtrl', ['$scope', '$state', '$ionicPopup', 'WebApiService', 'TRACKING_ORM',
-    function($scope, $state, $ionicPopup, WebApiService, TRACKING_ORM) {
+appControllers.controller('ShipmentStatusCtrl', ['$scope', '$state', '$ionicPopup', 'ApiService', 'TRACKING_ORM',
+    function($scope, $state, $ionicPopup, ApiService, TRACKING_ORM) {
         $scope.Tracking = {
             ContainerNo: '',
             JobNo: '',
@@ -118,7 +118,7 @@ appControllers.controller('ShipmentStatusCtrl', ['$scope', '$state', '$ionicPopu
         };
         var getSearchResult = function(FilterName, FilterValue) {
             var strUri = '/api/freight/tracking/count?FilterName=' + FilterName + '&FilterValue=' + FilterValue;
-            WebApiService.GetParam(strUri, true).then(function chkCount(result) {
+            ApiService.GetParam(strUri, true).then(function chkCount(result) {
                 if (result.data.results > 1) {
                     $state.go('shipmentStatusList', {
                         'FilterName': FilterName,
@@ -147,7 +147,7 @@ appControllers.controller('ShipmentStatusCtrl', ['$scope', '$state', '$ionicPopu
                         });
                     } else {
                         strUri = '/api/freight/tracking/sps?FilterName=' + FilterName + '&RecordCount=0&FilterValue=' + FilterValue;
-                        WebApiService.GetParam(strUri, false).then(function success(result) {
+                        ApiService.GetParam(strUri, false).then(function success(result) {
                             if (result.data.results.length > 0) {
                                 TRACKING_ORM.TRACKING_DETAIL._set(result.data.results[0].JobNo, result.data.results[0].ModuleCode);
                                 $state.go('shipmentStatusDetail', {
@@ -236,8 +236,8 @@ appControllers.controller('ShipmentStatusCtrl', ['$scope', '$state', '$ionicPopu
     }
 ]);
 
-appControllers.controller('ShipmentStatusListCtrl', ['$scope', '$state', '$stateParams', 'WebApiService', 'TRACKING_ORM',
-    function($scope, $state, $stateParams, WebApiService, TRACKING_ORM) {
+appControllers.controller('ShipmentStatusListCtrl', ['$scope', '$state', '$stateParams', 'ApiService', 'TRACKING_ORM',
+    function($scope, $state, $stateParams, ApiService, TRACKING_ORM) {
         var RecordCount = 0;
         var dataResults = new Array();
         $scope.TrackingList = {
@@ -281,7 +281,7 @@ appControllers.controller('ShipmentStatusListCtrl', ['$scope', '$state', '$state
                 $scope.TrackingList.CanLoadedMoreData = false;
             } else {
                 var strUri = '/api/freight/tracking/sps?FilterName=' + $scope.TrackingList.FilterName + '&RecordCount=' + RecordCount + '&FilterValue=' + $scope.TrackingList.FilterValue;
-                WebApiService.GetParam(strUri, false).then(function success(result) {
+                ApiService.GetParam(strUri, false).then(function success(result) {
                     if (result.data.results.length > 0) {
                         dataResults = dataResults.concat(result.data.results);
                         $scope.Jmjm1s = dataResults;
@@ -299,8 +299,8 @@ appControllers.controller('ShipmentStatusListCtrl', ['$scope', '$state', '$state
     }
 ]);
 
-appControllers.controller('ShipmentStatusDetailCtrl', ['$scope', '$state', '$stateParams', '$ionicPopup', 'WebApiService', 'TRACKING_ORM',
-    function($scope, $state, $stateParams, $ionicPopup, WebApiService, TRACKING_ORM) {
+appControllers.controller('ShipmentStatusDetailCtrl', ['$scope', '$state', '$stateParams', '$ionicPopup', 'ApiService', 'TRACKING_ORM',
+    function($scope, $state, $stateParams, $ionicPopup, ApiService, TRACKING_ORM) {
         $scope.Detail = {
             FilterName: TRACKING_ORM.TRACKING_SEARCH.FilterName,
             Key: TRACKING_ORM.TRACKING_DETAIL.Key,
@@ -335,7 +335,7 @@ appControllers.controller('ShipmentStatusDetailCtrl', ['$scope', '$state', '$sta
             } else {
                 var getOmtx1 = function(FilterName, FilterValue) {
                     var strUri = '/api/freight/tracking?FilterName=' + FilterName + '&FilterValue=' + FilterValue;
-                    WebApiService.GetParam(strUri, true).then(function success(result) {
+                    ApiService.GetParam(strUri, true).then(function success(result) {
                         $scope.Omtx1s = result.data.results;
                         TRACKING_ORM.TRACKING_DETAIL._setOmtx($scope.Omtx1s);
                     });
@@ -348,7 +348,7 @@ appControllers.controller('ShipmentStatusDetailCtrl', ['$scope', '$state', '$sta
             } else {
                 var getJmjm1 = function(FilterName, FilterValue, ModuleCode) {
                     var strUri = '/api/freight/tracking?FilterName=' + FilterName + '&ModuleCode=' + ModuleCode + '&FilterValue=' + FilterValue;
-                    WebApiService.GetParam(strUri, true).then(function success(result) {
+                    ApiService.GetParam(strUri, true).then(function success(result) {
                         $scope.jmjm1 = result.data.results[0];
                         TRACKING_ORM.TRACKING_DETAIL._setJmjm($scope.jmjm1);
                     });
@@ -359,8 +359,8 @@ appControllers.controller('ShipmentStatusDetailCtrl', ['$scope', '$state', '$sta
     }
 ]);
 
-appControllers.controller('InvoiceCtrl', ['ENV', '$scope', '$state', '$ionicPopup', 'DownloadFileService', 'WebApiService',
-    function(ENV, $scope, $state, $ionicPopup, DownloadFileService, WebApiService) {
+appControllers.controller('InvoiceCtrl', ['ENV', '$scope', '$state', '$ionicPopup', 'DownloadFileService', 'ApiService',
+    function(ENV, $scope, $state, $ionicPopup, DownloadFileService, ApiService) {
         var alertPopup = null;
         $scope.returnMain = function() {
             $state.go('index.main', {}, {});
@@ -378,7 +378,7 @@ appControllers.controller('InvoiceCtrl', ['ENV', '$scope', '$state', '$ionicPopu
         };
         var GetIvcr1s = function() {
             var strUri = "/api/freight/view/pdf?FolderName=ivcr1";
-            WebApiService.GetParam(strUri, true).then(function success(result) {
+            ApiService.GetParam(strUri, true).then(function success(result) {
                 if (result.data.results != null && result.data.results.length > 0) {
                     $scope.Ivcr1s = result.data.results;
                 } else {
@@ -398,8 +398,8 @@ appControllers.controller('InvoiceCtrl', ['ENV', '$scope', '$state', '$ionicPopu
     }
 ]);
 
-appControllers.controller('BlCtrl', ['ENV', '$scope', '$state', '$ionicPopup', 'DownloadFileService', 'WebApiService',
-    function(ENV, $scope, $state, $ionicPopup, DownloadFileService, WebApiService) {
+appControllers.controller('BlCtrl', ['ENV', '$scope', '$state', '$ionicPopup', 'DownloadFileService', 'ApiService',
+    function(ENV, $scope, $state, $ionicPopup, DownloadFileService, ApiService) {
         var alertPopup = null;
         $scope.returnMain = function() {
             $state.go('index.main', {}, {});
@@ -417,7 +417,7 @@ appControllers.controller('BlCtrl', ['ENV', '$scope', '$state', '$ionicPopup', '
         };
         var GetJmjm1s = function() {
             var strUri = "/api/freight/view/pdf?FolderName=jmjm1";
-            WebApiService.GetParam(strUri, true).then(function success(result) {
+            ApiService.GetParam(strUri, true).then(function success(result) {
                 if (result.data.results != null && result.data.results.length > 0) {
                     $scope.Jmjm1s = result.data.results;
                 } else {
@@ -437,8 +437,8 @@ appControllers.controller('BlCtrl', ['ENV', '$scope', '$state', '$ionicPopup', '
     }
 ]);
 
-appControllers.controller('AwbCtrl', ['ENV', '$scope', '$state', '$ionicPopup', 'DownloadFileService', 'WebApiService',
-    function(ENV, $scope, $state, $ionicPopup, DownloadFileService, WebApiService) {
+appControllers.controller('AwbCtrl', ['ENV', '$scope', '$state', '$ionicPopup', 'DownloadFileService', 'ApiService',
+    function(ENV, $scope, $state, $ionicPopup, DownloadFileService, ApiService) {
         var alertPopup = null;
         $scope.returnMain = function() {
             $state.go('index.main', {}, {});
@@ -456,7 +456,7 @@ appControllers.controller('AwbCtrl', ['ENV', '$scope', '$state', '$ionicPopup', 
         };
         var GetJmjm1s = function() {
             var strUri = "/api/freight/view/pdf?FolderName=jmjm1";
-            WebApiService.GetParam(strUri, true).then(function success(result) {
+            ApiService.GetParam(strUri, true).then(function success(result) {
                 if (result.data.results != null && result.data.results.length > 0) {
                     $scope.Jmjm1s = result.data.results;
                 } else {
@@ -476,8 +476,8 @@ appControllers.controller('AwbCtrl', ['ENV', '$scope', '$state', '$ionicPopup', 
     }
 ]);
 
-appControllers.controller('SOACtrl', ['ENV', '$scope', '$state', '$ionicPopup', 'DownloadFileService', 'WebApiService',
-    function(ENV, $scope, $state, $ionicPopup, DownloadFileService, WebApiService) {
+appControllers.controller('SOACtrl', ['ENV', '$scope', '$state', '$ionicPopup', 'DownloadFileService', 'ApiService',
+    function(ENV, $scope, $state, $ionicPopup, DownloadFileService, ApiService) {
         var alertPopup = null;
         $scope.returnMain = function() {
             $state.go('index.main', {}, {});
@@ -495,7 +495,7 @@ appControllers.controller('SOACtrl', ['ENV', '$scope', '$state', '$ionicPopup', 
         };
         var GetJmjm1s = function() {
             var strUri = "/api/freight/view/pdf?FolderName=slcu1";
-            WebApiService.GetParam(strUri, true).then(function success(result) {
+            ApiService.GetParam(strUri, true).then(function success(result) {
                 if (result.data.results != null && result.data.results.length > 0) {
                     $scope.Slcu1s = result.data.results;
                 } else {

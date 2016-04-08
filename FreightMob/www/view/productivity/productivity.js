@@ -37,8 +37,8 @@ appControllers.controller('PaymentApprovalCtrl', ['$scope', '$state',
     }
 ]);
 
-appControllers.controller('PaymentApprovalListCtrl', ['$scope', '$state', '$stateParams', '$ionicPopup', 'WebApiService',
-    function($scope, $state, $stateParams, $ionicPopup, WebApiService) {
+appControllers.controller('PaymentApprovalListCtrl', ['$scope', '$state', '$stateParams', '$ionicPopup', 'ApiService',
+    function($scope, $state, $stateParams, $ionicPopup, ApiService) {
         var RecordCount = 0;
         var dataResults = new Array();
         $scope.Filter = {
@@ -70,7 +70,7 @@ appControllers.controller('PaymentApprovalListCtrl', ['$scope', '$state', '$stat
                         "plvi1s": appPlvi1
                     };
                     var strUri = "/api/freight/plvi1/update";
-                    WebApiService.Post(strUri, jsonData, true).then(function success(result) {
+                    ApiService.Post(strUri, jsonData, true).then(function success(result) {
                         var removeApp = function(plvi1s) {
                             for (var i = 0; i <= plvi1s.length - 1; i++) {
                                 if (plvi1s[i].StatusCode === 'APP') {
@@ -151,7 +151,7 @@ appControllers.controller('PaymentApprovalListCtrl', ['$scope', '$state', '$stat
                     strUri = strUri + "&VendorName=" + $scope.Filter.FilterValue;
                 }
             }
-            WebApiService.GetParam(strUri, false).then(function success(result) {
+            ApiService.GetParam(strUri, false).then(function success(result) {
                 if (result.data.results.length > 0) {
                     dataResults = dataResults.concat(result.data.results);
                     $scope.plvi1s = dataResults;
@@ -167,8 +167,8 @@ appControllers.controller('PaymentApprovalListCtrl', ['$scope', '$state', '$stat
     }
 ]);
 
-appControllers.controller('MemoCtrl', ['$scope', '$state', '$stateParams', '$ionicPopup', 'WebApiService',
-    function($scope, $state, $stateParams, $ionicPopup, WebApiService) {
+appControllers.controller('MemoCtrl', ['$scope', '$state', '$stateParams', '$ionicPopup', 'ApiService',
+    function($scope, $state, $stateParams, $ionicPopup, ApiService) {
         $scope.Saus1 = {
             UserID: sessionStorage.getItem("UserId"),
             Memo: ''
@@ -186,7 +186,7 @@ appControllers.controller('MemoCtrl', ['$scope', '$state', '$stateParams', '$ion
                     "saus1": $scope.Saus1
                 };
                 var strUri = "/api/freight/saus1/memo";
-                WebApiService.Post(strUri, jsonData, true).then(function success(result) {
+                ApiService.Post(strUri, jsonData, true).then(function success(result) {
                     alertPopup = $ionicPopup.alert({
                         title: "Save Successfully!",
                         okType: 'button-calm'
@@ -199,7 +199,7 @@ appControllers.controller('MemoCtrl', ['$scope', '$state', '$stateParams', '$ion
         };
         var GetSaus1 = function(uid) {
             var strUri = "/api/freight/saus1/memo?userID=" + uid;
-            WebApiService.GetParam(strUri, true).then(function success(result) {
+            ApiService.GetParam(strUri, true).then(function success(result) {
                 $scope.Saus1.Memo = result.data.results;
             });
         };
@@ -207,8 +207,8 @@ appControllers.controller('MemoCtrl', ['$scope', '$state', '$stateParams', '$ion
     }
 ]);
 
-appControllers.controller('ReminderCtrl', ['$scope', '$state', '$stateParams', 'WebApiService',
-    function($scope, $state, $stateParams, WebApiService) {
+appControllers.controller('ReminderCtrl', ['$scope', '$state', '$stateParams', 'ApiService',
+    function($scope, $state, $stateParams, ApiService) {
         $scope.returnMain = function() {
             $state.go('index.main', {}, {});
         };
@@ -232,11 +232,14 @@ appControllers.controller('ReminderCtrl', ['$scope', '$state', '$stateParams', '
     }
 ]);
 
-appControllers.controller('DocumentScanCtrl', ['$scope', '$state', '$stateParams', 'WebApiService',
-    function($scope, $state, $stateParams, WebApiService) {
-        $scope.capture = null;
-        var canvas = document.getElementById('canvas1');
-        var context = canvas.getContext('2d');
+appControllers.controller('DocumentScanCtrl', ['$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicActionSheet', 'ApiService',
+    function($scope, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicActionSheet, ApiService) {
+        $scope.Doc = {
+            JobNo : ''
+        };
+        //$scope.capture = null;
+        //var canvas = document.getElementById('canvas1');
+        //var context = canvas.getContext('2d');
         $scope.returnMain = function() {
             $state.go('index.main', {}, {});
         };
@@ -255,5 +258,44 @@ appControllers.controller('DocumentScanCtrl', ['$scope', '$state', '$stateParams
             var video = document.getElementById('videoS');
             context.clearRect(0,0,320,480);
             $scope.capture = null;
+        };
+        $scope.showActionSheet = function(){
+            if(is.not.empty()){
+                var type = 'gallery';
+                var actionSheet = $ionicActionSheet.show({
+                    buttons: [
+                      { text: 'Camera' },
+                      { text: 'From Gallery' }
+                    ],
+                    //destructiveText: 'Delete',
+                    titleText: 'Select Picture',
+                    cancelText: 'Cancel',
+                    cancel: function() {
+                         // add cancel code..
+                       },
+                    buttonClicked: function(index) {
+                        if(index == 0){
+                            type = 'camera';
+                        }else if(index == 1){
+                            type = 'gallery';
+                            $scope.modal.show();
+                        }
+                        return true;
+                    }
+                });
+            }
+        };
+
+        $ionicModal.fromTemplateUrl( 'upload.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        } ).then( function( modal ) {
+            $scope.modal = modal;
+        } );
+        $scope.$on( '$destroy', function() {
+            $scope.modal.remove();
+        } );
+        $scope.closeModal = function() {
+            $scope.modal.hide();
         };
     }]);
