@@ -18,6 +18,37 @@
             </div>
         </div>
     </ion-pane>
+    <script id="camera.html" type="text/ng-template">
+        <ion-modal-view>
+            <ion-header-bar class="bar-positive" align-title="center">
+                <div class="buttons">
+                    <button class="button button-icon button-clear ion-android-arrow-back" ng-click="closeModal('camera')"></button>
+                </div>
+                <div class="h1 title">Camera</div>
+            </ion-header-bar>
+            <ion-pane>
+                <div style="height: 43px;"></div>
+                <webcam channel="myChannel" ng-show="capture==null"></webcam>
+                <canvas id="canvas1" width="320" height="480" visble="false"></canvas>
+                <img width="320" ng-src='{{capture}}' ng-show="capture!=null"/>
+            </ion-pane>
+            <ion-footer-bar class="bar-positive hide-on-keyboard-open">
+                <div class="button-bar">
+                    <button class="button icon ion-android-refresh" ng-click="reCapture()">
+                        &nbsp;Restore
+                    </button>
+                    <button class="button icon ion-android-camera" ng-click="takePhoto()">
+                    </button>
+                    <button class="button icon ion-arrow-return-right" ng-click="closeModal('camera')" ng-if="capture==null">
+                        &nbsp;Return
+                    </button>
+                    <button class="button icon ion-android-done" ng-click="closeModal('camera')" ng-if="capture!=null">
+                        &nbsp;Done
+                    </button>
+                </div>
+            </ion-footer-bar>
+        </ion-modal-view>
+    </script>
     <script id="upload.html" type="text/ng-template">
         <ion-modal-view>
             <ion-header-bar class="bar-positive" align-title="center">
@@ -25,10 +56,21 @@
             </ion-header-bar>
             <ion-pane>
                 <div style="height: 43px;"></div>
+                <div>
+                    <input type="file" nv-file-select uploader="uploader"/><br/>
+                    <ul>
+                        <li ng-repeat="item in uploader.queue">
+                            Name: <span ng-bind="item.file.name"></span><br/>
+                            <button ng-click="item.upload()">upload</button>
+                        </li>
+                    </ul>
+                </div>
             </ion-pane>
-            <ion-footer-bar class="bar-positive">
+            <ion-footer-bar class="bar-positive hide-on-keyboard-open">
                 <div class="button-bar">
-                    <button class="button icon ion-arrow-return-right" ng-click="closeModal()">&nbsp;Return</button>
+                    <button class="button icon ion-arrow-return-right" ng-click="closeModal('upload')">
+                        &nbsp;Return
+                    </button>
                 </div>
             </ion-footer-bar>
         </ion-modal-view>

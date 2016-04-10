@@ -232,14 +232,13 @@ appControllers.controller('ReminderCtrl', ['$scope', '$state', '$stateParams', '
     }
 ]);
 
-appControllers.controller('DocumentScanCtrl', ['$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicActionSheet', 'ApiService',
-    function($scope, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicActionSheet, ApiService) {
+appControllers.controller('DocumentScanCtrl', ['$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicActionSheet', 'FileUploader', 'ApiService',
+    function($scope, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicActionSheet, FileUploader, ApiService) {
         $scope.Doc = {
             JobNo : ''
         };
-        //$scope.capture = null;
-        //var canvas = document.getElementById('canvas1');
-        //var context = canvas.getContext('2d');
+        $scope.capture = null;
+        var canvas,context = null;
         $scope.returnMain = function() {
             $state.go('index.main', {}, {});
         };
@@ -261,7 +260,6 @@ appControllers.controller('DocumentScanCtrl', ['$scope', '$state', '$stateParams
         };
         $scope.showActionSheet = function(){
             if(is.not.empty()){
-                var type = 'gallery';
                 var actionSheet = $ionicActionSheet.show({
                     buttons: [
                       { text: 'Camera' },
@@ -274,11 +272,13 @@ appControllers.controller('DocumentScanCtrl', ['$scope', '$state', '$stateParams
                          // add cancel code..
                        },
                     buttonClicked: function(index) {
-                        if(index == 0){
-                            type = 'camera';
-                        }else if(index == 1){
-                            type = 'gallery';
-                            $scope.modal.show();
+                        if(index === 0){
+                            $scope.modal_camera.show();
+                            $scope.capture = null;
+                            canvas = document.getElementById('canvas1');
+                            context = canvas.getContext('2d');
+                        }else if(index === 1){
+                            $scope.modal_upload.show();
                         }
                         return true;
                     }
@@ -290,12 +290,26 @@ appControllers.controller('DocumentScanCtrl', ['$scope', '$state', '$stateParams
             scope: $scope,
             animation: 'slide-in-up'
         } ).then( function( modal ) {
-            $scope.modal = modal;
+            $scope.modal_upload = modal;
+        } );
+        $ionicModal.fromTemplateUrl( 'camera.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        } ).then( function( modal ) {
+            $scope.modal_camera = modal;
         } );
         $scope.$on( '$destroy', function() {
-            $scope.modal.remove();
+            $scope.modal_upload.remove();
+            $scope.modal_camera.remove();
         } );
-        $scope.closeModal = function() {
-            $scope.modal.hide();
+        $scope.closeModal = function(type) {
+            if(is.equal(type,'camera')){
+                $scope.modal_camera.hide();
+            }else{
+                $scope.modal_upload.hide();
+            }
         };
+        var uploader = $scope.uploader = new FileUploader({
+            url: 'upload.php'
+        });
     }]);

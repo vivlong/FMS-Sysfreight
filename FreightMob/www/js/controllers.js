@@ -3,6 +3,7 @@ var appControllers = angular.module('MobileAPP.controllers', [
     'ionic.ion.headerShrink',
     'jett.ionic.filter.bar',
     'ionMdInput',
+    'angularFileUpload',
     'ngCordova.plugins.toast',
     'ngCordova.plugins.dialogs',
     'ngCordova.plugins.appVersion',
