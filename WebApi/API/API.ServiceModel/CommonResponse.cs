@@ -38,4 +38,9 @@ namespace WebApi.ServiceModel
             data = new CommonResponse_data();
         }
     }
+
+				public class QiniuTokenResponse
+				{
+								public string uptoken { get; set; }
+				}
 }

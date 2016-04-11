@@ -44,7 +44,7 @@ namespace WebApi
                 EnableFeatures = Feature.Json | Feature.Metadata
                 //ServiceStackHandlerFactoryPath  = "api"                
             });
-            CorsFeature cf = new CorsFeature(allowedOrigins: "*", allowedMethods: "GET, POST, PUT, DELETE, OPTIONS", allowedHeaders: "Content-Type, Signature", allowCredentials: false);
+												CorsFeature cf = new CorsFeature(allowedOrigins: "*", allowedMethods: "GET, POST, PUT, DELETE, OPTIONS", allowedHeaders: "X-Requested-With, Content-Type, Signature", allowCredentials: false);
             this.Plugins.Add(cf);
             this.Plugins.Add(new SwaggerFeature());
             //DB
@@ -91,6 +91,9 @@ namespace WebApi
             container.RegisterAutoWired<WebApi.ServiceModel.Freight.Rcvy_Logic>();
 												container.RegisterAutoWired<WebApi.ServiceModel.Freight.Tracking_Logic>();
 												container.RegisterAutoWired<WebApi.ServiceModel.Freight.ViewPDF_Logic>();
+												container.RegisterAutoWired<WebApi.ServiceModel.Freight.UploadImg_Logic>();
+												//Utils
+												container.RegisterAutoWired<WebApi.ServiceModel.Utils.QiniuToken_Logic>();
         }
         #region DES
         //private string DESKey = "F322186F";

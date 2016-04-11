@@ -405,7 +405,32 @@ namespace WebApi.ServiceInterface
 																return ecr;
 												}
 								}
+								public ServiceModel.Freight.UploadImg_Logic uploadImg_Logic { get; set; }
+								public object Any(ServiceModel.Freight.UploadImg request)
+								{
+												CommonResponse ecr = new CommonResponse();
+												ecr.initial();
+												try
+												{
+																ServiceInterface.Freight.PdfService ps = new ServiceInterface.Freight.PdfService();
+																ps.PS_Upload(auth, request, uploadImg_Logic, ecr, this.Request.Headers.GetValues("Signature"), this.Request.RawUrl);
+												}
+												catch (Exception ex) { cr(ecr, ex); }
+												return ecr;
+								}
 								#endregion
+								public ServiceModel.Utils.QiniuToken_Logic qiniuToken_Logic { get; set; }
+								public object Any(ServiceModel.Utils.QiniuToken request)
+								{
+												QiniuTokenResponse qtr = new QiniuTokenResponse();
+												try
+												{
+																ServiceInterface.Utils.Qiniu q = new ServiceInterface.Utils.Qiniu();
+																qtr.uptoken = q.Q_UpToken(request, qiniuToken_Logic);
+												}
+												catch (Exception ex) { qtr.uptoken = ex.Message; }
+												return qtr;
+								}
 								#region Common
 								public object Post(Uploading request)
 								{

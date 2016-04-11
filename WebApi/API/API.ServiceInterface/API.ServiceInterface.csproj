@@ -86,6 +86,7 @@
     <Compile Include="Event\LoginService.cs" />
     <Compile Include="Tms\LoginService.cs" />
     <Compile Include="Tms\TableService.cs" />
+    <Compile Include="Utils\Qiniu.cs" />
     <Compile Include="Wms\ConfirmService.cs" />
     <Compile Include="Wms\TableService.cs" />
     <Compile Include="ApiServices.cs" />
@@ -99,6 +100,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
