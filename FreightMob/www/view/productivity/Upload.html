@@ -1,0 +1,28 @@
+<ion-view title="DocumentScan">
+    <ion-header-bar class="bar-positive" align-title="center">
+        <div class="buttons">
+            <button class="button button-icon button-clear ion-android-arrow-back" ng-click="returnDoc()"></button>
+        </div>
+        <div class="h1 title">Upload</div>
+    </ion-header-bar>
+    <ion-pane>
+        <div style="height: 43px;"></div>
+        <div>
+            <div ng-file-select="onFileSelect($files)" data-multiple="true" title="select file" onclick="this.value = null" class="botton">
+                Click here to select file
+            </div>
+            <ol>
+               <li ng-repeat="(k,v) in selectFiles">
+                   {{v.file.name}} - {{v.progress.p}}% <button ng-click="abort(k)">x</button>
+               </li>
+            </ol>
+        </div>
+    </ion-pane>
+    <ion-footer-bar class="bar-positive hide-on-keyboard-open">
+        <div class="button-bar">
+            <button class="button icon ion-arrow-return-right" ng-click="returnDoc()">
+                &nbsp;Return
+            </button>
+        </div>
+    </ion-footer-bar>
+</ion-view>

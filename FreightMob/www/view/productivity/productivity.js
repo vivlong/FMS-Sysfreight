@@ -232,8 +232,8 @@ appControllers.controller('ReminderCtrl', ['$scope', '$state', '$stateParams', '
     }
 ]);
 
-appControllers.controller('DocumentScanCtrl', ['$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicActionSheet', 'FileUploader', 'ApiService',
-    function($scope, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicActionSheet, FileUploader, ApiService) {
+appControllers.controller('DocumentScanCtrl', ['ENV', '$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicActionSheet', 'ApiService',
+    function(ENV, $scope, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicActionSheet, ApiService) {
         $scope.Doc = {
             JobNo : ''
         };
@@ -278,20 +278,13 @@ appControllers.controller('DocumentScanCtrl', ['$scope', '$state', '$stateParams
                             canvas = document.getElementById('canvas1');
                             context = canvas.getContext('2d');
                         }else if(index === 1){
-                            $scope.modal_upload.show();
+                            $state.go('upload', {}, {});
                         }
                         return true;
                     }
                 });
             }
         };
-
-        $ionicModal.fromTemplateUrl( 'upload.html', {
-            scope: $scope,
-            animation: 'slide-in-up'
-        } ).then( function( modal ) {
-            $scope.modal_upload = modal;
-        } );
         $ionicModal.fromTemplateUrl( 'camera.html', {
             scope: $scope,
             animation: 'slide-in-up'
@@ -299,17 +292,65 @@ appControllers.controller('DocumentScanCtrl', ['$scope', '$state', '$stateParams
             $scope.modal_camera = modal;
         } );
         $scope.$on( '$destroy', function() {
-            $scope.modal_upload.remove();
             $scope.modal_camera.remove();
         } );
-        $scope.closeModal = function(type) {
-            if(is.equal(type,'camera')){
-                $scope.modal_camera.hide();
-            }else{
-                $scope.modal_upload.hide();
-            }
+        $scope.closeModal = function() {
+            $scope.modal_camera.hide();
         };
-        var uploader = $scope.uploader = new FileUploader({
-            url: 'upload.php'
-        });
+    }]);
+appControllers.controller('RetrieveDocCtrl', ['ENV', '$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicActionSheet', 'ApiService',
+    function(ENV, $scope, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicActionSheet, ApiService) {
+        $scope.Doc = {
+            JobNo : ''
+        };
+        $scope.returnMain = function() {
+            $state.go('index.main', {}, {});
+        };
+    }]);
+appControllers.controller('UploadCtrl', ['ENV', '$scope', '$state', '$stateParams', '$qupload', 'ApiService',
+    function(ENV, $scope, $state, $stateParams, $qupload, ApiService) {
+        var uptoken = '';
+        $scope.returnDoc = function() {
+            $state.go('documentScan', {}, {});
+        };
+        $scope.selectFiles = [];
+		var start = function (index) {
+			$scope.selectFiles[index].progress = {
+				p: 0
+			};
+			$scope.selectFiles[index].upload = $qupload.upload({
+				key: $scope.selectFiles[index].file.name,
+				file: $scope.selectFiles[index].file,
+				token: uptoken
+			});
+			$scope.selectFiles[index].upload.then(function (response) {
+				console.log(response);
+			}, function (response) {
+				console.log(response);
+			}, function (evt) {
+				$scope.selectFiles[index].progress.p = Math.floor(100 * evt.loaded / evt.totalSize);
+			});
+		};
+
+		$scope.abort = function (index) {
+			$scope.selectFiles[index].upload.abort();
+			$scope.selectFiles.splice(index, 1);
+		};
+
+		$scope.onFileSelect = function ($files) {
+			var offsetx = $scope.selectFiles.length;
+			for (var i = 0; i < $files.length; i++) {
+				$scope.selectFiles[i + offsetx] = {
+					file: $files[i]
+				};
+				//start(i + offsetx);
+			}
+		};
+        var GetToken = function() {
+            var strUri = '/api/qiniu/uptoken';
+            ApiService.Get(strUri, true).then(function success(result) {
+                uptoken = result.uptoken;
+            });
+        };
+        GetToken();
     }]);

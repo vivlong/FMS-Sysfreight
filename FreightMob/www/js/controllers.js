@@ -3,7 +3,7 @@ var appControllers = angular.module('MobileAPP.controllers', [
     'ionic.ion.headerShrink',
     'jett.ionic.filter.bar',
     'ionMdInput',
-    'angularFileUpload',
+    'angularQFileUpload',
     'ngCordova.plugins.toast',
     'ngCordova.plugins.dialogs',
     'ngCordova.plugins.appVersion',
@@ -359,6 +359,11 @@ appControllers.controller('MainCtrl', ['ENV', '$scope', '$state', 'SALES_ORM', '
         };
         $scope.GoToDocScan = function() {
             $state.go('documentScan', {}, {
+                reload: true
+            });
+        };
+        $scope.GoToRetrieveDoc = function() {
+            $state.go('retrieveDoc', {}, {
                 reload: true
             });
         };
