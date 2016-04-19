@@ -90,6 +90,7 @@
     <Compile Include="ConfigInterface.cs" />
     <Compile Include="Freight\Freight_Login.cs" />
     <Compile Include="Freight\Plvi.cs" />
+    <Compile Include="Freight\Jmjm.cs" />
     <Compile Include="Freight\Smct.cs" />
     <Compile Include="Freight\Smsa.cs" />
     <Compile Include="Freight\Saus.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="Tables\Imgr2.cs" />
     <Compile Include="Tables\Impr1.cs" />
     <Compile Include="Tables\Jmje1.cs" />
+    <Compile Include="Tables\Jmjm1_Doc.cs" />
     <Compile Include="Tables\Omtx3.cs" />
     <Compile Include="Tables\Omtx1.cs" />
     <Compile Include="Tables\Jmjm1_Type.cs" />
@@ -132,30 +134,12 @@
     <Compile Include="Tables\Imsn1.cs" />
     <Compile Include="Tables\Rcbp3.cs" />
     <Compile Include="Tables\Rcbp1.cs" />
-    <Compile Include="Event\List_Container.cs" />
-    <Compile Include="Event\List_Jmjm6.cs" />
-    <Compile Include="Event\List_JobNo.cs" />
-    <Compile Include="Event\Event_Login.cs" />
-    <Compile Include="Event\Update_Done.cs" />
-    <Compile Include="Tms\Jmjm.cs" />
-    <Compile Include="Tms\Sibl.cs" />
-    <Compile Include="Tms\Tms_Login.cs" />
     <Compile Include="Utils\Download.cs" />
     <Compile Include="Utils\QiniuToken.cs" />
     <Compile Include="Utils\Uploading.cs" />
-    <Compile Include="Wms\List_Imgi1.cs" />
-    <Compile Include="Wms\List_Imsn1.cs" />
-    <Compile Include="Wms\List_Imgi2.cs" />
     <Compile Include="Freight\Rcbp.cs" />
-    <Compile Include="Wms\List_Imgr2.cs" />
-    <Compile Include="Wms\List_Impr1.cs" />
-    <Compile Include="Wms\List_Imgr1.cs" />
-    <Compile Include="Wms\List_Rcbp1.cs" />
-    <Compile Include="Wms\Wms_Login.cs" />
     <Compile Include="Modfunction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Wms\Confirm_Imgr1.cs" />
-    <Compile Include="Wms\Insert_Imsn1.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

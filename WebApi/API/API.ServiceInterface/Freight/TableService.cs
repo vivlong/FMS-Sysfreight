@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using WebApi.ServiceModel;
-using WebApi.ServiceModel.Wms;
 using WebApi.ServiceModel.Freight;
 
 namespace WebApi.ServiceInterface.Freight
@@ -175,7 +174,27 @@ namespace WebApi.ServiceInterface.Freight
                 ecr.meta.message = "Unauthorized";
             }
         }
-        public void TS_Tracking(Auth auth, Tracking request, Tracking_Logic logic, CommonResponse ecr, string[] token, string uri)
+								public void TS_Jmjm(Auth auth, Jmjm request, Jmjm_Logic logic, CommonResponse ecr, string[] token, string uri)
+								{
+												if (auth.AuthResult(token, uri))
+												{
+																if (uri.IndexOf("/jmjm1/attach") > 0)
+																{
+																				ecr.data.results = logic.Get_Jmjm1_Attach_List(request);
+																} if (uri.IndexOf("/jmjm1/doc") > 0)
+																{
+																				ecr.data.results = logic.Get_Jmjm1_Doc_List(request);
+																}
+																ecr.meta.code = 200;
+																ecr.meta.message = "OK";
+												}
+												else
+												{
+																ecr.meta.code = 401;
+																ecr.meta.message = "Unauthorized";
+												}
+								}
+								public void TS_Tracking(Auth auth, Tracking request, Tracking_Logic logic, CommonResponse ecr, string[] token, string uri)
         {
             if (auth.AuthResult(token, uri))
             {

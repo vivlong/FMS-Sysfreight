@@ -54,33 +54,12 @@ namespace WebApi
                     x =>
                     new ProfiledDbConnection(x, Profiler.Current)
             };
-												dbConnectionFactory.RegisterConnection("TMS", GetConnectionString("TMS"), SqlServerDialect.Provider);
-												dbConnectionFactory.RegisterConnection("WMS", GetConnectionString("WMS"), SqlServerDialect.Provider);
             container.Register<IDbConnectionFactory>(dbConnectionFactory);
 												//
             var secretKey = new WebApi.ServiceModel.SecretKeyFactory(strSecretKey);
             container.Register<WebApi.ServiceModel.ISecretKey>(secretKey);
             //Auth
-            container.RegisterAutoWired<WebApi.ServiceModel.Auth>();
-            //WMS
-												container.RegisterAutoWired<WebApi.ServiceModel.Wms.Wms_Login_Logic>();
-												container.RegisterAutoWired<WebApi.ServiceModel.Wms.List_Rcbp1_Logic>();
-            container.RegisterAutoWired<WebApi.ServiceModel.Wms.List_Imgr1_Logic>();
-            container.RegisterAutoWired<WebApi.ServiceModel.Wms.List_Impr1_Logic>();
-            container.RegisterAutoWired<WebApi.ServiceModel.Wms.List_Imgr2_Logic>();
-            container.RegisterAutoWired<WebApi.ServiceModel.Wms.List_Imgi1_Logic>();
-            container.RegisterAutoWired<WebApi.ServiceModel.Wms.List_Imgi2_Logic>();
-            container.RegisterAutoWired<WebApi.ServiceModel.Wms.List_Imsn1_Logic>();
-            container.RegisterAutoWired<WebApi.ServiceModel.Wms.Confirm_Imgr1_Logic>();
-												//TMS
-												container.RegisterAutoWired<WebApi.ServiceModel.Tms.Jmjm_Logic>();
-												container.RegisterAutoWired<WebApi.ServiceModel.Tms.Sibl_Logic>();
-            //Event
-            container.RegisterAutoWired<WebApi.ServiceModel.Event.Event_Login_Logic>();
-            container.RegisterAutoWired<WebApi.ServiceModel.Event.List_Jmjm6_Logic>();
-            container.RegisterAutoWired<WebApi.ServiceModel.Event.List_JobNo_Logic>();
-            container.RegisterAutoWired<WebApi.ServiceModel.Event.Update_Done_Logic>();
-            container.RegisterAutoWired<WebApi.ServiceModel.Event.List_Container_Logic>();
+            container.RegisterAutoWired<WebApi.ServiceModel.Auth>();           
             //Freight
 												container.RegisterAutoWired<WebApi.ServiceModel.Freight.Freight_Login_Logic>();
 												container.RegisterAutoWired<WebApi.ServiceModel.Freight.Saus_Logic>();
@@ -88,7 +67,8 @@ namespace WebApi
 												container.RegisterAutoWired<WebApi.ServiceModel.Freight.Smsa_Logic>();
 												container.RegisterAutoWired<WebApi.ServiceModel.Freight.Smct_Logic>();
 												container.RegisterAutoWired<WebApi.ServiceModel.Freight.Plvi_Logic>();
-            container.RegisterAutoWired<WebApi.ServiceModel.Freight.Rcvy_Logic>();
+												container.RegisterAutoWired<WebApi.ServiceModel.Freight.Rcvy_Logic>();
+												container.RegisterAutoWired<WebApi.ServiceModel.Freight.Jmjm_Logic>();
 												container.RegisterAutoWired<WebApi.ServiceModel.Freight.Tracking_Logic>();
 												container.RegisterAutoWired<WebApi.ServiceModel.Freight.ViewPDF_Logic>();
 												container.RegisterAutoWired<WebApi.ServiceModel.Freight.UploadImg_Logic>();
