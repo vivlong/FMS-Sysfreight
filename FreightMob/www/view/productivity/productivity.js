@@ -234,8 +234,10 @@ appControllers.controller('ReminderCtrl', ['$scope', '$state', '$stateParams', '
 
 appControllers.controller('DocumentScanCtrl', ['ENV', '$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicActionSheet', 'ApiService',
     function(ENV, $scope, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicActionSheet, ApiService) {
+        var alertPopup = null;
         $scope.Doc = {
-            JobNo : ''
+            JobNo : '',
+            Jmjm1s : {}
         };
         $scope.capture = null;
         var canvas,context = null;
@@ -259,29 +261,45 @@ appControllers.controller('DocumentScanCtrl', ['ENV', '$scope', '$state', '$stat
             $scope.capture = null;
         };
         $scope.showActionSheet = function(){
-            if(is.not.empty()){
-                var actionSheet = $ionicActionSheet.show({
-                    buttons: [
-                      { text: 'Camera' },
-                      { text: 'From Gallery' }
-                    ],
-                    //destructiveText: 'Delete',
-                    titleText: 'Select Picture',
-                    cancelText: 'Cancel',
-                    cancel: function() {
-                         // add cancel code..
-                       },
-                    buttonClicked: function(index) {
-                        if(index === 0){
-                            $scope.modal_camera.show();
-                            $scope.capture = null;
-                            canvas = document.getElementById('canvas1');
-                            context = canvas.getContext('2d');
-                        }else if(index === 1){
-                            $state.go('upload', {}, {});
-                        }
-                        return true;
+            if(is.not.empty($scope.Doc.JobNo)){
+                var strUri = '/api/freight/jmjm1/doc?JobNo=' + $scope.Doc.JobNo;
+                ApiService.GetParam(strUri, true).then(function success(result) {
+                    $scope.Doc.Jmjm1s = result.data.results;
+                    if(is.array($scope.Doc.Jmjm1s) && is.not.empty($scope.Doc.Jmjm1s)){
+                        var actionSheet = $ionicActionSheet.show({
+                            buttons: [
+                              { text: 'Camera' },
+                              { text: 'From Gallery' }
+                            ],
+                            //destructiveText: 'Delete',
+                            titleText: 'Select Picture',
+                            cancelText: 'Cancel',
+                            cancel: function() {
+                                 // add cancel code..
+                               },
+                            buttonClicked: function(index) {
+                                if(index === 0){
+                                    $scope.modal_camera.show();
+                                    $scope.capture = null;
+                                    canvas = document.getElementById('canvas1');
+                                    context = canvas.getContext('2d');
+                                }else if(index === 1){
+                                    $state.go('upload', {'JobNo':$scope.Doc.JobNo}, {});
+                                }
+                                return true;
+                            }
+                        });
+                    }else{
+                        alertPopup = $ionicPopup.alert({
+                            title: 'Wrong Job No',
+                            okType: 'button-assertive'
+                        });
                     }
+                });
+            }else{
+                alertPopup = $ionicPopup.alert({
+                    title: 'Please Enter Job No',
+                    okType: 'button-assertive'
                 });
             }
         };
@@ -300,16 +318,78 @@ appControllers.controller('DocumentScanCtrl', ['ENV', '$scope', '$state', '$stat
     }]);
 appControllers.controller('RetrieveDocCtrl', ['ENV', '$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicActionSheet', 'ApiService',
     function(ENV, $scope, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicActionSheet, ApiService) {
+        var alertPopup = null;
         $scope.Doc = {
-            JobNo : ''
+            JobNo : '',
+            Jmjm1s : []
         };
         $scope.returnMain = function() {
             $state.go('index.main', {}, {});
         };
+        $scope.goToList = function() {
+            if(is.not.empty($scope.Doc.JobNo)){
+                var strUri = '/api/freight/jmjm1/doc?JobNo=' + $scope.Doc.JobNo;
+                ApiService.GetParam(strUri, true).then(function success(result) {
+                    $scope.Doc.Jmjm1s = result.data.results;
+                    if(is.array($scope.Doc.Jmjm1s) && is.not.empty($scope.Doc.Jmjm1s)){
+                        $state.go('retrieveDocList', {'JobNo':$scope.Doc.JobNo}, {});
+                    }else{
+                        alertPopup = $ionicPopup.alert({
+                            title: 'Wrong Job No',
+                            okType: 'button-assertive'
+                        });
+                    }
+                });
+            }else{
+                alertPopup = $ionicPopup.alert({
+                    title: 'Please Enter Job No',
+                    okType: 'button-assertive'
+                });
+            }
+        };
+    }]);
+appControllers.controller('RetrieveDocListCtrl', ['ENV', '$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicActionSheet', 'ApiService',
+    function(ENV, $scope, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicActionSheet, ApiService) {
+        var alertPopup = null;
+        var JobNo = $stateParams.JobNo;
+        $scope.returnSearch = function() {
+            $state.go('retrieveDoc', {}, {});
+        };
+        $scope.ShowDate = function(utc) {
+            return moment(utc).format('DD-MMM-YYYY');
+        };
+        var onPlatformError = function(url) {
+            window.open(url);
+        };
+        $scope.download = function(Jmjm1) {
+            var strFileName = Jmjm1.JobNo + '-' + Jmjm1.FileName;
+            var strURL = ENV.api + '/api/freight/view/pdf/file?FolderName=ivcr1&Key=' + Jmjm1.TrxNo + '&FileName=' + Jmjm1.FileName + '&format=json';
+            DownloadFileService.Download(strURL, strFileName, 'application/pdf', onPlatformError, null, null);
+        };
+        var GetJmjm1s = function(JobNo) {
+            var strUri = '/api/freight/jmjm1/attach?JobNo=' + JobNo;
+            ApiService.GetParam(strUri, true).then(function success(result) {
+                if (result.data.results != null && result.data.results.length > 0) {
+                    $scope.Jmjm1s = result.data.results;
+                } else {
+                    $scope.Jmjm1s = null;
+                    alertPopup = $ionicPopup.alert({
+                        title: 'No Attachment Found',
+                        okType: 'button-calm'
+                    });
+                    alertPopup.then(function(res) {
+                        console.log('No Attachment Found');
+                        $scope.returnSearch();
+                    });
+                }
+            });
+        };
+        GetJmjm1s($stateParams.JobNo);
     }]);
 appControllers.controller('UploadCtrl', ['ENV', '$scope', '$state', '$stateParams', '$qupload', 'ApiService',
     function(ENV, $scope, $state, $stateParams, $qupload, ApiService) {
-        var uptoken = '';
+        var uptoken = '',
+            JobNo = $stateParams.JobNo;
         $scope.returnDoc = function() {
             $state.go('documentScan', {}, {});
         };
@@ -318,32 +398,31 @@ appControllers.controller('UploadCtrl', ['ENV', '$scope', '$state', '$stateParam
 			$scope.selectFiles[index].progress = {
 				p: 0
 			};
-			$scope.selectFiles[index].upload = $qupload.upload({
-				key: $scope.selectFiles[index].file.name,
+            var key = '/FreightApp/Doc/' + JobNo + '/' + $scope.selectFiles[index].file.name;
+            $qupload.upload({
+				key: key,
 				file: $scope.selectFiles[index].file,
 				token: uptoken
-			});
-			$scope.selectFiles[index].upload.then(function (response) {
-				console.log(response);
+			}).then(function (response) {
+                //
+				console.log('response');
+                //
 			}, function (response) {
 				console.log(response);
 			}, function (evt) {
 				$scope.selectFiles[index].progress.p = Math.floor(100 * evt.loaded / evt.totalSize);
 			});
 		};
-
 		$scope.abort = function (index) {
-			$scope.selectFiles[index].upload.abort();
 			$scope.selectFiles.splice(index, 1);
 		};
-
 		$scope.onFileSelect = function ($files) {
 			var offsetx = $scope.selectFiles.length;
 			for (var i = 0; i < $files.length; i++) {
 				$scope.selectFiles[i + offsetx] = {
 					file: $files[i]
 				};
-				//start(i + offsetx);
+				start(i + offsetx);
 			}
 		};
         var GetToken = function() {

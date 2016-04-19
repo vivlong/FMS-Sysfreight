@@ -388,16 +388,20 @@ app.config( [ '$httpProvider', '$stateProvider', '$urlRouterProvider', '$ionicCo
                 controller: 'DocumentScanCtrl'
             } )
             .state( 'upload', {
-                url: '/Upload',
-                cache: 'false',
+                url: '/Upload/:JobNo',
                 templateUrl: 'view/productivity/Upload.html',
                 controller: 'UploadCtrl'
             } )
             .state( 'retrieveDoc', {
-                url: '/RetrieveDoc',
-                cache: 'false',
+                url: '/RetrieveDoc/',
                 templateUrl: 'view/productivity/RetrieveDoc.html',
                 controller: 'RetrieveDocCtrl'
+            } )
+            .state( 'retrieveDocList', {
+                url: '/retrieveDoc/list/:JobNo',
+                cache: 'false',
+                templateUrl: 'view/productivity/RetrieveDoc-list.html',
+                controller: 'RetrieveDocListCtrl'
             } );
         $urlRouterProvider.otherwise( '/login' );
         /*

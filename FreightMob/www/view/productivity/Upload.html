@@ -8,9 +8,10 @@
     <ion-pane>
         <div style="height: 43px;"></div>
         <div>
-            <div ng-file-select="onFileSelect($files)" data-multiple="true" title="select file" onclick="this.value = null" class="botton">
+            <div ng-file-select="onFileSelect($files)" data-multiple="false" title="select file" onclick="this.value = null">
                 Click here to select file
             </div>
+            <hr />
             <ol>
                <li ng-repeat="(k,v) in selectFiles">
                    {{v.file.name}} - {{v.progress.p}}% <button ng-click="abort(k)">x</button>
