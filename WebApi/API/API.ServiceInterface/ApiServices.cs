@@ -154,6 +154,11 @@ namespace WebApi.ServiceInterface
 												try
 												{
 																ServiceInterface.Freight.PdfService ps = new ServiceInterface.Freight.PdfService();
+																if (this.Request.Files.Length > 0)
+																{
+																				request.RequestStream = this.Request.Files[0].InputStream;
+																				request.FileName = this.Request.Files[0].FileName;
+																}																
 																ps.PS_Upload(auth, request, uploadImg_Logic, ecr, this.Request.Headers.GetValues("Signature"), this.Request.RawUrl);
 												}
 												catch (Exception ex) { cr(ecr, ex); }
@@ -185,28 +190,6 @@ namespace WebApi.ServiceInterface
 												catch (Exception ex) { qtr.uptoken = ex.Message; }
 												return qtr;
 								}
-								#region Common
-								public object Post(Uploading request)
-								{
-												//string[] segments = base.Request.QueryString.GetValues(0);
-												//string strFileName = segments[0];
-												//string strPath = HttpContext.Current.Request.PhysicalApplicationPath;
-												//string resultFile = Path.Combine(@"C:\inetpub\wwwroot\WebAPI\attach", strFileName);
-												//if (File.Exists(resultFile))
-												//{
-												//				File.Delete(resultFile);
-												//}
-												//using (FileStream file = File.Create(resultFile))
-												//{
-												//				byte[] buffer = new byte[request.RequestStream.Length];
-												//				request.RequestStream.Read(buffer, 0, buffer.Length);
-												//				file.Write(buffer, 0, buffer.Length);
-												//				file.Flush();
-												//				file.Close();
-												//}
-												return new HttpResult(System.Net.HttpStatusCode.OK);
-								}
-								#endregion
 								private CommonResponse cr(CommonResponse ecr, Exception ex)
         {
             ecr.meta.code = 599;

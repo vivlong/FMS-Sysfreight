@@ -121,6 +121,7 @@
     <Compile Include="Tables\Saco1.cs" />
     <Compile Include="Tables\Smct2.cs" />
     <Compile Include="Tables\Smct1.cs" />
+    <Compile Include="Tables\View_Attach.cs" />
     <Compile Include="Tables\ViewPDF_Jmjm.cs" />
     <Compile Include="Tables\ViewPDF_Ivcr.cs" />
     <Compile Include="Tables\Smsa2.cs" />

@@ -24,6 +24,7 @@ namespace WebApi.ServiceModel.Freight
 								{
 												public string Key;
 												public string FileName;
+												public string Extension;
 								}
 								private List<JobNoAttachName> jan = null;
 								private void SortAsFileCreationTime(ref FileInfo[] arrFi)
@@ -47,10 +48,12 @@ namespace WebApi.ServiceModel.Freight
 																								{
 																												SortAsFileCreationTime(ref arrFi);
 																												tnn.FileName = arrFi[0].Name;
+																												tnn.Extension = arrFi[0].Extension;
 																								}
 																								else
 																								{
 																												tnn.FileName = "";
+																												tnn.Extension = "";
 																								}
 																								jan.Add(tnn);
 																								GetAllDirList(diA[i].FullName);
@@ -91,15 +94,16 @@ namespace WebApi.ServiceModel.Freight
 																				}
 																				using (var db = DbConnectionFactory.OpenDbConnection())
 																				{
-																								string strSQL = "Select JobNo,JobDate,CustomerName,InvoiceLocalAmt From Jmjm1 Where IsNull(AttachmentFlag,'')='Y' And JobNo in (" + strKeys + ")";
-																								List<ViewPDF_Jmjm> rJmjm = db.Select<ViewPDF_Jmjm>(strSQL);
-																								foreach (ViewPDF_Jmjm vi in rJmjm)
+																								string strSQL = "Select TrxNo,JobNo From Jmjm1 Where IsNull(AttachmentFlag,'')='Y' And JobNo in (" + strKeys + ")";
+																								List<View_Attach> rJmjm = db.Select<View_Attach>(strSQL);
+																								foreach (View_Attach vi in rJmjm)
 																								{
 																												for (int i = 0; i <= jan.Count - 1; i++)
 																												{
 																																if (jan[i].Key.Equals(vi.JobNo.ToString()))
 																																{
 																																				vi.FileName = jan[i].FileName;
+																																				vi.Extension = jan[i].Extension;
 																																				break;
 																																}
 																												}

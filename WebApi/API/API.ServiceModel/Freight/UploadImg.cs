@@ -11,25 +11,54 @@ using ServiceStack.Common.Web;
 using ServiceStack.OrmLite;
 using ServiceStack.ServiceHost;
 using WebApi.ServiceModel.Tables;
+using WebApi.ServiceModel.Utils;
 
 namespace WebApi.ServiceModel.Freight
 {
-				[Route("/freight/upload/img", "Post")]
-				[Route("/freight/upload/img", "Options")]
+				[Route("/freight/upload/img", "Post")]						//img?JobNo= & FileName= & Extension=
+				[Route("/freight/upload/img", "Options")]			//img?FileName= & Extension=
 				public class UploadImg : IReturn<CommonResponse>
 				{
-								public Stream RequestStream { get; set; }
+								public string JobNo { get; set; }
 								public string FileName { get; set; }
-								public string Name { get; set; }
+								public string Extension { get; set; }
+								public Stream RequestStream { get; set; }
 				}
 				public class UploadImg_Logic
 				{
 								public IDbConnectionFactory DbConnectionFactory { get; set; }
 								public int upload(UploadImg request)
 								{
-												Image img = System.Drawing.Image.FromStream(request.RequestStream);
-												img.Save(System.IO.Path.GetTempPath() + "\\myImage.Jpeg", ImageFormat.Jpeg);
-												int i = 0;
+												int i = -1;
+												string filePath = "";
+												if (!string.IsNullOrEmpty(request.JobNo))
+												{
+																using (var db = DbConnectionFactory.OpenDbConnection())
+																{
+																				string strSQL = "Select Top 1 DocumentPath From Saco1";
+																				List<Saco1> saco1 = db.Select<Saco1>(strSQL);
+																				if (saco1.Count > 0)
+																				{
+																								filePath = saco1[0].DocumentPath + "\\Jmjm1\\" + request.JobNo;
+																				}
+																}
+																if (!Directory.Exists(filePath))
+																{
+																				Directory.CreateDirectory(filePath);
+																}
+																string resultFile = Path.Combine(filePath, request.FileName);
+																if (File.Exists(resultFile))
+																{
+																				File.Delete(resultFile);
+																}
+																//Image img = System.Drawing.Image.FromStream(request.RequestStream);
+																//img.Save(System.IO.Path.GetTempPath() + "\\" + request.FileName, ImageFormat.Jpeg);												
+																using (FileStream file = File.Create(resultFile))
+																{
+																				request.RequestStream.Copy(file);
+																				i = 0;
+																}
+												}
 												return i;
 								}
 				}
