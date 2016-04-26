@@ -348,8 +348,8 @@ appControllers.controller('RetrieveDocCtrl', ['ENV', '$scope', '$state', '$state
             }
         };
     }]);
-appControllers.controller('RetrieveDocListCtrl', ['ENV', '$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicActionSheet', 'ApiService',
-    function(ENV, $scope, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicActionSheet, ApiService) {
+appControllers.controller('RetrieveDocListCtrl', ['ENV', '$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicActionSheet', 'DownloadFileService', 'ApiService',
+    function(ENV, $scope, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicActionSheet, DownloadFileService, ApiService) {
         var alertPopup = null;
         var JobNo = $stateParams.JobNo;
         $scope.returnSearch = function() {
@@ -386,13 +386,52 @@ appControllers.controller('RetrieveDocListCtrl', ['ENV', '$scope', '$state', '$s
         };
         GetJmjm1s($stateParams.JobNo);
     }]);
-appControllers.controller('UploadCtrl', ['ENV', '$scope', '$state', '$stateParams', '$qupload', 'ApiService',
-    function(ENV, $scope, $state, $stateParams, $qupload, ApiService) {
+appControllers.controller('UploadCtrl', ['ENV', '$scope', '$state', '$stateParams', 'FileUploader', 'ApiService',
+    function(ENV, $scope, $state, $stateParams, FileUploader, ApiService) {
         var uptoken = '',
             JobNo = $stateParams.JobNo;
         $scope.returnDoc = function() {
             $state.go('documentScan', {}, {});
         };
+        var uploader = $scope.uploader = new FileUploader({
+            url: ENV.api + '/api/freight/upload/img?JobNo=' + JobNo
+        });
+        /*
+        uploader.onWhenAddingFileFailed = function(item, filter, options) {
+            console.info('onWhenAddingFileFailed', item, filter, options);
+        };
+        uploader.onAfterAddingFile = function(fileItem) {
+            console.info('onAfterAddingFile', fileItem);
+        };
+        uploader.onAfterAddingAll = function(addedFileItems) {
+            console.info('onAfterAddingAll', addedFileItems);
+        };
+        uploader.onBeforeUploadItem = function(item) {
+            console.info('onBeforeUploadItem', item);
+        };
+        uploader.onProgressItem = function(fileItem, progress) {
+            console.info('onProgressItem', fileItem, progress);
+        };
+        uploader.onProgressAll = function(progress) {
+            console.info('onProgressAll', progress);
+        };
+        uploader.onErrorItem = function(fileItem, response, status, headers) {
+            console.info('onErrorItem', fileItem, response, status, headers);
+        };
+        uploader.onCancelItem = function(fileItem, response, status, headers) {
+            console.info('onCancelItem', fileItem, response, status, headers);
+        };
+        uploader.onCompleteItem = function(fileItem, response, status, headers) {
+            console.info('onCompleteItem', fileItem, response, status, headers);
+        };
+        uploader.onCompleteAll = function() {
+            console.info('onCompleteAll');
+        };
+        */
+        uploader.onSuccessItem = function(fileItem, response, status, headers) {
+            console.info('onSuccessItem', fileItem, response, status, headers);
+        };
+        /*
         $scope.selectFiles = [];
 		var start = function (index) {
 			$scope.selectFiles[index].progress = {
@@ -432,4 +471,5 @@ appControllers.controller('UploadCtrl', ['ENV', '$scope', '$state', '$stateParam
             });
         };
         GetToken();
+        */
     }]);
