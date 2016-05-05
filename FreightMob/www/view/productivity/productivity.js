@@ -316,6 +316,7 @@ appControllers.controller('DocumentScanCtrl', ['ENV', '$scope', '$state', '$stat
             $scope.modal_camera.hide();
         };
     }]);
+
 appControllers.controller('RetrieveDocCtrl', ['ENV', '$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicActionSheet', 'ApiService',
     function(ENV, $scope, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicActionSheet, ApiService) {
         var alertPopup = null;
@@ -348,6 +349,7 @@ appControllers.controller('RetrieveDocCtrl', ['ENV', '$scope', '$state', '$state
             }
         };
     }]);
+
 appControllers.controller('RetrieveDocListCtrl', ['ENV', '$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicActionSheet', 'DownloadFileService', 'ApiService',
     function(ENV, $scope, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicActionSheet, DownloadFileService, ApiService) {
         var alertPopup = null;
@@ -363,8 +365,8 @@ appControllers.controller('RetrieveDocListCtrl', ['ENV', '$scope', '$state', '$s
         };
         $scope.download = function(Jmjm1) {
             var strFileName = Jmjm1.JobNo + '-' + Jmjm1.FileName;
-            var strURL = ENV.api + '/api/freight/view/pdf/file?FolderName=ivcr1&Key=' + Jmjm1.TrxNo + '&FileName=' + Jmjm1.FileName + '&format=json';
-            DownloadFileService.Download(strURL, strFileName, 'application/pdf', onPlatformError, null, null);
+            var strURL = ENV.api + '/api/freight/view/img/file?FolderName=Jmjm1&Key=' + Jmjm1.JobNo + '&FileName=' + Jmjm1.FileName + '&format=json';
+            DownloadFileService.Download(strURL, strFileName, 'image/jpeg', onPlatformError, null, null);
         };
         var GetJmjm1s = function(JobNo) {
             var strUri = '/api/freight/jmjm1/attach?JobNo=' + JobNo;
@@ -386,10 +388,12 @@ appControllers.controller('RetrieveDocListCtrl', ['ENV', '$scope', '$state', '$s
         };
         GetJmjm1s($stateParams.JobNo);
     }]);
-appControllers.controller('UploadCtrl', ['ENV', '$scope', '$state', '$stateParams', 'FileUploader', 'ApiService',
-    function(ENV, $scope, $state, $stateParams, FileUploader, ApiService) {
+
+appControllers.controller('UploadCtrl', ['ENV', '$scope', '$state', '$stateParams', '$ionicPopup', 'FileUploader', 'ApiService',
+    function(ENV, $scope, $state, $stateParams, $ionicPopup, FileUploader, ApiService) {
         var uptoken = '',
-            JobNo = $stateParams.JobNo;
+            JobNo = $stateParams.JobNo,
+            alertPopup = null;
         $scope.returnDoc = function() {
             $state.go('documentScan', {}, {});
         };
@@ -430,6 +434,18 @@ appControllers.controller('UploadCtrl', ['ENV', '$scope', '$state', '$stateParam
         */
         uploader.onSuccessItem = function(fileItem, response, status, headers) {
             console.info('onSuccessItem', fileItem, response, status, headers);
+            if (alertPopup === null) {
+                alertPopup = $ionicPopup.alert({
+                    title: "Upload Successfully!",
+                    okType: 'button-calm'
+                });
+                alertPopup.then(function(res) {
+                    $scope.returnDoc();
+                });
+            } else {
+                alertPopup.close();
+                alertPopup = null;
+            }
         };
         /*
         $scope.selectFiles = [];
