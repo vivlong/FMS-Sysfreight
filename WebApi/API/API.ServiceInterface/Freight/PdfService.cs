@@ -13,11 +13,7 @@ namespace WebApi.ServiceInterface.Freight
 								{
 												if (auth.AuthResult(token, uri))
 												{
-																if (uri.IndexOf("/pdf/file") > 0)
-																{
-																				ecr.data.results = logic.Get_File(request);
-																}
-																else if (uri.IndexOf("/pdf") > 0)
+															 if (uri.IndexOf("/pdf") > 0)
 																{
 																				ecr.data.results = logic.Get_List(request);
 																}

@@ -39,11 +39,33 @@ namespace WebApi.ServiceModel.Freight
 																{
 																				DirectoryInfo di = new DirectoryInfo(strPath);
 																				DirectoryInfo[] diA = di.GetDirectories();
-																				for (int i = 0; i <= diA.Length - 1; i++)
+																				if (diA.Length > 0)
+																				{
+																								for (int i = 0; i <= diA.Length - 1; i++)
+																								{
+																												JobNoAttachName tnn = new JobNoAttachName();
+																												tnn.Key = diA[i].Name;
+																												FileInfo[] arrFi = diA[i].GetFiles();
+																												if (arrFi.Length > 0)
+																												{
+																																SortAsFileCreationTime(ref arrFi);
+																																tnn.FileName = arrFi[0].Name;
+																																tnn.Extension = arrFi[0].Extension;
+																												}
+																												else
+																												{
+																																tnn.FileName = "";
+																																tnn.Extension = "";
+																												}
+																												jan.Add(tnn);
+																												GetAllDirList(diA[i].FullName);
+																								}
+																				}
+																				else
 																				{
 																								JobNoAttachName tnn = new JobNoAttachName();
-																								tnn.Key = diA[i].Name;
-																								FileInfo[] arrFi = diA[i].GetFiles();
+																								tnn.Key = di.Name;
+																								FileInfo[] arrFi = di.GetFiles();
 																								if (arrFi.Length > 0)
 																								{
 																												SortAsFileCreationTime(ref arrFi);
@@ -56,8 +78,7 @@ namespace WebApi.ServiceModel.Freight
 																												tnn.Extension = "";
 																								}
 																								jan.Add(tnn);
-																								GetAllDirList(diA[i].FullName);
-																				}
+																				}																				
 																}
 												}
 												catch { throw; }
@@ -79,7 +100,7 @@ namespace WebApi.ServiceModel.Freight
 																								DocumentPath = saco1[0].DocumentPath;
 																				}
 																}
-																strPath = DocumentPath + "\\Jmjm1";
+																strPath = DocumentPath + "\\Jmjm1\\" + request.JobNo;
 																GetAllDirList(strPath);
 																if (jan.Count > 0)
 																{
@@ -94,7 +115,7 @@ namespace WebApi.ServiceModel.Freight
 																				}
 																				using (var db = DbConnectionFactory.OpenDbConnection())
 																				{
-																								string strSQL = "Select TrxNo,JobNo From Jmjm1 Where IsNull(AttachmentFlag,'')='Y' And JobNo in (" + strKeys + ")";
+																								string strSQL = "Select JobNo From Jmjm1 Where IsNull(AttachmentFlag,'')='Y' And JobNo in (" + strKeys + ")";
 																								List<View_Attach> rJmjm = db.Select<View_Attach>(strSQL);
 																								foreach (View_Attach vi in rJmjm)
 																								{

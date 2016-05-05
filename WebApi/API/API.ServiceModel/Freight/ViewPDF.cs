@@ -14,6 +14,7 @@ namespace WebApi.ServiceModel.Freight
 {
 				[Route("/freight/view/pdf", "Get")] // pdf?FolderName=
 				[Route("/freight/view/pdf/file", "Get")] // file?FolderName= & Key= & FileName=
+				[Route("/freight/view/img/file", "Get")] // file?FolderName= & Key= & FileName=
 				public class ViewPDF : IReturn<CommonResponse>
 				{
 								public string FolderName { get; set; }
@@ -41,11 +42,31 @@ namespace WebApi.ServiceModel.Freight
 																{
 																				DirectoryInfo di = new DirectoryInfo(strPath);
 																				DirectoryInfo[] diA = di.GetDirectories();
-																				for (int i = 0; i <= diA.Length - 1; i++)
+																				if (diA.Length > 0)
+																				{
+																								for (int i = 0; i <= diA.Length - 1; i++)
+																								{
+																												TrxNoPDFName tnn = new TrxNoPDFName();
+																												tnn.Key = diA[i].Name;
+																												FileInfo[] arrFi = diA[i].GetFiles();
+																												if (arrFi.Length > 0)
+																												{
+																																SortAsFileCreationTime(ref arrFi);
+																																tnn.FileName = arrFi[0].Name;
+																												}
+																												else
+																												{
+																																tnn.FileName = "";
+																												}
+																												tnPDF.Add(tnn);
+																												GetAllDirList(diA[i].FullName);
+																								}
+																				}
+																				else
 																				{
 																								TrxNoPDFName tnn = new TrxNoPDFName();
-																								tnn.Key = diA[i].Name;
-																								FileInfo[] arrFi = diA[i].GetFiles();
+																								tnn.Key = di.Name;
+																								FileInfo[] arrFi = di.GetFiles();
 																								if (arrFi.Length > 0)
 																								{
 																												SortAsFileCreationTime(ref arrFi);
@@ -56,8 +77,7 @@ namespace WebApi.ServiceModel.Freight
 																												tnn.FileName = "";
 																								}
 																								tnPDF.Add(tnn);
-																								GetAllDirList(diA[i].FullName);
-																				}
+																				}																				
 																}																		
 												}
 												catch { throw; }
@@ -150,6 +170,31 @@ namespace WebApi.ServiceModel.Freight
 																								}
 																				}																				
 																}																
+												}
+												catch { throw; }
+												return Result;
+								}
+								public byte[] Get_Img_File(ViewPDF request)
+								{
+												byte[] Result = null;
+												string strPath = "";
+												string DocumentPath = "";
+												try
+												{
+																using (var db = DbConnectionFactory.OpenDbConnection())
+																{
+																				string strSQL = "Select Top 1 DocumentPath From Saco1";
+																				List<Saco1> saco1 = db.Select<Saco1>(strSQL);
+																				DocumentPath = saco1[0].DocumentPath;
+																				strPath = DocumentPath + "\\" + request.FolderName + "\\" + request.Key + "\\" + request.FileName;
+																				using (FileStream fsRead = new FileStream(strPath, FileMode.Open))
+																				{
+																								int fsLen = (int)fsRead.Length;
+																								byte[] heByte = new byte[fsLen];
+																								int r = fsRead.Read(heByte, 0, heByte.Length);
+																								Result = heByte;
+																				}
+																}
 												}
 												catch { throw; }
 												return Result;

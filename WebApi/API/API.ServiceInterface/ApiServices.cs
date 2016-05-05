@@ -133,6 +133,11 @@ namespace WebApi.ServiceInterface
 																byte[] heByte = viewPDF_Logic.Get_File(request);																
 																return new HttpResult(heByte, "application/pdf");
 												}
+												else if (this.Request.RawUrl.IndexOf("/img/file") > 0)
+												{
+																byte[] heByte = viewPDF_Logic.Get_Img_File(request);
+																return new HttpResult(heByte, "image/jpeg");
+												}
 												else //this.Request.RawUrl.IndexOf("/pdf") > 0
 												{
 																CommonResponse ecr = new CommonResponse();

@@ -7,7 +7,6 @@ namespace WebApi.ServiceModel.Tables
 {
 				public class View_Attach
 				{
-								public int TrxNo { get; set; }
 								public string JobNo { get; set; }
 								public string FileName { get; set; }
 								public string Extension { get; set; }
