@@ -39,10 +39,10 @@
                     </button>
                     <button class="button icon ion-android-camera" ng-click="takePhoto()">
                     </button>
-                    <button class="button icon ion-arrow-return-right" ng-click="closeModal('camera')" ng-if="capture==null">
+                    <button class="button icon ion-arrow-return-right" ng-click="closeModal()" ng-if="capture==null">
                         &nbsp;Return
                     </button>
-                    <button class="button icon ion-android-done" ng-click="closeModal('camera')" ng-if="capture!=null">
+                    <button class="button icon ion-android-done" ng-click="uploadPhoto()" ng-if="capture!=null">
                         &nbsp;Done
                     </button>
                 </div>

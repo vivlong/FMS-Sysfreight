@@ -260,6 +260,27 @@ appControllers.controller('DocumentScanCtrl', ['ENV', '$scope', '$state', '$stat
             context.clearRect(0,0,320,480);
             $scope.capture = null;
         };
+        $scope.uploadPhoto = function(){
+            var jsonData = {
+                'Base64': $scope.capture,
+                'FileName': moment().format('YYYY-MM-DD-HH-mm-ss').toString() + '.jpg'
+            };
+            var strUri = '/api/freight/upload/img?JobNo=' + $scope.Doc.JobNo;
+            ApiService.Post( strUri, jsonData, true ).then( function success( result ) {
+                if (alertPopup === null) {
+                    alertPopup = $ionicPopup.alert({
+                        title: 'Upload Successfully!',
+                        okType: 'button-calm'
+                    });
+                    alertPopup.then(function(res) {
+                        $scope.closeModal();
+                    });
+                } else {
+                    alertPopup.close();
+                    alertPopup = null;
+                }
+            } );
+        };
         $scope.showActionSheet = function(){
             if(is.not.empty($scope.Doc.JobNo)){
                 var strUri = '/api/freight/jmjm1/doc?JobNo=' + $scope.Doc.JobNo;
