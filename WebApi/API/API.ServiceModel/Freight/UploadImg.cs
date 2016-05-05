@@ -22,6 +22,7 @@ namespace WebApi.ServiceModel.Freight
 								public string JobNo { get; set; }
 								public string FileName { get; set; }
 								public string Extension { get; set; }
+								public string Base64 { get; set; }
 								public Stream RequestStream { get; set; }
 				}
 				public class UploadImg_Logic
@@ -54,12 +55,33 @@ namespace WebApi.ServiceModel.Freight
 																								File.Delete(resultFile);
 																				}
 																				//Image img = System.Drawing.Image.FromStream(request.RequestStream);
-																				//img.Save(System.IO.Path.GetTempPath() + "\\" + request.FileName, ImageFormat.Jpeg);												
-																				using (FileStream file = File.Create(resultFile))
+																				//img.Save(System.IO.Path.GetTempPath() + "\\" + request.FileName, ImageFormat.Jpeg);		
+																				if (string.IsNullOrEmpty(request.Base64))
 																				{
-																								request.RequestStream.Copy(file);
-																								i = 0;
+																								using (FileStream file = File.Create(resultFile))
+																								{
+																												request.RequestStream.Copy(file);
+																												i = 0;
+																								}
 																				}
+																				else
+																				{
+																								string strBase64 = request.Base64;
+																								string[] base64s = strBase64.Split(',');
+																								if (base64s.Length > 0)
+																								{
+																												byte[] arr = Convert.FromBase64String(base64s[1]);
+																												using (MemoryStream ms = new MemoryStream(arr))
+																												{
+																																Bitmap bmp = new Bitmap(ms);
+																																bmp.Save(resultFile, System.Drawing.Imaging.ImageFormat.Jpeg);
+																																//bmp.Save(txtFileName + ".bmp", ImageFormat.Bmp);
+																																//bmp.Save(txtFileName + ".gif", ImageFormat.Gif);
+																																//bmp.Save(txtFileName + ".png", ImageFormat.Png);
+																																i = 0;
+																												}				
+																								}														
+																				}																				
 																				if (i.Equals(0))
 																				{
 																								using (var db = DbConnectionFactory.OpenDbConnection())
