@@ -11,6 +11,7 @@ var appControllers = angular.module('MobileAPP.controllers', [
     'ngCordova.plugins.fileTransfer',
     'ngCordova.plugins.fileOpener2',
     'ngCordova.plugins.sms',
+    'ngCordova.plugins.camera',
     'ngCordova.plugins.actionSheet',
     'MobileAPP.config',
     'MobileAPP.directives',

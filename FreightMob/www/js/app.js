@@ -124,6 +124,7 @@ app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeo
                 $state.includes( 'reminder' ) ||
                 $state.includes( 'memo' ) ||
                 $state.includes( 'documentScan' ) ||
+                $state.includes( 'retrieveDoc' ) ||
                 $state.includes( 'vesselSchedule' ) ||
                 $state.includes( 'shipmentStatus' ) ||
                 $state.includes( 'invoice' ) ||
