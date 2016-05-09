@@ -95,7 +95,7 @@ app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeo
                     ionic.Platform.exitApp();
                 } else {
                     $rootScope.backButtonPressedOnceToExit = true;
-                    $cordovaToast.showShortBottom( 'Press again to exit.' );
+                    $cordovaToast.showShortBottom( 'Press again to exit' );
                     setTimeout( function() {
                         $rootScope.backButtonPressedOnceToExit = false;
                     }, 2000 );

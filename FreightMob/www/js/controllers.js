@@ -56,8 +56,8 @@ appControllers.controller('GeoCtrl', ['ENV', '$scope',
 ]);
 
 appControllers.controller('IndexCtrl', ['ENV', '$scope', '$state', '$rootScope',
-    '$ionicLoading', '$ionicPopup', '$ionicSideMenuDelegate',
-    function(ENV, $scope, $state, $rootScope, $ionicLoading, $ionicPopup,
+    '$http', '$ionicLoading', '$ionicPopup', '$ionicSideMenuDelegate',
+    function(ENV, $scope, $state, $rootScope, $http, $ionicLoading, $ionicPopup,
         $ionicSideMenuDelegate) {
         $scope.Status = {
             Login: false

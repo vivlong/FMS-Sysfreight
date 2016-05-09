@@ -113,7 +113,7 @@ appService.service('DownloadFileService', ['ENV', '$http', '$timeout', '$ionicLo
                             console.log(ex);
                         });
                     }, function(err) {
-                        $cordovaToast.showShortCenter('Download faild.');
+                        $cordovaToast.showShortCenter('Download faild');
                         $ionicLoading.hide();
                         if (onDownloadError) onDownloadError();
                     }, function(progress) {
