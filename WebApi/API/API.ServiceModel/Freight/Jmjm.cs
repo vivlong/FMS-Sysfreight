@@ -20,13 +20,17 @@ namespace WebApi.ServiceModel.Freight
 				public class Jmjm_Logic
     {
         public IDbConnectionFactory DbConnectionFactory { get; set; }
-								public struct JobNoAttachName
+								public struct JobNoAttachs
 								{
 												public string Key;
-												public string FileName;
-												public string Extension;
+												public class FileInfos
+												{
+																public string FileName { get; set; }
+																public string Extension { get; set; }
+												}
+												public List<FileInfos> Files { get; set; }
 								}
-								private List<JobNoAttachName> jan = null;
+								private List<JobNoAttachs> attachs = null;
 								private void SortAsFileCreationTime(ref FileInfo[] arrFi)
 								{
 												Array.Sort<FileInfo>(arrFi, delegate(FileInfo x, FileInfo y) { return y.CreationTime.CompareTo(x.CreationTime); });
@@ -43,41 +47,57 @@ namespace WebApi.ServiceModel.Freight
 																				{
 																								for (int i = 0; i <= diA.Length - 1; i++)
 																								{
-																												JobNoAttachName tnn = new JobNoAttachName();
-																												tnn.Key = diA[i].Name;
+																												JobNoAttachs attach = new JobNoAttachs();
+																												attach.Key = diA[i].Name;
+																												attach.Files = new List<JobNoAttachs.FileInfos>();
 																												FileInfo[] arrFi = diA[i].GetFiles();
 																												if (arrFi.Length > 0)
 																												{
 																																SortAsFileCreationTime(ref arrFi);
-																																tnn.FileName = arrFi[0].Name;
-																																tnn.Extension = arrFi[0].Extension;
+																																foreach (FileInfo j in arrFi)
+																																{
+																																				JobNoAttachs.FileInfos fi = new JobNoAttachs.FileInfos();
+																																				fi.FileName = j.Name;
+																																				fi.Extension = j.Extension;
+																																				attach.Files.Add(fi);
+																																}
 																												}
 																												else
 																												{
-																																tnn.FileName = "";
-																																tnn.Extension = "";
+																																JobNoAttachs.FileInfos fi = new JobNoAttachs.FileInfos();
+																																fi.FileName = "";
+																																fi.Extension = "";
+																																attach.Files.Add(fi);
 																												}
-																												jan.Add(tnn);
+																												attachs.Add(attach);
 																												GetAllDirList(diA[i].FullName);
 																								}
 																				}
 																				else
 																				{
-																								JobNoAttachName tnn = new JobNoAttachName();
-																								tnn.Key = di.Name;
+																								JobNoAttachs attach = new JobNoAttachs();
+																								attach.Key = di.Name;
+																								attach.Files = new List<JobNoAttachs.FileInfos>();
 																								FileInfo[] arrFi = di.GetFiles();
 																								if (arrFi.Length > 0)
 																								{
 																												SortAsFileCreationTime(ref arrFi);
-																												tnn.FileName = arrFi[0].Name;
-																												tnn.Extension = arrFi[0].Extension;
+																												foreach (FileInfo j in arrFi)
+																												{
+																																JobNoAttachs.FileInfos fi = new JobNoAttachs.FileInfos();
+																																fi.FileName = j.Name;
+																																fi.Extension = j.Extension;
+																																attach.Files.Add(fi);
+																												}
 																								}
 																								else
 																								{
-																												tnn.FileName = "";
-																												tnn.Extension = "";
+																												JobNoAttachs.FileInfos fi = new JobNoAttachs.FileInfos();
+																												fi.FileName = "";
+																												fi.Extension = "";
+																												attach.Files.Add(fi);
 																								}
-																								jan.Add(tnn);
+																								attachs.Add(attach);
 																				}																				
 																}
 												}
@@ -86,7 +106,7 @@ namespace WebApi.ServiceModel.Freight
 								public object Get_Jmjm1_Attach_List(Jmjm request)
 								{
 												object Result = null;
-												jan = new List<JobNoAttachName>();
+												attachs = new List<JobNoAttachs>();
 												string strPath = "";
 												string DocumentPath = "";
 												try
@@ -102,12 +122,12 @@ namespace WebApi.ServiceModel.Freight
 																}
 																strPath = DocumentPath + "\\Jmjm1\\" + request.JobNo;
 																GetAllDirList(strPath);
-																if (jan.Count > 0)
+																if (attachs.Count > 0)
 																{
 																				string strKeys = "";
-																				for (int i = 0; i <= jan.Count - 1; i++)
+																				for (int i = 0; i <= attachs.Count - 1; i++)
 																				{
-																								strKeys = strKeys + "'" + jan[i].Key + "',";
+																								strKeys = strKeys + "'" + attachs[i].Key + "',";
 																				}
 																				if (strKeys.LastIndexOf(",").Equals(strKeys.Length - 1))
 																				{
@@ -119,12 +139,18 @@ namespace WebApi.ServiceModel.Freight
 																								List<View_Attach> rJmjm = db.Select<View_Attach>(strSQL);
 																								foreach (View_Attach vi in rJmjm)
 																								{
-																												for (int i = 0; i <= jan.Count - 1; i++)
+																												vi.Files = new List<View_Attach.FileInfos>();
+																												for (int i = 0; i <= attachs.Count - 1; i++)
 																												{
-																																if (jan[i].Key.Equals(vi.JobNo.ToString()))
+																																if (attachs[i].Key.Equals(vi.JobNo.ToString()))
 																																{
-																																				vi.FileName = jan[i].FileName;
-																																				vi.Extension = jan[i].Extension;
+																																				foreach (JobNoAttachs.FileInfos j in attachs[i].Files)
+																																				{
+																																								View_Attach.FileInfos fi = new View_Attach.FileInfos();
+																																								fi.FileName = j.FileName;
+																																								fi.Extension = j.Extension;
+																																								vi.Files.Add(fi);
+																																				}																																				
 																																				break;
 																																}
 																												}
