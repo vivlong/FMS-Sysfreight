@@ -13,6 +13,7 @@ var appControllers = angular.module('MobileAPP.controllers', [
     'ngCordova.plugins.sms',
     'ngCordova.plugins.camera',
     'ngCordova.plugins.actionSheet',
+    'ngCordova.plugins.barcodeScanner',
     'MobileAPP.config',
     'MobileAPP.directives',
     'MobileAPP.services',
@@ -132,8 +133,7 @@ appControllers.controller('LoginCtrl', ['ENV', '$scope', '$rootScope', '$http', 
             strUserName: '',
             strPassword: ''
         };
-        var alertPopup = null;
-        var alertTitle = '';
+        var alertPopup = null, alertTitle = '';
         $scope.login = function() {
             if (window.cordova && window.cordova.plugins.Keyboard) {
                 cordova.plugins.Keyboard.close();
