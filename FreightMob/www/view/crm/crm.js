@@ -150,16 +150,16 @@ appControllers.controller( 'SalesmanActivityDetailCtrl', [ '$scope', '$state', '
             return moment( utc ).format( 'DD-MMM-YYYY' );
         };
         var GetSmsa2Detail = function( TrxNo ) {
-            if ( SALESMANACTIVITY_ORM.DETAIL.Smsa2s != null && SALESMANACTIVITY_ORM.DETAIL.Smsa2s.length > 0 && SALESMANACTIVITY_ORM.DETAIL.TrxNo === parseInt( TrxNo ) ) {
-                $scope.Smsa2s = SALESMANACTIVITY_ORM.DETAIL.Smsa2s;
-            } else {
+            //if ( SALESMANACTIVITY_ORM.DETAIL.Smsa2s != null && SALESMANACTIVITY_ORM.DETAIL.Smsa2s.length > 0 && SALESMANACTIVITY_ORM.DETAIL.TrxNo === parseInt( TrxNo ) ) {
+            //    $scope.Smsa2s = SALESMANACTIVITY_ORM.DETAIL.Smsa2s;
+            //} else {
                 var strUri = "/api/freight/smsa2/read?TrxNo=" + TrxNo;
                 ApiService.GetParam( strUri, true ).then( function success( result ) {
                     $scope.Smsa2s = result.data.results;
                     SALESMANACTIVITY_ORM.DETAIL._setKey( TrxNo );
                     SALESMANACTIVITY_ORM.DETAIL._setObj( $scope.Smsa2s );
                 } );
-            }
+            //}
         };
         GetSmsa2Detail( $scope.Detail.TrxNo );
     }

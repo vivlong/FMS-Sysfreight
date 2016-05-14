@@ -8,16 +8,21 @@
     <ion-content>
         <div style="height: 43px;"></div>
         <div class="card" ng-repeat="Jmjm1 in Jmjm1s">
-            <div class="list" ng-repeat="File in Jmjm1.Files">
+            <div class="list">
                 <ion-item nav-clear menu-close class="item">
-                    <div class="pull-left" style="width:80%;">
-                        <h2>Job  No&nbsp;:&nbsp;<span ng-bind="Jmjm1.JobNo"></span></h2>
-                        <h3>File&nbsp;:&nbsp;<span ng-bind="File.FileName"></span></h3>
+                    <h2>Job  No&nbsp;:&nbsp;<span ng-bind="Jmjm1.JobNo"></span></h2>
+                    <div ng-repeat="File in Jmjm1.Files">
+                        <div class="row" style="padding:0;">
+                            <div class="col col-80">
+                                <h3 style="padding-top: 1em;">File&nbsp;:&nbsp;<span ng-bind="File.FileName"></span></h3>
+                            </div>
+                            <div class="col">
+                                <button class="button button-clear" ng-click="download(Jmjm1, File)">
+                                    <i class="icon iconfont ion-android-download"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <button class="button button-clear" ng-click="download(Jmjm1, File)">
-                        <i class="iconfont icon-pdf" ng-if="File.Extension=='.pdf'"></i>
-                        <i class="icon iconfont ion-android-image" ng-if="File.Extension=='.jpg'"></i>
-                    </button>
                 </ion-item>
             </div>
         </div>
