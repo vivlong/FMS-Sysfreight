@@ -387,7 +387,9 @@ appControllers.controller( 'DocumentScanCtrl', [ 'ENV', '$scope', '$state', '$st
         };
         $scope.openCam = function() {
             $cordovaBarcodeScanner.scan().then( function( imageData ) {
-                $scope.Doc.JobNo = imageData.text;
+                var qrcode = imageData.text;
+                var qrcodes = qrcodes.split('#');
+                $scope.Doc.JobNo = qrcodes.length>1? qrcodes[1]: qrcodes[0];
                 $scope.showActionSheet();
             }, function( error ) {
                 $cordovaToast.showShortBottom( error );
@@ -435,7 +437,9 @@ appControllers.controller( 'RetrieveDocCtrl', [ 'ENV', '$scope', '$state', '$sta
         };
         $scope.openCam = function() {
             $cordovaBarcodeScanner.scan().then( function( imageData ) {
-                $scope.Doc.JobNo = imageData.text;
+                var qrcode = imageData.text;
+                var qrcodes = qrcodes.split('#');
+                $scope.Doc.JobNo = qrcodes.length>1? qrcodes[1]: qrcodes[0];
                 $scope.goToList();
             }, function( error ) {
                 $cordovaToast.showShortBottom( error );
@@ -478,9 +482,18 @@ appControllers.controller( 'RetrieveDocListCtrl', [ 'ENV', '$scope', '$state', '
         };
         $scope.download = function( Jmjm1, File ) {
             if(is.not.undefined(File)){
-                var strFileName = Jmjm1.JobNo + '-' + File.FileName;
-                var strURL = ENV.api + '/api/freight/view/img/file?FolderName=Jmjm1&Key=' + Jmjm1.JobNo + '&FileName=' + File.FileName + '&format=json';
-                DownloadFileService.Download( strURL, strFileName, 'image/jpeg', onPlatformError, null, null );
+                var strFileName = Jmjm1.JobNo + '-' + File.FileName,
+                    strURL='';
+                if(is.equal(File.Extension,'.pdf')){
+                    strURL = ENV.api + '/api/freight/view/pdf/file?FolderName=Jmjm1&Key=' + Jmjm1.JobNo + '&FileName=' + File.FileName + '&format=json';
+                    DownloadFileService.Download( strURL, strFileName, 'application/pdf', onPlatformError, null, null );
+                }else if(is.equal(File.Extension,'.txt')){
+                    strURL = ENV.api + '/api/freight/view/txt/file?FolderName=Jmjm1&Key=' + Jmjm1.JobNo + '&FileName=' + File.FileName + '&format=json';
+                    DownloadFileService.Download( strURL, strFileName, 'text/plan', onPlatformError, null, null );
+                }else if(is.equal(File.Extension,'.jpg')||is.equal(File.Extension,'.png')||is.equal(File.Extension,'.bmp')){
+                    strURL = ENV.api + '/api/freight/view/img/file?FolderName=Jmjm1&Key=' + Jmjm1.JobNo + '&FileName=' + File.FileName + '&format=json';
+                    DownloadFileService.Download( strURL, strFileName, 'image/jpeg', onPlatformError, null, null );
+                }
             }
         };
         var GetJmjm1s = function( JobNo ) {
