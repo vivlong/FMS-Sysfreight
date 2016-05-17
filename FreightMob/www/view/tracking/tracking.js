@@ -91,6 +91,7 @@ appControllers.controller('ShipmentStatusCtrl', ['$scope', '$state', '$ionicPopu
             OrderNo: '',
             ReferenceNo: ''
         };
+        $scope.Tracking.JobNo = 'SE07731-03';        
         switch (TRACKING_ORM.TRACKING_SEARCH.FilterName) {
             case 'ContainerNo':
                 $scope.Tracking.ContainerNo = TRACKING_ORM.TRACKING_SEARCH.FilterValue;

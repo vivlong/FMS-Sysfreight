@@ -4,6 +4,7 @@ appControllers.controller( 'SalesmanActivityCtrl', [ '$scope', '$state', '$ionic
             SalesmanNameLike: SALESMANACTIVITY_ORM.SEARCH.SalesmanNameLike
         };
         var alertPopup = null;
+        $scope.Rcsm1.SalesmanNameLike = 'ning';
         $scope.returnMain = function() {
             $state.go( 'index.main', {}, {
                 relaod: true
