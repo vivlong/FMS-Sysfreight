@@ -15,9 +15,9 @@ using WebApi.ServiceModel.Utils;
 
 namespace WebApi.ServiceModel.Freight
 {
-				[Route("/freight/upload/img", "Post")]						//img?JobNo= & FileName= & Extension=
+				[Route("/freight/upload/img", "Post")]						//img?JobNo= & FileName= & Extension= & Base64=
 				[Route("/freight/upload/img", "Options")]			//img?FileName= & Extension=
-				public class UploadImg : IReturn<CommonResponse>
+				public class UploadFile : IReturn<CommonResponse>
 				{
 								public string JobNo { get; set; }
 								public string FileName { get; set; }
@@ -25,10 +25,10 @@ namespace WebApi.ServiceModel.Freight
 								public string Base64 { get; set; }
 								public Stream RequestStream { get; set; }
 				}
-				public class UploadImg_Logic
+				public class UploadFile_Logic
 				{
 								public IDbConnectionFactory DbConnectionFactory { get; set; }
-								public int upload(UploadImg request)
+								public int upload(UploadFile request)
 								{
 												int i = -1;
 												string filePath = "";
@@ -53,9 +53,7 @@ namespace WebApi.ServiceModel.Freight
 																				if (File.Exists(resultFile))
 																				{
 																								File.Delete(resultFile);
-																				}
-																				//Image img = System.Drawing.Image.FromStream(request.RequestStream);
-																				//img.Save(System.IO.Path.GetTempPath() + "\\" + request.FileName, ImageFormat.Jpeg);		
+																				}		
 																				if (string.IsNullOrEmpty(request.Base64))
 																				{
 																								using (FileStream file = File.Create(resultFile))

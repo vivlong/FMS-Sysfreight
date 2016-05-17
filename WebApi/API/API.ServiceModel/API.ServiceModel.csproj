@@ -96,8 +96,8 @@
     <Compile Include="Freight\Saus.cs" />
     <Compile Include="Freight\Tracking.cs" />
     <Compile Include="Freight\Rcvy.cs" />
-    <Compile Include="Freight\UploadImg.cs" />
-    <Compile Include="Freight\ViewPDF.cs" />
+    <Compile Include="Freight\UploadFile.cs" />
+    <Compile Include="Freight\ViewFile.cs" />
     <Compile Include="Tables\Imgi2.cs" />
     <Compile Include="Tables\Imgi1.cs" />
     <Compile Include="Tables\Imgr1.cs" />
@@ -135,9 +135,8 @@
     <Compile Include="Tables\Imsn1.cs" />
     <Compile Include="Tables\Rcbp3.cs" />
     <Compile Include="Tables\Rcbp1.cs" />
-    <Compile Include="Utils\Download.cs" />
     <Compile Include="Utils\QiniuToken.cs" />
-    <Compile Include="Utils\Uploading.cs" />
+    <Compile Include="Utils\StreamExtender.cs" />
     <Compile Include="Freight\Rcbp.cs" />
     <Compile Include="Modfunction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

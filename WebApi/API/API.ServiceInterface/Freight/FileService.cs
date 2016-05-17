@@ -7,9 +7,9 @@ using WebApi.ServiceModel.Freight;
 
 namespace WebApi.ServiceInterface.Freight
 {
-				public class PdfService
+				public class FileService
 				{
-								public void PS_View(Auth auth, ViewPDF request, ViewPDF_Logic logic, CommonResponse ecr, string[] token, string uri)
+								public void FS_View(Auth auth, ViewFile request, ViewFile_Logic logic, CommonResponse ecr, string[] token, string uri)
 								{
 												if (auth.AuthResult(token, uri))
 												{
@@ -26,7 +26,7 @@ namespace WebApi.ServiceInterface.Freight
 																ecr.meta.message = "Unauthorized";
 												}
 								}
-								public void PS_Upload(Auth auth, UploadImg request, UploadImg_Logic logic, CommonResponse ecr, string[] token, string uri)
+								public void FS_Upload(Auth auth, UploadFile request, UploadFile_Logic logic, CommonResponse ecr, string[] token, string uri)
 								{
 												if (auth.AuthResult(token, uri))
 												{

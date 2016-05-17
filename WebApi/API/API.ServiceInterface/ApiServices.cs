@@ -125,46 +125,56 @@ namespace WebApi.ServiceInterface
             catch (Exception ex) { cr(ecr, ex); }
             return ecr;
         }
-								public ServiceModel.Freight.ViewPDF_Logic viewPDF_Logic { get; set; }
-								public object Get(ServiceModel.Freight.ViewPDF request)
+								public ServiceModel.Freight.ViewFile_Logic viewFile_Logic { get; set; }
+								public object Get(ServiceModel.Freight.ViewFile request)
 								{
-												if (this.Request.RawUrl.IndexOf("/pdf/file") > 0)
+												if (this.Request.RawUrl.IndexOf("/pdf/file/edoc") > 0)
 												{
-																byte[] heByte = viewPDF_Logic.Get_File(request);																
+																byte[] heByte = viewFile_Logic.Get_eDoc_File(request);
+																return new HttpResult(heByte, "application/pdf");
+												}
+												else if (this.Request.RawUrl.IndexOf("/pdf/file") > 0)
+												{
+																byte[] heByte = viewFile_Logic.Get_File(request);																
 																return new HttpResult(heByte, "application/pdf");
 												}
 												else if (this.Request.RawUrl.IndexOf("/img/file") > 0)
 												{
-																byte[] heByte = viewPDF_Logic.Get_Img_File(request);
+																byte[] heByte = viewFile_Logic.Get_Img_File(request);
 																return new HttpResult(heByte, "image/jpeg");
 												}
-												else //this.Request.RawUrl.IndexOf("/pdf") > 0
+												else if (this.Request.RawUrl.IndexOf("/txt/file") > 0)
+												{
+																byte[] heByte = viewFile_Logic.Get_File(request);
+																return new HttpResult(heByte, "text/plain");
+												}
+												else
 												{
 																CommonResponse ecr = new CommonResponse();
 																ecr.initial();
 																try
 																{
-																				ServiceInterface.Freight.PdfService ps = new ServiceInterface.Freight.PdfService();
-																				ps.PS_View(auth, request, viewPDF_Logic, ecr, this.Request.Headers.GetValues("Signature"), this.Request.RawUrl);
+																				ServiceInterface.Freight.FileService fs = new ServiceInterface.Freight.FileService();
+																				fs.FS_View(auth, request, viewFile_Logic, ecr, this.Request.Headers.GetValues("Signature"), this.Request.RawUrl);
 																}
 																catch (Exception ex) { cr(ecr, ex); }
 																return ecr;
 												}
 								}
-								public ServiceModel.Freight.UploadImg_Logic uploadImg_Logic { get; set; }
-								public object Any(ServiceModel.Freight.UploadImg request)
+								public ServiceModel.Freight.UploadFile_Logic uploadImg_Logic { get; set; }
+								public object Any(ServiceModel.Freight.UploadFile request)
 								{
 												CommonResponse ecr = new CommonResponse();
 												ecr.initial();
 												try
 												{
-																ServiceInterface.Freight.PdfService ps = new ServiceInterface.Freight.PdfService();
+																ServiceInterface.Freight.FileService ps = new ServiceInterface.Freight.FileService();
 																if (this.Request.Files.Length > 0)
 																{
 																				request.RequestStream = this.Request.Files[0].InputStream;
 																				request.FileName = this.Request.Files[0].FileName;
 																}																
-																ps.PS_Upload(auth, request, uploadImg_Logic, ecr, this.Request.Headers.GetValues("Signature"), this.Request.RawUrl);
+																ps.FS_Upload(auth, request, uploadImg_Logic, ecr, this.Request.Headers.GetValues("Signature"), this.Request.RawUrl);
 												}
 												catch (Exception ex) { cr(ecr, ex); }
 												return ecr;

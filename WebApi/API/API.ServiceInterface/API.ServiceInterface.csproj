@@ -78,7 +78,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Freight\PdfService.cs" />
+    <Compile Include="Freight\FileService.cs" />
     <Compile Include="Freight\TableService.cs" />
     <Compile Include="Freight\LoginService.cs" />
     <Compile Include="Utils\Qiniu.cs" />

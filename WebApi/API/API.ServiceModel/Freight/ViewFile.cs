@@ -12,16 +12,17 @@ using WebApi.ServiceModel.Tables;
 
 namespace WebApi.ServiceModel.Freight
 {
-				[Route("/freight/view/pdf", "Get")] // pdf?FolderName=
 				[Route("/freight/view/pdf/file", "Get")] // file?FolderName= & Key= & FileName=
+				[Route("/freight/view/pdf/file/edoc", "Get")] // edoc?FolderName= & Key= & FileName=
 				[Route("/freight/view/img/file", "Get")] // file?FolderName= & Key= & FileName=
-				public class ViewPDF : IReturn<CommonResponse>
+				[Route("/freight/view/txt/file", "Get")] // file?FolderName= & Key= & FileName=
+				public class ViewFile : IReturn<CommonResponse>
 				{
 								public string FolderName { get; set; }
 								public string Key { get; set; }
 								public string FileName { get; set; }
 				}
-				public class ViewPDF_Logic
+				public class ViewFile_Logic
 				{
 								public IDbConnectionFactory DbConnectionFactory { get; set; }
 								public struct TrxNoPDFName
@@ -82,7 +83,7 @@ namespace WebApi.ServiceModel.Freight
 												}
 												catch { throw; }
 								}
-								public object Get_List(ViewPDF request)
+								public object Get_List(ViewFile request)
 								{
 												object Result = null;
 												tnPDF = new List<TrxNoPDFName>();
@@ -174,7 +175,7 @@ namespace WebApi.ServiceModel.Freight
 												catch { throw; }
 												return Result;
 								}
-								public byte[] Get_Img_File(ViewPDF request)
+								public byte[] Get_Img_File(ViewFile request)
 								{
 												byte[] Result = null;
 												string strPath = "";
@@ -199,7 +200,32 @@ namespace WebApi.ServiceModel.Freight
 												catch { throw; }
 												return Result;
 								}
-								public byte[] Get_File(ViewPDF request)
+								public byte[] Get_File(ViewFile request)
+								{
+												byte[] Result = null;
+												string strPath = "";
+												string DocumentPath = "";
+												try
+												{
+																using (var db = DbConnectionFactory.OpenDbConnection())
+																{
+																				string strSQL = "Select Top 1 DocumentPath From Saco1";
+																				List<Saco1> saco1 = db.Select<Saco1>(strSQL);
+																				DocumentPath = saco1[0].DocumentPath;
+																				strPath = DocumentPath + "\\" + request.FolderName + "\\" + request.Key + "\\" + request.FileName;
+																				using (FileStream fsRead = new FileStream(strPath, FileMode.Open))
+																				{
+																								int fsLen = (int)fsRead.Length;
+																								byte[] heByte = new byte[fsLen];
+																								int r = fsRead.Read(heByte, 0, heByte.Length);
+																								Result = heByte;
+																				}
+																}
+												}
+												catch { throw; }
+												return Result;
+								}
+								public byte[] Get_eDoc_File(ViewFile request)
 								{
 												byte[] Result = null;
 												string strPath = "";

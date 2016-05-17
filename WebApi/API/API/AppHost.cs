@@ -70,8 +70,8 @@ namespace WebApi
 												container.RegisterAutoWired<WebApi.ServiceModel.Freight.Rcvy_Logic>();
 												container.RegisterAutoWired<WebApi.ServiceModel.Freight.Jmjm_Logic>();
 												container.RegisterAutoWired<WebApi.ServiceModel.Freight.Tracking_Logic>();
-												container.RegisterAutoWired<WebApi.ServiceModel.Freight.ViewPDF_Logic>();
-												container.RegisterAutoWired<WebApi.ServiceModel.Freight.UploadImg_Logic>();
+												container.RegisterAutoWired<WebApi.ServiceModel.Freight.ViewFile_Logic>();
+												container.RegisterAutoWired<WebApi.ServiceModel.Freight.UploadFile_Logic>();
 												//Utils
 												container.RegisterAutoWired<WebApi.ServiceModel.Utils.QiniuToken_Logic>();
         }
