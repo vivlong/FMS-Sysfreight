@@ -128,26 +128,26 @@ namespace WebApi.ServiceInterface
 								public ServiceModel.Freight.ViewFile_Logic viewFile_Logic { get; set; }
 								public object Get(ServiceModel.Freight.ViewFile request)
 								{
-												if (this.Request.RawUrl.IndexOf("/pdf/file/edoc") > 0)
+												if (this.Request.RawUrl.IndexOf("/file/list") < 0 && !string.IsNullOrEmpty(request.eDoc) && !string.IsNullOrEmpty(request.Type))
 												{
-																byte[] heByte = viewFile_Logic.Get_eDoc_File(request);
-																return new HttpResult(heByte, "application/pdf");
-												}
-												else if (this.Request.RawUrl.IndexOf("/pdf/file") > 0)
-												{
-																byte[] heByte = viewFile_Logic.Get_File(request);																
-																return new HttpResult(heByte, "application/pdf");
-												}
-												else if (this.Request.RawUrl.IndexOf("/img/file") > 0)
-												{
-																byte[] heByte = viewFile_Logic.Get_Img_File(request);
-																return new HttpResult(heByte, "image/jpeg");
-												}
-												else if (this.Request.RawUrl.IndexOf("/txt/file") > 0)
-												{
-																byte[] heByte = viewFile_Logic.Get_File(request);
-																return new HttpResult(heByte, "text/plain");
-												}
+																bool blnEDoc = false;
+																if (request.eDoc.Equals("1")) { blnEDoc = true; }
+																byte[] heByte = viewFile_Logic.Get_File(request, blnEDoc);
+																string type = "application/octet-stream";
+																if (request.Type.ToLower().Equals("img"))
+																{
+																				type = "image/jpeg";
+																}
+																else if (request.Type.ToLower().Equals("txt"))
+																{
+																				type = "text/plain";
+																}
+																else if (request.Type.ToLower().Equals("pdf"))
+																{
+																				type = "application/pdf";
+																}
+																return new HttpResult(heByte, type);
+												}												
 												else
 												{
 																CommonResponse ecr = new CommonResponse();

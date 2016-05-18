@@ -13,5 +13,11 @@ namespace WebApi.ServiceModel.Tables
 								public string CustomerName { get; set; }
 								public decimal InvoiceAmt { get; set; }
 								public string FileName { get; set; }
+								public class FileInfos
+								{
+												public string FileName { get; set; }
+												public string Extension { get; set; }
+								}
+								public List<FileInfos> Files { get; set; }
     }
 }

@@ -12,12 +12,12 @@ using WebApi.ServiceModel.Tables;
 
 namespace WebApi.ServiceModel.Freight
 {
-				[Route("/freight/view/pdf/file", "Get")] // file?FolderName= & Key= & FileName=
-				[Route("/freight/view/pdf/file/edoc", "Get")] // edoc?FolderName= & Key= & FileName=
-				[Route("/freight/view/img/file", "Get")] // file?FolderName= & Key= & FileName=
-				[Route("/freight/view/txt/file", "Get")] // file?FolderName= & Key= & FileName=
+				[Route("/freight/view/file", "Get")]								// file? eDoc=1/0 & Type=pdf/img/txt & FolderName= & Key= & FileName=
+				[Route("/freight/view/file/list", "Get")]			// list? eDoc=1/0 & FolderName=
 				public class ViewFile : IReturn<CommonResponse>
 				{
+								public string eDoc { get; set; }
+								public string Type { get; set; }
 								public string FolderName { get; set; }
 								public string Key { get; set; }
 								public string FileName { get; set; }
@@ -25,12 +25,17 @@ namespace WebApi.ServiceModel.Freight
 				public class ViewFile_Logic
 				{
 								public IDbConnectionFactory DbConnectionFactory { get; set; }
-								public struct TrxNoPDFName
+								public struct eDocAttachs
 								{
 												public string Key;
-												public string FileName;
+												public class FileInfos
+												{
+																public string FileName { get; set; }
+																public string Extension { get; set; }
+												}
+												public List<FileInfos> Files { get; set; }
 								}
-								private List<TrxNoPDFName> tnPDF = null;
+								private List<eDocAttachs> attachs = null;
 								private void SortAsFileCreationTime(ref FileInfo[] arrFi)
 								{
 												Array.Sort<FileInfo>(arrFi, delegate(FileInfo x, FileInfo y) { return y.CreationTime.CompareTo(x.CreationTime); });
@@ -38,7 +43,7 @@ namespace WebApi.ServiceModel.Freight
 								public void GetAllDirList(string strPath)
 								{
 												try
-												{																
+												{
 																if (Directory.Exists(strPath))
 																{
 																				DirectoryInfo di = new DirectoryInfo(strPath);
@@ -47,46 +52,66 @@ namespace WebApi.ServiceModel.Freight
 																				{
 																								for (int i = 0; i <= diA.Length - 1; i++)
 																								{
-																												TrxNoPDFName tnn = new TrxNoPDFName();
-																												tnn.Key = diA[i].Name;
+																												eDocAttachs attach = new eDocAttachs();
+																												attach.Key = diA[i].Name;
+																												attach.Files = new List<eDocAttachs.FileInfos>();
 																												FileInfo[] arrFi = diA[i].GetFiles();
 																												if (arrFi.Length > 0)
 																												{
 																																SortAsFileCreationTime(ref arrFi);
-																																tnn.FileName = arrFi[0].Name;
+																																foreach (FileInfo j in arrFi)
+																																{
+																																				eDocAttachs.FileInfos fi = new eDocAttachs.FileInfos();
+																																				fi.FileName = j.Name;
+																																				fi.Extension = j.Extension;
+																																				attach.Files.Add(fi);
+																																}
 																												}
 																												else
 																												{
-																																tnn.FileName = "";
+																																eDocAttachs.FileInfos fi = new eDocAttachs.FileInfos();
+																																fi.FileName = "";
+																																fi.Extension = "";
+																																attach.Files.Add(fi);
 																												}
-																												tnPDF.Add(tnn);
+																												attachs.Add(attach);
 																												GetAllDirList(diA[i].FullName);
 																								}
 																				}
 																				else
 																				{
-																								TrxNoPDFName tnn = new TrxNoPDFName();
-																								tnn.Key = di.Name;
+																								eDocAttachs attach = new eDocAttachs();
+																								attach.Key = di.Name;
+																								attach.Files = new List<eDocAttachs.FileInfos>();
 																								FileInfo[] arrFi = di.GetFiles();
 																								if (arrFi.Length > 0)
 																								{
 																												SortAsFileCreationTime(ref arrFi);
-																												tnn.FileName = arrFi[0].Name;
+																												foreach (FileInfo j in arrFi)
+																												{
+																																eDocAttachs.FileInfos fi = new eDocAttachs.FileInfos();
+																																fi.FileName = j.Name;
+																																fi.Extension = j.Extension;
+																																attach.Files.Add(fi);
+																												}
 																								}
 																								else
 																								{
-																												tnn.FileName = "";
+																												eDocAttachs.FileInfos fi = new eDocAttachs.FileInfos();
+																												fi.FileName = "";
+																												fi.Extension = "";
+																												attach.Files.Add(fi);
 																								}
-																								tnPDF.Add(tnn);
-																				}																				
-																}																		
+																								attachs.Add(attach);
+																				}
+																}
 												}
 												catch { throw; }
 								}
 								public object Get_List(ViewFile request)
 								{
 												object Result = null;
-												tnPDF = new List<TrxNoPDFName>();
+												attachs = new List<eDocAttachs>();
 												string strPath = "";
 												string eDocumentPath = "";
 												try
@@ -105,12 +130,12 @@ namespace WebApi.ServiceModel.Freight
 																				strPath = eDocumentPath + "\\" + request.FolderName + "\\eDoc";
 																				GetAllDirList(strPath);
 																}
-																if (tnPDF.Count > 0)
+																if (attachs.Count > 0)
 																{
 																				string strKeys = "";
-																				for (int i = 0; i <= tnPDF.Count - 1; i++)
+																				for (int i = 0; i <= attachs.Count - 1; i++)
 																				{
-																								strKeys = strKeys + "'" + tnPDF[i].Key + "',";
+																								strKeys = strKeys + "'" + attachs[i].Key + "',";
 																				}
 																				if (strKeys.LastIndexOf(",").Equals(strKeys.Length-1)){
 																								strKeys = strKeys.Substring(0,strKeys.Length-1);
@@ -125,11 +150,18 @@ namespace WebApi.ServiceModel.Freight
 																																List<ViewPDF_Ivcr> rIvcr = db.Select<ViewPDF_Ivcr>(strSQL);
 																																foreach (ViewPDF_Ivcr vi in rIvcr)
 																																{
-																																				for (int i = 0; i <= tnPDF.Count - 1; i++)
+																																				vi.Files = new List<ViewPDF_Ivcr.FileInfos>();
+																																				for (int i = 0; i <= attachs.Count - 1; i++)
 																																				{
-																																								if (tnPDF[i].Key.Equals(vi.TrxNo.ToString()))
+																																								if (attachs[i].Key.Equals(vi.TrxNo.ToString()))
 																																								{
-																																												vi.FileName = tnPDF[i].FileName;
+																																												foreach (eDocAttachs.FileInfos j in attachs[i].Files)
+																																												{
+																																																ViewPDF_Ivcr.FileInfos fi = new ViewPDF_Ivcr.FileInfos();
+																																																fi.FileName = j.FileName;
+																																																fi.Extension = j.Extension;
+																																																vi.Files.Add(fi);
+																																												}
 																																												break;
 																																								}
 																																				}
@@ -141,11 +173,18 @@ namespace WebApi.ServiceModel.Freight
 																																List<ViewPDF_Jmjm> rJmjm = db.Select<ViewPDF_Jmjm>(strSQL);
 																																foreach (ViewPDF_Jmjm vi in rJmjm)
 																																{
-																																				for (int i = 0; i <= tnPDF.Count - 1; i++)
+																																				vi.Files = new List<ViewPDF_Jmjm.FileInfos>();
+																																				for (int i = 0; i <= attachs.Count - 1; i++)
 																																				{
-																																								if (tnPDF[i].Key.Equals(vi.JobNo.ToString()))
+																																								if (attachs[i].Key.Equals(vi.JobNo.ToString()))
 																																								{
-																																												vi.FileName = tnPDF[i].FileName;
+																																												foreach (eDocAttachs.FileInfos j in attachs[i].Files)
+																																												{
+																																																ViewPDF_Jmjm.FileInfos fi = new ViewPDF_Jmjm.FileInfos();
+																																																fi.FileName = j.FileName;
+																																																fi.Extension = j.Extension;
+																																																vi.Files.Add(fi);
+																																												}
 																																												break;
 																																								}
 																																				}
@@ -154,14 +193,21 @@ namespace WebApi.ServiceModel.Freight
 																																break;
 																												case "slcu1":
 																																strSQL = "Select TrxNo,InvoiceNo,InvoiceDate,CustomerName,InvoiceAmt From Ivcr1 Where TrxNo in (" + strKeys + ")";
-																																List<ViewPDF_Jmjm> rSlcu = db.Select<ViewPDF_Jmjm>(strSQL);
-																																foreach (ViewPDF_Jmjm vi in rSlcu)
+																																List<ViewPDF_Ivcr> rSlcu = db.Select<ViewPDF_Ivcr>(strSQL);
+																																foreach (ViewPDF_Ivcr vi in rSlcu)
 																																{
-																																				for (int i = 0; i <= tnPDF.Count - 1; i++)
+																																				vi.Files = new List<ViewPDF_Ivcr.FileInfos>();
+																																				for (int i = 0; i <= attachs.Count - 1; i++)
 																																				{
-																																								if (tnPDF[i].Key.Equals(vi.JobNo.ToString()))
+																																								if (attachs[i].Key.Equals(vi.TrxNo.ToString()))
 																																								{
-																																												vi.FileName = tnPDF[i].FileName;
+																																												foreach (eDocAttachs.FileInfos j in attachs[i].Files)
+																																												{
+																																																ViewPDF_Ivcr.FileInfos fi = new ViewPDF_Ivcr.FileInfos();
+																																																fi.FileName = j.FileName;
+																																																fi.Extension = j.Extension;
+																																																vi.Files.Add(fi);
+																																												}
 																																												break;
 																																								}
 																																				}
@@ -175,69 +221,28 @@ namespace WebApi.ServiceModel.Freight
 												catch { throw; }
 												return Result;
 								}
-								public byte[] Get_Img_File(ViewFile request)
+								public byte[] Get_File(ViewFile request, bool blnEDoc)
 								{
 												byte[] Result = null;
 												string strPath = "";
 												string DocumentPath = "";
-												try
-												{
-																using (var db = DbConnectionFactory.OpenDbConnection())
-																{
-																				string strSQL = "Select Top 1 DocumentPath From Saco1";
-																				List<Saco1> saco1 = db.Select<Saco1>(strSQL);
-																				DocumentPath = saco1[0].DocumentPath;
-																				strPath = DocumentPath + "\\" + request.FolderName + "\\" + request.Key + "\\" + request.FileName;
-																				using (FileStream fsRead = new FileStream(strPath, FileMode.Open))
-																				{
-																								int fsLen = (int)fsRead.Length;
-																								byte[] heByte = new byte[fsLen];
-																								int r = fsRead.Read(heByte, 0, heByte.Length);
-																								Result = heByte;
-																				}
-																}
-												}
-												catch { throw; }
-												return Result;
-								}
-								public byte[] Get_File(ViewFile request)
-								{
-												byte[] Result = null;
-												string strPath = "";
-												string DocumentPath = "";
-												try
-												{
-																using (var db = DbConnectionFactory.OpenDbConnection())
-																{
-																				string strSQL = "Select Top 1 DocumentPath From Saco1";
-																				List<Saco1> saco1 = db.Select<Saco1>(strSQL);
-																				DocumentPath = saco1[0].DocumentPath;
-																				strPath = DocumentPath + "\\" + request.FolderName + "\\" + request.Key + "\\" + request.FileName;
-																				using (FileStream fsRead = new FileStream(strPath, FileMode.Open))
-																				{
-																								int fsLen = (int)fsRead.Length;
-																								byte[] heByte = new byte[fsLen];
-																								int r = fsRead.Read(heByte, 0, heByte.Length);
-																								Result = heByte;
-																				}
-																}
-												}
-												catch { throw; }
-												return Result;
-								}
-								public byte[] Get_eDoc_File(ViewFile request)
-								{
-												byte[] Result = null;
-												string strPath = "";
 												string eDocumentPath = "";
 												try
 												{
 																using (var db = DbConnectionFactory.OpenDbConnection())
 																{
-																				string strSQL = "Select Top 1 eDocumentPath From Saco1";
+																				string strSQL = "Select Top 1 DocumentPath,eDocumentPath From Saco1";
 																				List<Saco1> saco1 = db.Select<Saco1>(strSQL);
+																				DocumentPath = saco1[0].DocumentPath;
 																				eDocumentPath = saco1[0].eDocumentPath;
-																				strPath = eDocumentPath + "\\" + request.FolderName + "\\eDoc\\" + request.Key + "\\" + request.FileName;
+																				if (blnEDoc)
+																				{
+																								strPath = eDocumentPath + "\\" + request.FolderName + "\\eDoc\\" + request.Key + "\\" + request.FileName;
+																				}
+																				else
+																				{
+																								strPath = DocumentPath + "\\" + request.FolderName + "\\" + request.Key + "\\" + request.FileName;
+																				}
 																				using (FileStream fsRead = new FileStream(strPath, FileMode.Open))
 																				{
 																								int fsLen = (int)fsRead.Length;
@@ -249,6 +254,6 @@ namespace WebApi.ServiceModel.Freight
 												}
 												catch { throw; }
 												return Result;
-								}
+								}								
 				}
 }
