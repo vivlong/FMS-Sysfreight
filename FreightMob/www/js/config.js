@@ -10,7 +10,7 @@ appConfig.value('ENV', {
     'rootPath': 'FreightApp',
     'configFile': 'config.txt',
     'mapProvider': 'google',
-    'version': '1.0.24'
+    'version': '1.0.26'
 });
 
 var onGetRegistradionID = function(data) {
