@@ -20,11 +20,18 @@ app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeo
     '$ionicHistory', '$ionicLoading', '$cordovaToast', '$cordovaFile', '$cordovaKeyboard',
     function( ENV, $ionicPlatform, $rootScope, $state, $location, $timeout, $ionicPopup,
         $ionicHistory, $ionicLoading, $cordovaToast, $cordovaFile, $cordovaKeyboard ) {
+        if ( window.cordova ) {
+            ENV.fromWeb = false;
+        } else {
+            var blnSSL = 'https:' === document.location.protocol ? true : false;
+            ENV.ssl = blnSSL ? '1' : '0';
+            ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
+            ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
+        }
         $ionicPlatform.ready( function() {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
             if ( window.cordova ) {
-                ENV.fromWeb = false;
                 $cordovaKeyboard.hideAccessoryBar(true);
                 $cordovaKeyboard.disableScroll(true);
                 /*
@@ -89,11 +96,6 @@ app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeo
                                     } );
                             } );
                     } );
-            } else {
-                var blnSSL = 'https:' === document.location.protocol ? true : false;
-                ENV.ssl = blnSSL ? '1' : '0';
-                ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
-                ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
             }
             if ( window.StatusBar ) {
                 // org.apache.cordova.statusbar required

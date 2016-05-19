@@ -1,8 +1,8 @@
 'use strict';
 var appConfig = angular.module('MobileAPP.config', []);
 appConfig.value('ENV', {
-    'website':      'http://www.sysfreight.net/mobileapp',
-    'api':          'http://www.sysfreight.net/WebApi',
+    'website':      'www.sysfreight.net/mobileapp',
+    'api':          'www.sysfreight.net/WebApi',
     'ssl':          '0', // 0 : false, 1 : true
     'port':         '8081', // http port no
     'debug':        true,
