@@ -57,9 +57,11 @@ appControllers.controller('GeoCtrl', ['ENV', '$scope',
 ]);
 
 appControllers.controller('IndexCtrl', ['ENV', '$scope', '$state', '$rootScope',
-    '$http', '$ionicLoading', '$ionicPopup', '$ionicSideMenuDelegate',
+    '$http', '$ionicLoading', '$ionicPopup', '$ionicSideMenuDelegate', '$cordovaAppVersion',
     function(ENV, $scope, $state, $rootScope, $http, $ionicLoading, $ionicPopup,
-        $ionicSideMenuDelegate) {
+        $ionicSideMenuDelegate, $cordovaAppVersion) {
+        var alertPopup = null;
+        var alertPopupTitle = '';
         $scope.Status = {
             Login: false
         };
@@ -74,7 +76,7 @@ appControllers.controller('IndexCtrl', ['ENV', '$scope', '$state', '$rootScope',
         };
         $scope.gotoUpdate = function() {
             if (!ENV.fromWeb) {
-                var url = ENV.website + '/update.json';
+                var url = ENV.website + '/' + ENV.updateFile;
                 $http.get(url)
                     .success(function(res) {
                         var serverAppVersion = res.version;
@@ -85,24 +87,27 @@ appControllers.controller('IndexCtrl', ['ENV', '$scope', '$state', '$rootScope',
                                     'Version': serverAppVersion
                                 });
                             } else {
-                                var alertPopup = $ionicPopup.alert({
-                                    title: "Already the Latest Version!",
+                                alertPopupTitle = 'Already the Latest Version!';
+                                alertPopup = $ionicPopup.alert( {
+                                    title: alertPopupTitle,
                                     okType: 'button-assertive'
-                                });
+                                } );
                             }
                         });
                     })
                     .error(function(res) {
-                        var alertPopup = $ionicPopup.alert({
-                            title: "Connect Update Server Error!",
+                        alertPopupTitle = 'Connect Update Server Error!';
+                        alertPopup = $ionicPopup.alert( {
+                            title: alertPopupTitle,
                             okType: 'button-assertive'
-                        });
+                        } );
                     });
             } else {
-                var alertPopup = $ionicPopup.alert({
-                    title: "Web Platform Not Supported!",
-                    okType: 'button-assertive'
-                });
+                alertPopupTitle = 'No Updates!';
+                alertPopup = $ionicPopup.alert( {
+                    title: alertPopupTitle,
+                    okType: 'button-calm'
+                } );
             }
         }
         $rootScope.$on('logout', function() {
@@ -118,7 +123,7 @@ appControllers.controller('IndexCtrl', ['ENV', '$scope', '$state', '$rootScope',
 appControllers.controller('LoadingCtrl', ['$state', '$timeout',
     function($state, $timeout) {
         $timeout(function() {
-            $state.go('login', {}, {
+            $state.go('index.login', {}, {
                 reload: true
             });
         }, 2000);
@@ -175,21 +180,21 @@ appControllers.controller('LoginCtrl', ['ENV', '$scope', '$rootScope', '$http', 
                 });
             }
         };
-        if (!ENV.fromWeb && is.equal($stateParams.CanCheckUpdate, 'Y')) {
-            var url = ENV.website + '/update.json';
-            $http.get(url)
-                .success(function(res) {
-                    var serverAppVersion = res.version;
-                    $cordovaAppVersion.getVersionNumber().then(function(version) {
-                        if (version != serverAppVersion) {
-                            $state.go('update', {
-                                'Version': serverAppVersion
-                            });
-                        }
-                    });
-                })
-                .error(function(res) {});
-        }
+        // if (!ENV.fromWeb) {
+        //     var url = ENV.website + '/update.json';
+        //     $http.get(url)
+        //         .success(function(res) {
+        //             var serverAppVersion = res.version;
+        //             $cordovaAppVersion.getVersionNumber().then(function(version) {
+        //                 if (version != serverAppVersion) {
+        //                     $state.go('update', {
+        //                         'Version': serverAppVersion
+        //                     });
+        //                 }
+        //             });
+        //         })
+        //         .error(function(res) {});
+        // }
         $('#iUserName').on('keydown', function(e) {
             if (e.which === 9 || e.which === 13) {
                 $('#iPassword').focus();
@@ -212,10 +217,12 @@ appControllers.controller('LoginCtrl', ['ENV', '$scope', '$rootScope', '$http', 
 appControllers.controller('SettingCtrl', ['ENV', '$scope', '$state', '$ionicHistory', '$ionicPopup', '$cordovaToast', '$cordovaFile',
     function(ENV, $scope, $state, $ionicHistory, $ionicPopup, $cordovaToast, $cordovaFile) {
         $scope.Setting = {
-            Version: ENV.version,
-            WebApiURL: ENV.api.replace('http://', ''),
-            WebSiteUrl: ENV.website.replace('http://', ''),
-            MapProvider: ENV.mapProvider
+            Version:    ENV.version,
+            WebApiURL:  rmProtocol(ENV.api),
+            WebSiteUrl: rmProtocol(ENV.website),
+            SSL:        { checked: ENV.ssl === '0' ? false : true },
+            MapProvider:ENV.mapProvider,
+            blnWeb:     ENV.fromWeb
         };
         $scope.return = function() {
             if ($ionicHistory.backView()) {
@@ -227,21 +234,25 @@ appControllers.controller('SettingCtrl', ['ENV', '$scope', '$state', '$ionicHist
             }
         };
         $scope.save = function() {
-            if (is.not.empty($scope.Setting.WebApiURL)) {
-                ENV.api = onStrToURL($scope.Setting.WebApiURL);
+            if ( is.not.empty( $scope.Setting.WebApiURL ) ) {
+                ENV.api = $scope.Setting.WebApiURL;
             } else {
-                $scope.Setting.WebApiURL = ENV.website.replace('http://', '');
+                $scope.Setting.WebApiURL = rmProtocol(ENV.api);
             }
-            if (is.not.empty($scope.Setting.WebSiteUrl)) {
-                ENV.website = onStrToURL($scope.Setting.WebSiteUrl);
+            if ( is.not.empty( $scope.Setting.WebSiteUrl ) ) {
+                ENV.website = $scope.Setting.WebSiteUrl;
             } else {
-                $scope.Setting.WebSiteUrl = ENV.api.replace('http://', '');
+                $scope.Setting.WebSiteUrl = rmProtocol(ENV.website);
             }
             if (is.not.empty($scope.Setting.MapProvider)) {
                 ENV.mapProvider = $scope.Setting.MapProvider;
             } else {
                 $scope.Setting.MapProvider = ENV.mapProvider;
             }
+            ENV.ssl = $scope.Setting.SSL.checked ? '1' : '0';
+            var blnSSL = $scope.Setting.SSL.checked ? true : false;
+            ENV.website = appendProtocol(ENV.website, blnSSL, ENV.port);
+            ENV.api     = appendProtocol(ENV.api, blnSSL, ENV.port);
             if (!ENV.fromWeb) {
                 var data = 'website=' + ENV.website + '##api=' + ENV.api + '##map=' + ENV.mapProvider;
                 var path = cordova.file.externalRootDirectory;
@@ -263,7 +274,7 @@ appControllers.controller('SettingCtrl', ['ENV', '$scope', '$state', '$ionicHist
         $scope.reset = function() {
             $scope.Setting.WebApiURL = 'www.sysfreight.net:8081/WebApi';
             $scope.Setting.WebSiteUrl = 'www.sysfreight.net:8081/mobileapp';
-            $scope.Setting.MapProvider = 'baidu';
+            $scope.Setting.MapProvider = 'google';
             if (!ENV.fromWeb) {
                 var path = cordova.file.externalRootDirectory;
                 var file = ENV.rootPath + '/' + ENV.configFile;
@@ -285,12 +296,12 @@ appControllers.controller('UpdateCtrl', ['ENV', '$scope', '$state', '$stateParam
             onError();
         };
         var onError = function() {
-            $state.go('login', {}, {
+            $state.go('index.login', {}, {
                 reload: true
             });
         };
         $scope.upgrade = function() {
-            DownloadFileService.Download(ENV.website + '/FreightApp.apk', 'application/vnd.android.package-archive', null, onError, onError);
+            DownloadFileService.Download(ENV.website + '/' + ENV.apkName + '.apk', ENV.apkName + '.apk', 'application/vnd.android.package-archive', null, onError, onError);
         };
     }
 ]);

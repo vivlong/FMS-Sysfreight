@@ -9,6 +9,7 @@ var app = angular.module( 'MobileAPP', [
     'ngCordova.plugins.file',
     'ngCordova.plugins.fileTransfer',
     'ngCordova.plugins.fileOpener2',
+    'ngCordova.plugins.keyboard',
     'MobileAPP.config',
     'MobileAPP.factories',
     'MobileAPP.services',
@@ -16,16 +17,16 @@ var app = angular.module( 'MobileAPP', [
 ] );
 
 app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$ionicPopup',
-    '$ionicHistory', '$ionicLoading', '$cordovaToast', '$cordovaFile',
+    '$ionicHistory', '$ionicLoading', '$cordovaToast', '$cordovaFile', '$cordovaKeyboard',
     function( ENV, $ionicPlatform, $rootScope, $state, $location, $timeout, $ionicPopup,
-        $ionicHistory, $ionicLoading, $cordovaToast, $cordovaFile ) {
+        $ionicHistory, $ionicLoading, $cordovaToast, $cordovaFile, $cordovaKeyboard ) {
         $ionicPlatform.ready( function() {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
-            if ( window.cordova && window.cordova.plugins.Keyboard ) {
+            if ( window.cordova ) {
                 ENV.fromWeb = false;
-                cordova.plugins.Keyboard.hideKeyboardAccessoryBar( true );
-                cordova.plugins.Keyboard.disableScroll( true );
+                $cordovaKeyboard.hideAccessoryBar(true);
+                $cordovaKeyboard.disableScroll(true);
                 /*
                 if(window.plugins.jPushPlugin){
                     // Add JPush
@@ -39,12 +40,14 @@ app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeo
                 var data = 'website=' + ENV.website + '##api=' + ENV.api + '##map=' + ENV.mapProvider;
                 var path = cordova.file.externalRootDirectory;
                 var directory = ENV.rootPath;
-                var file = directory + "/" + ENV.configFile;
+                var file = directory + '/' + ENV.configFile;
                 $cordovaFile.createDir( path, directory, false )
                     .then( function( success ) {
                         $cordovaFile.writeFile( path, file, data, true )
                             .then( function( success ) {
-                                //
+                                var blnSSL = ENV.ssl === 0 ? false : true;
+                                ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
+                                ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
                             }, function( error ) {
                                 console.error( error );
                                 $cordovaToast.showShortBottom( error );
@@ -68,6 +71,9 @@ app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeo
                                         if ( is.not.empty( arMapProvider[ 1 ] ) ) {
                                             ENV.mapProvider = arMapProvider[ 1 ];
                                         }
+                                        var blnSSL = ENV.ssl === 0 ? false : true;
+                                        ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
+                                        ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
                                     }, function( error ) {
                                         $cordovaToast.showShortBottom( error );
                                     } );
@@ -75,12 +81,19 @@ app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeo
                                 // If file not exists
                                 $cordovaFile.writeFile( path, file, data, true )
                                     .then( function( success ) {
-                                        //
+                                        var blnSSL = ENV.ssl === 0 ? false : true;
+                                        ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
+                                        ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
                                     }, function( error ) {
                                         $cordovaToast.showShortBottom( error );
                                     } );
                             } );
                     } );
+            } else {
+                var blnSSL = 'https:' === document.location.protocol ? true : false;
+                ENV.ssl = blnSSL ? '1' : '0';
+                ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
+                ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
             }
             if ( window.StatusBar ) {
                 // org.apache.cordova.statusbar required
@@ -90,7 +103,7 @@ app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeo
         $ionicPlatform.registerBackButtonAction( function( e ) {
             e.preventDefault();
             // Is there a page to go back to?  $state.include ??
-            if ( $state.includes( 'index' ) || $state.includes( 'index.main' ) || $state.includes( 'index.login' ) || $state.includes( 'loading' ) ) {
+            if ( $state.includes( 'index.main' ) || $state.includes( 'index.login' ) || $state.includes( 'loading' ) ) {
                 if ( $rootScope.backButtonPressedOnceToExit ) {
                     ionic.Platform.exitApp();
                 } else {
@@ -100,15 +113,7 @@ app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeo
                         $rootScope.backButtonPressedOnceToExit = false;
                     }, 2000 );
                 }
-            } else if ( $state.includes( 'index.setting' ) ) {
-                if ( $ionicHistory.backView() ) {
-                    $ionicHistory.goBack();
-                } else {
-                    $state.go( 'index.login', {}, {
-                        reload: true
-                    } );
-                }
-            } else if ( $state.includes( 'index.update' ) ) {
+            } else if ( $state.includes( 'index.setting' ) ||  $state.includes( 'index.update' ) ) {
                 if ( $ionicHistory.backView() ) {
                     $ionicHistory.goBack();
                 } else {
