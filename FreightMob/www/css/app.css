@@ -114,6 +114,7 @@ ion-content {
   animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
   stroke-linecap: round; }
 
+
 @-webkit-keyframes rotate {
   100% {
     -webkit-transform: rotate(360deg);
@@ -166,6 +167,28 @@ ion-content {
   80%, 90% {
     stroke: #ffa700; } }
 
+    .login {
+        background-color:#387ef5;
+    }
+    .logo {
+        padding-top: 4em;
+        text-align:center;
+    }
+    .logo img {
+        height: 90px;
+    }
+
+    .mainImg {
+        width: 14%;
+    }
+    .mainAds {
+        width:30%;height:100%;
+        display: block;
+        margin: auto;
+    }
+    .mainFoot {
+        height:15%; padding:0px; border-top: 0px;
+    }
 
 @media screen and (max-width: 1199px) { /*<1200的设备*/
 	.mainImg {
@@ -223,119 +246,6 @@ ion-content {
     }
 }
 
-.login {
-    background-color:#387ef5;
-}
-.logo {
-    padding-top: 4em;
-    text-align:center;
-}
-.logo img {
-    height: 90px;
-}
-/*
-.material {
-}
-.material .login {
-    background-image: url('../img/mountains.jpg');
-    background-position: 25% 25%;
-    background-size: 180% 180%;
-    height: 100%;
-    -moz-transition: all 1.5s ease-in-out;
-    -o-transition: all 1.5s ease-in-out;
-    -webkit-transition: all 1.5s ease-in-out;
-    transition: all 1.5s ease-in-out;
-}
-.material .hero.no-header {
-    height: 140px;
-    top: 0;
-}
-.material .flat, .material .flat.hero {
-    box-shadow: none;
-    -webkit-box-shadow: none;
-}
-.material .hero > .content {
-    position: absolute;
-    text-align: center;
-    width: 100%;
-    z-index: 1;
-}
-.material .hero .hero-icon {
-    border-radius: 50%;
-    display: inline-block;
-    font-size: 65px;
-    height: 220;
-    padding: 10px 30px;
-    line-height: 136px;
-    width: 220px;
-}
-.material .list .item {
-    border: none;
-    padding-left: 16px;
-    padding-right: 16px;
-    text-align: left;
-}
-.material .item {
-    font-size: 14px;
-    width: 100%;
-}
-.material .item-md-label {
-    display: block;
-    background: transparent;
-    box-shadow: none;
-    margin-left: 12px;
-    margin-right: 12px;
-    padding: 30px 0 0;
-}
-.material .login .item {
-    margin: 0 12px;
-    padding-left: 0;
-    padding-right: 0;
-    width: initial;
-}
-.material .item-md-label input {
-    background-color: rgba(0, 0, 0, 0.6);
-    bottom: 0;
-    color: #fff;
-    letter-spacing: 0.25rem;
-    padding: 20px 10px;
-    position: relative;
-    z-index: 1;
-}
-.material .item-md-label .input-label {
-    position: absolute;
-    z-index: 2;
-    -webkit-transform: translate3d(0, -30px, 0) scale(1);
-    transform: translate3d(0, -30px, 0) scale(1);
-    -webkit-transition: all 0.2s ease;
-    transition: all 0.2s ease;
-    color: #fff;
-    opacity: 0.5;
-    transform-origin: 0;
-    letter-spacing: 0.25rem;
-    padding: 0 10px;
-}
-.material .item-md-label input:focus ~ .input-label, .material .item-md-label input.used ~ .input-label {
-    font-weight: bold;
-    opacity: 0.7;
-    padding: 0;
-    text-transform: uppercase;
-    -webkit-transform: translate3d(0, -60px, 0) scale(0.9);
-    transform: translate3d(0, -60px, 0) scale(0.9);
-}
-.material .item-md-label .highlight {
-    position: absolute;
-    bottom: 0;
-    height: 2px;
-    left: 0;
-    width: 100%;
-    -webkit-transform: translate3d(-100%, 0, 0);
-    transform: translate3d(-100%, 0, 0);
-    -webkit-transition: all 0.15s ease;
-    transition: all 0.15s ease;
-    z-index: 1;
-}
-*/
 .nav-info {
 	background-color: #387ef5;
 	height: 12em;
