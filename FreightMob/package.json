@@ -36,6 +36,7 @@
     "cordova-sms-plugin",
     "cordova-plugin-actionsheet",
     "cordova-plugin-inappbrowser",
+    "cordova-sqlite-storage",
     "cordova-plugin-whitelist"
   ],
   "cordovaPlatforms": [
