@@ -4,8 +4,8 @@
   "description": "Freight Mob APP",
   "dependencies": {},
   "devDependencies": {
-    "bower": ">=1.7.7",
-    "shelljs": "^0.6.0"
+    "bower": ">=1.7.9",
+    "shelljs": "^0.7.0"
   },
   "cordovaPlugins": [
     "cordova-plugin-app-version",
@@ -39,6 +39,10 @@
     "cordova-plugin-whitelist"
   ],
   "cordovaPlatforms": [
-    "android"
+    {
+      "platform": "android",
+      "version": "5.1.1",
+      "locator": "android@5.1.1"
+    }
   ]
 }
