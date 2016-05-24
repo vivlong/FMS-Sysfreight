@@ -1,15 +1,13 @@
 var app = angular.module( 'MobileAPP', [
     'ionic',
+    'ngCordova.plugins.device',
+    'ngCordova.plugins.toast',
+    'ngCordova.plugins.dialogs',
+    'ngCordova.plugins.keyboard',
+    'ngCordova.plugins.sqlite',
     'jett.ionic.filter.bar',
     'ionic-datepicker',
     'ionicLazyLoad',
-    'ngCordova.plugins.toast',
-    'ngCordova.plugins.dialogs',
-    'ngCordova.plugins.appVersion',
-    'ngCordova.plugins.file',
-    'ngCordova.plugins.fileTransfer',
-    'ngCordova.plugins.fileOpener2',
-    'ngCordova.plugins.keyboard',
     'MobileAPP.config',
     'MobileAPP.factories',
     'MobileAPP.services',
@@ -17,9 +15,9 @@ var app = angular.module( 'MobileAPP', [
 ] );
 
 app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$ionicPopup',
-    '$ionicHistory', '$ionicLoading', '$cordovaToast', '$cordovaFile', '$cordovaKeyboard',
+    '$ionicHistory', '$ionicLoading', '$cordovaToast', '$cordovaKeyboard', '$cordovaDevice', '$cordovaSQLite', 'EnvService',
     function( ENV, $ionicPlatform, $rootScope, $state, $location, $timeout, $ionicPopup,
-        $ionicHistory, $ionicLoading, $cordovaToast, $cordovaFile, $cordovaKeyboard ) {
+        $ionicHistory, $ionicLoading, $cordovaToast, $cordovaKeyboard, $cordovaDevice, $cordovaSQLite, EnvService) {
         if ( window.cordova ) {
             ENV.fromWeb = false;
         } else {
@@ -29,11 +27,12 @@ app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeo
             ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
         }
         $ionicPlatform.ready( function() {
-            // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-            // for form inputs)
-            if ( window.cordova ) {
+            if ( !ENV.fromWeb ) {
                 $cordovaKeyboard.hideAccessoryBar(true);
                 $cordovaKeyboard.disableScroll(true);
+
+                var objDevice = $cordovaDevice.getDevice();
+                console.error(objDevice);
                 /*
                 if(window.plugins.jPushPlugin){
                     // Add JPush
@@ -44,58 +43,18 @@ app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeo
                     //window.plugins.jPushPlugin.receiveMessageInAndroidCallback = function(data);
                 }
                 */
-                var data = 'website=' + ENV.website + '##api=' + ENV.api + '##map=' + ENV.mapProvider;
-                var path = cordova.file.externalRootDirectory;
-                var directory = ENV.rootPath;
-                var file = directory + '/' + ENV.configFile;
-                $cordovaFile.createDir( path, directory, false )
-                    .then( function( success ) {
-                        $cordovaFile.writeFile( path, file, data, true )
-                            .then( function( success ) {
-                                var blnSSL = ENV.ssl === 0 ? false : true;
-                                ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
-                                ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
-                            }, function( error ) {
-                                console.error( error );
-                                $cordovaToast.showShortBottom( error );
-                            } );
-                    }, function( error ) {
-                        // If an existing directory exists
-                        $cordovaFile.checkFile( path, file )
-                            .then( function( success ) {
-                                $cordovaFile.readAsText( path, file )
-                                    .then( function( success ) {
-                                        var arConf = success.split( '##' );
-                                        var arWebServiceURL = arConf[ 0 ].split( '=' );
-                                        if ( is.not.empty( arWebServiceURL[ 1 ] ) ) {
-                                            ENV.website = arWebServiceURL[ 1 ];
-                                        }
-                                        var arWebSiteURL = arConf[ 1 ].split( '=' );
-                                        if ( is.not.empty( arWebSiteURL[ 1 ] ) ) {
-                                            ENV.api = arWebSiteURL[ 1 ];
-                                        }
-                                        var arMapProvider = arConf[ 2 ].split( '=' );
-                                        if ( is.not.empty( arMapProvider[ 1 ] ) ) {
-                                            ENV.mapProvider = arMapProvider[ 1 ];
-                                        }
-                                        var blnSSL = ENV.ssl === 0 ? false : true;
-                                        ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
-                                        ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
-                                    }, function( error ) {
-                                        $cordovaToast.showShortBottom( error );
-                                    } );
-                            }, function( error ) {
-                                // If file not exists
-                                $cordovaFile.writeFile( path, file, data, true )
-                                    .then( function( success ) {
-                                        var blnSSL = ENV.ssl === 0 ? false : true;
-                                        ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
-                                        ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
-                                    }, function( error ) {
-                                        $cordovaToast.showShortBottom( error );
-                                    } );
-                            } );
-                    } );
+                EnvService.GetENV().then(function success(){
+
+                },function error(error){
+                    $cordovaToast.showShortBottom( error );
+                });
+                var db = $cordovaSQLite.openDB({name: 'freightapp.db', location: 'default', androidLockWorkaround: 1}, function(db) {
+                    db.transaction(function(tx) {
+                        //
+                    }, function(err) {
+                        console.error(err);
+                    });
+                });
             }
             if ( window.StatusBar ) {
                 // org.apache.cordova.statusbar required

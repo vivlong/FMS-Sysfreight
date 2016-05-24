@@ -24,31 +24,40 @@ appControllers.controller('GeoCtrl', ['ENV', '$scope',
     function(ENV, $scope) {
         function loadJScript() {
             var uri = '';
-            var script = document.createElement('script');
-            script.type = 'text/javascript';
-            if (is.equal(ENV.mapProvider, 'baidu')) {
+            if(is.equal(document.location.port,'8100')){
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
                 script.src = 'http://api.map.baidu.com/getscript?v=2.0&ak=94415618dfaa9ff5987dd07983f25159';
                 document.body.appendChild(script);
-            } else if (is.equal(ENV.mapProvider, 'google')) {
-                script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
-                document.body.appendChild(script);
-                /*
-                uri = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
-                $.ajax({
-                    url: uri,
-                    type: 'GET',
-                    timeout: 10000,
-                    complete: function(response) {
-                        if (response.status == 200) {
-                            script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
-                            document.body.appendChild(script);
-                        } else {
-                            console.log('Load Map ' + response.status);
-                        }
-                    }
-                });
-                */
+            }else{
+                if (is.equal(ENV.mapProvider.toLowerCase(), 'baidu')) {
+                    var script = document.createElement('script');
+                    script.type = 'text/javascript';
+                    script.src = 'http://api.map.baidu.com/getscript?v=2.0&ak=94415618dfaa9ff5987dd07983f25159';
+                    document.body.appendChild(script);
+                } else if (is.equal(ENV.mapProvider.toLowerCase(), 'google')) {
+                    var script = document.createElement('script');
+                    script.type = 'text/javascript';
+                    script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
+                    document.body.appendChild(script);
+                }
             }
+            /*
+            uri = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
+            $.ajax({
+                url: uri,
+                type: 'GET',
+                timeout: 10000,
+                complete: function(response) {
+                    if (response.status == 200) {
+                        script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
+                        document.body.appendChild(script);
+                    } else {
+                        console.log('Load Map ' + response.status);
+                    }
+                }
+            });
+            */
         }
         $scope.$watch('$viewContentLoaded', function() {
             loadJScript();
