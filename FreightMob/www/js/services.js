@@ -1,6 +1,8 @@
 var appService = angular.module( 'MobileAPP.services', [
     'ionic',
     'ngCordova.plugins.toast',
+    'ngCordova.plugins.device',
+    'ngCordova.plugins.sqlite',
     'ngCordova.plugins.file',
     'ngCordova.plugins.fileTransfer',
     'ngCordova.plugins.fileOpener2',
@@ -166,7 +168,7 @@ appService.service( 'GeoService', [ '$q', '$cordovaGeolocation',
     function( $q, $cordovaGeolocation ) {
         this.BaiduGetCurrentPosition = function() {
             var deferred = $q.defer();
-            if(is.not.undefined(BMap)){
+            if(typeof(BMap) != 'undefined'){
                 var geolocation = new BMap.Geolocation();
                 geolocation.getCurrentPosition( function( r ) {
                     if ( this.getStatus() == BMAP_STATUS_SUCCESS ) {
@@ -186,6 +188,9 @@ appService.service( 'GeoService', [ '$q', '$cordovaGeolocation',
                     timeout: 5000,
                     enableHighAccuracy: true
                 } )
+            }else{
+                deferred.reject( 'BMap undefined' );
+                console.log( 'BMap undefined' );
             }
             return deferred.promise;
         };
@@ -237,75 +242,17 @@ appService.service( 'GeoService', [ '$q', '$cordovaGeolocation',
     }
 ] );
 
-appService.service( 'EnvService', [ '$q', 'ENV', '$cordovaFile',
-    function( $q, ENV, $cordovaFile ) {
-        this.GetENV = function() {
-            var deferred = $q.defer();
-            var data = 'website=' + ENV.website + '##' +
-                'api=' + ENV.api + '##' +
-                'map=' + ENV.mapProvider;
-            var path = cordova.file.externalRootDirectory,
-                directory = ENV.rootPath,
-                file = ENV.rootPath + '/' + ENV.configFile;
-            $cordovaFile.createDir( path, directory, false )
-                .then( function( success ) {
-                    $cordovaFile.writeFile( path, file, data, true )
-                        .then( function( success ) {
-                            var blnSSL = ENV.ssl === 0 ? false : true;
-                            ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
-                            ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
-                            deferred.resolve( ENV );
-                        }, function( error ) {
-                            deferred.reject( error );
-                            console.error( error );
-                        } );
-                }, function( error ) {
-                    // If an existing directory exists
-                    $cordovaFile.checkFile( path, file )
-                        .then( function( success ) {
-                            $cordovaFile.readAsText( path, file )
-                                .then( function( success ) {
-                                    var arConf = success.split( '##' );
-                                    var arWebServiceURL = arConf[ 0 ].split( '=' );
-                                    if ( is.not.empty( arWebServiceURL[ 1 ] ) ) {
-                                        ENV.website = arWebServiceURL[ 1 ];
-                                    }
-                                    var arWebSiteURL = arConf[ 1 ].split( '=' );
-                                    if ( is.not.empty( arWebSiteURL[ 1 ] ) ) {
-                                        ENV.api = arWebSiteURL[ 1 ];
-                                    }
-                                    var arMapProvider = arConf[ 2 ].split( '=' );
-                                    if ( is.not.empty( arMapProvider[ 1 ] ) ) {
-                                        ENV.mapProvider = arMapProvider[ 1 ];
-                                    }
-                                    var blnSSL = ENV.ssl === 0 ? false : true;
-                                    ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
-                                    ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
-                                    deferred.resolve( ENV );
-                                }, function( error ) {
-                                    deferred.reject( error );
-                                    console.error( error );
-                                } );
-                        }, function( error ) {
-                            // If file not exists
-                            $cordovaFile.writeFile( path, file, data, true )
-                                .then( function( success ) {
-                                    var blnSSL = ENV.ssl === 0 ? false : true;
-                                    ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
-                                    ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
-                                    deferred.resolve( ENV );
-                                }, function( error ) {
-                                    deferred.reject( error );
-                                    console.error( error );
-                                } );
-                        } );
-                } );
-            return deferred.promise;
-        };
-        this.SaveENV = function() {
-            var deferred = $q.defer();
-
-            return deferred.promise;
-        };
+appService.service( 'SqlService', [ '$q', '$cordovaSQLite', '$ionicPlatform', '$cordovaDevice',
+    function( $q, $cordovaSQLite, $ionicPlatform, $cordovaDevice ){
+        var dbName = 'freightapp.db', dbLocation = 'default';
+        $ionicPlatform.ready(function () {
+            var db = $cordovaSQLite.openDB({name: dbName, location: 'default', androidLockWorkaround: 1}, function(db) {
+                db.transaction(function(tx) {
+                    $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS User(id INTEGER PRIMARY KEY AUTOINCREMENT, password TEXT, details TEXT)');
+                }, function(err) {
+                    console.error('SqliteErr',err);
+                });
+            });
+        });
     }
 ] );

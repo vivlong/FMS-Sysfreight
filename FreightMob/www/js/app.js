@@ -1,10 +1,8 @@
 var app = angular.module( 'MobileAPP', [
     'ionic',
-    'ngCordova.plugins.device',
     'ngCordova.plugins.toast',
     'ngCordova.plugins.dialogs',
     'ngCordova.plugins.keyboard',
-    'ngCordova.plugins.sqlite',
     'jett.ionic.filter.bar',
     'ionic-datepicker',
     'ionicLazyLoad',
@@ -15,9 +13,9 @@ var app = angular.module( 'MobileAPP', [
 ] );
 
 app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$ionicPopup',
-    '$ionicHistory', '$ionicLoading', '$cordovaToast', '$cordovaKeyboard', '$cordovaDevice', '$cordovaSQLite', 'EnvService',
+    '$ionicHistory', '$ionicLoading', '$cordovaToast', '$cordovaKeyboard',
     function( ENV, $ionicPlatform, $rootScope, $state, $location, $timeout, $ionicPopup,
-        $ionicHistory, $ionicLoading, $cordovaToast, $cordovaKeyboard, $cordovaDevice, $cordovaSQLite, EnvService) {
+        $ionicHistory, $ionicLoading, $cordovaToast, $cordovaKeyboard) {
         if ( window.cordova ) {
             ENV.fromWeb = false;
         } else {
@@ -30,9 +28,6 @@ app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeo
             if ( !ENV.fromWeb ) {
                 $cordovaKeyboard.hideAccessoryBar(true);
                 $cordovaKeyboard.disableScroll(true);
-
-                var objDevice = $cordovaDevice.getDevice();
-                console.error(objDevice);
                 /*
                 if(window.plugins.jPushPlugin){
                     // Add JPush
@@ -43,18 +38,6 @@ app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeo
                     //window.plugins.jPushPlugin.receiveMessageInAndroidCallback = function(data);
                 }
                 */
-                EnvService.GetENV().then(function success(){
-
-                },function error(error){
-                    $cordovaToast.showShortBottom( error );
-                });
-                var db = $cordovaSQLite.openDB({name: 'freightapp.db', location: 'default', androidLockWorkaround: 1}, function(db) {
-                    db.transaction(function(tx) {
-                        //
-                    }, function(err) {
-                        console.error(err);
-                    });
-                });
             }
             if ( window.StatusBar ) {
                 // org.apache.cordova.statusbar required
@@ -140,12 +123,6 @@ app.config( [ '$httpProvider', '$stateProvider', '$urlRouterProvider', '$ionicCo
                 abstract: true,
                 templateUrl: 'view/menu.html',
                 controller: 'IndexCtrl'
-            } )
-            .state( 'loading', {
-                url: '/loading',
-                cache: 'false',
-                templateUrl: 'view/loading.html',
-                controller: 'LoadingCtrl'
             } )
             .state( 'index.login', {
                 url: '/login',

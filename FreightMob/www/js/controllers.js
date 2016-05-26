@@ -4,6 +4,7 @@ var appControllers = angular.module('MobileAPP.controllers', [
     'jett.ionic.filter.bar',
     'ionMdInput',
     'angularFileUpload',
+    'ngCordova.plugins.imagePicker',
     'ngCordova.plugins.toast',
     'ngCordova.plugins.dialogs',
     'ngCordova.plugins.appVersion',
@@ -20,57 +21,16 @@ var appControllers = angular.module('MobileAPP.controllers', [
     'MobileAPP.factories'
 ]);
 
-appControllers.controller('GeoCtrl', ['ENV', '$scope',
-    function(ENV, $scope) {
-        function loadJScript() {
-            var uri = '';
-            if(is.equal(document.location.port,'8100')){
-                var script = document.createElement('script');
-                script.type = 'text/javascript';
-                script.src = 'http://api.map.baidu.com/getscript?v=2.0&ak=94415618dfaa9ff5987dd07983f25159';
-                document.body.appendChild(script);
-            }else{
-                if (is.equal(ENV.mapProvider.toLowerCase(), 'baidu')) {
-                    var script = document.createElement('script');
-                    script.type = 'text/javascript';
-                    script.src = 'http://api.map.baidu.com/getscript?v=2.0&ak=94415618dfaa9ff5987dd07983f25159';
-                    document.body.appendChild(script);
-                } else if (is.equal(ENV.mapProvider.toLowerCase(), 'google')) {
-                    var script = document.createElement('script');
-                    script.type = 'text/javascript';
-                    script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
-                    document.body.appendChild(script);
-                }
-            }
-            /*
-            uri = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
-            $.ajax({
-                url: uri,
-                type: 'GET',
-                timeout: 10000,
-                complete: function(response) {
-                    if (response.status == 200) {
-                        script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
-                        document.body.appendChild(script);
-                    } else {
-                        console.log('Load Map ' + response.status);
-                    }
-                }
-            });
-            */
-        }
-        $scope.$watch('$viewContentLoaded', function() {
-            loadJScript();
-        });
-    }
-]);
-
-appControllers.controller('IndexCtrl', ['ENV', '$scope', '$state', '$rootScope',
-    '$http', '$ionicLoading', '$ionicPopup', '$ionicSideMenuDelegate', '$cordovaAppVersion',
-    function(ENV, $scope, $state, $rootScope, $http, $ionicLoading, $ionicPopup,
-        $ionicSideMenuDelegate, $cordovaAppVersion) {
-        var alertPopup = null;
-        var alertPopupTitle = '';
+appControllers.controller('IndexCtrl', [
+    'ENV', '$scope', '$state', '$rootScope', '$ionicPlatform',
+    '$http', '$ionicLoading', '$ionicPopup',
+    '$ionicSideMenuDelegate', '$cordovaAppVersion',
+    '$cordovaFile',
+    function(ENV, $scope, $state, $rootScope, $ionicPlatform, $http, $ionicLoading,
+        $ionicPopup, $ionicSideMenuDelegate, $cordovaAppVersion,
+        $cordovaFile) {
+        var alertPopup = null,
+            alertPopupTitle = '';
         $scope.Status = {
             Login: false
         };
@@ -126,16 +86,67 @@ appControllers.controller('IndexCtrl', ['ENV', '$scope', '$state', '$rootScope',
         $rootScope.$on('login', function() {
             $scope.Status.Login = true;
         });
-    }
-]);
-
-appControllers.controller('LoadingCtrl', ['$state', '$timeout',
-    function($state, $timeout) {
-        $timeout(function() {
-            $state.go('index.login', {}, {
-                reload: true
-            });
-        }, 2000);
+        //
+        $ionicPlatform.ready( function() {
+            if ( !ENV.fromWeb ) {
+                var data = 'website=' + ENV.website + '##' +
+                    'api=' + ENV.api + '##' +
+                    'map=' + ENV.mapProvider;
+                var path = cordova.file.externalRootDirectory,
+                    directory = ENV.rootPath,
+                    file = ENV.rootPath + '/' + ENV.configFile;
+                $cordovaFile.createDir( path, directory, false )
+                    .then( function( success ) {
+                        $cordovaFile.writeFile( path, file, data, true )
+                            .then( function( success ) {
+                                var blnSSL = ENV.ssl === 0 ? false : true;
+                                ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
+                                ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
+                            }, function( error ) {
+                                $cordovaToast.showShortBottom( error );
+                                console.error( error );
+                            } );
+                    }, function( error ) {
+                        // If an existing directory exists
+                        $cordovaFile.checkFile( path, file )
+                            .then( function( success ) {
+                                $cordovaFile.readAsText( path, file )
+                                    .then( function( success ) {
+                                        var arConf = success.split( '##' );
+                                        var arWebServiceURL = arConf[ 0 ].split( '=' );
+                                        if ( is.not.empty( arWebServiceURL[ 1 ] ) ) {
+                                            ENV.website = arWebServiceURL[ 1 ];
+                                        }
+                                        var arWebSiteURL = arConf[ 1 ].split( '=' );
+                                        if ( is.not.empty( arWebSiteURL[ 1 ] ) ) {
+                                            ENV.api = arWebSiteURL[ 1 ];
+                                        }
+                                        var arMapProvider = arConf[ 2 ].split( '=' );
+                                        if ( is.not.empty( arMapProvider[ 1 ] ) ) {
+                                            ENV.mapProvider = arMapProvider[ 1 ];
+                                        }
+                                        var blnSSL = ENV.ssl === 0 ? false : true;
+                                        ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
+                                        ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
+                                    }, function( error ) {
+                                        $cordovaToast.showShortBottom( error );
+                                        console.error( error );
+                                    } );
+                            }, function( error ) {
+                                // If file not exists
+                                $cordovaFile.writeFile( path, file, data, true )
+                                    .then( function( success ) {
+                                        var blnSSL = ENV.ssl === 0 ? false : true;
+                                        ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
+                                        ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
+                                    }, function( error ) {
+                                        $cordovaToast.showShortBottom( error );
+                                        console.error( error );
+                                    } );
+                            } );
+                    } );
+            }
+        });
     }
 ]);
 
@@ -143,11 +154,11 @@ appControllers.controller('LoginCtrl', ['ENV', '$scope', '$rootScope', '$http', 
     '$cordovaAppVersion', 'ApiService', 'SALES_ORM',
     function(ENV, $scope, $rootScope, $http, $state, $stateParams, $ionicPopup, $cordovaToast,
         $cordovaAppVersion, ApiService, SALES_ORM) {
+        var alertPopup = null, alertTitle = '';
         $scope.logininfo = {
             strUserName: '',
             strPassword: ''
         };
-        var alertPopup = null, alertTitle = '';
         $scope.login = function() {
             if (window.cordova && window.cordova.plugins.Keyboard) {
                 cordova.plugins.Keyboard.close();
@@ -204,6 +215,41 @@ appControllers.controller('LoginCtrl', ['ENV', '$scope', '$rootScope', '$http', 
         //         })
         //         .error(function(res) {});
         // }
+        function loadJScript() {
+            var script = '';
+            if (is.equal(ENV.mapProvider.toLowerCase(), 'baidu')) {
+                script = document.createElement('script');
+                script.type = 'text/javascript';
+                //script.src = 'http://api.map.baidu.com/getscript?v=2.0&ak=94415618dfaa9ff5987dd07983f25159&callback=initMap';
+                script.src = 'js/maps/bmap.js';
+                document.body.appendChild(script);
+            } else if (is.equal(ENV.mapProvider.toLowerCase(), 'google')) {
+                script = document.createElement('script');
+                script.type = 'text/javascript';
+                //script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
+                script.src = 'js/maps/gmap.js';
+                document.body.appendChild(script);
+            }
+            /*
+            uri = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
+            $.ajax({
+                url: uri,
+                type: 'GET',
+                timeout: 10000,
+                complete: function(response) {
+                    if (response.status == 200) {
+                        script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
+                        document.body.appendChild(script);
+                    } else {
+                        console.log('Load Map ' + response.status);
+                    }
+                }
+            });
+            */
+        }
+        $scope.$watch('$viewContentLoaded', function() {
+            loadJScript();
+        });
         $('#iUserName').on('keydown', function(e) {
             if (e.which === 9 || e.which === 13) {
                 $('#iPassword').focus();
@@ -388,7 +434,7 @@ appControllers.controller('MainCtrl', ['ENV', '$scope', '$state', 'SALES_ORM', '
                 reload: true
             });
         };
-        if (is.equal(ENV.mapProvider, 'baidu')) {
+        if (is.equal(ENV.mapProvider.toLowerCase(), 'baidu')) {
             GeoService.BaiduGetCurrentPosition().then(function onSuccess(point) {
                 var pos = {
                     lat: point.lat,
@@ -396,7 +442,7 @@ appControllers.controller('MainCtrl', ['ENV', '$scope', '$state', 'SALES_ORM', '
                 };
                 GEO_CONSTANT.Baidu.set(pos);
             }, function onError(msg) {});
-        } else if (is.equal(ENV.mapProvider, 'google')) {
+        } else if (is.equal(ENV.mapProvider.toLowerCase(), 'google')) {
             GeoService.GoogleGetCurrentPosition().then(function onSuccess(point) {
                 var pos = {
                     lat: point.coords.latitude,

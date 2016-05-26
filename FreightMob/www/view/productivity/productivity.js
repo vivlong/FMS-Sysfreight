@@ -276,12 +276,12 @@ appControllers.controller( 'DocumentScanCtrl', [ 'ENV', '$scope', '$state', '$st
                 };
                 var strUri = '/api/freight/upload/img?JobNo=' + $scope.Doc.JobNo;
                 ApiService.Post( strUri, jsonData, true ).then( function success( result ) {
-                    showPopup( 'Upload Successfully!', 'calm' );
+                    showPopup( 'Upload Successfully', 'calm' );
                 }, function error( ex ) {
                     console.error( ex );
                 } );
             }, function( err ) {
-                showPopup( err.message, 'assertive' );
+                //showPopup( err.message, 'assertive' );
             } );
         };
         $scope.myChannel = {
@@ -517,103 +517,117 @@ appControllers.controller( 'RetrieveDocListCtrl', [ 'ENV', '$scope', '$state', '
         GetJmjm1s( $stateParams.JobNo );
     } ] );
 
-appControllers.controller( 'UploadCtrl', [ 'ENV', '$scope', '$state', '$stateParams', '$ionicPopup', 'FileUploader', 'ApiService',
-    function( ENV, $scope, $state, $stateParams, $ionicPopup, FileUploader, ApiService ) {
-        var uptoken = '',
-            JobNo = $stateParams.JobNo,
-            alertPopup = null;
-        $scope.returnDoc = function() {
-            $state.go( 'documentScan', {}, {} );
+appControllers.controller( 'UploadCtrl', [ 'ENV', '$scope', '$state', '$stateParams', '$ionicPopup', '$cordovaImagePicker', 'FileUploader', 'ApiService',
+    function( ENV, $scope, $state, $stateParams, $ionicPopup, $cordovaImagePicker, FileUploader, ApiService ) {
+        var alertPopup = null,
+            canvas = null,
+            ctx = null;
+        $scope.Detail = {
+            JobNo : $stateParams.JobNo,
+            blnGallery : true,
+            imageUri : ''
         };
-        var uploader = $scope.uploader = new FileUploader( {
-            url: ENV.api + '/api/freight/upload/img?JobNo=' + JobNo
-        } );
-        /*
-        uploader.onWhenAddingFileFailed = function(item, filter, options) {
-            console.info('onWhenAddingFileFailed', item, filter, options);
-        };
-        uploader.onAfterAddingFile = function(fileItem) {
-            console.info('onAfterAddingFile', fileItem);
-        };
-        uploader.onAfterAddingAll = function(addedFileItems) {
-            console.info('onAfterAddingAll', addedFileItems);
-        };
-        uploader.onBeforeUploadItem = function(item) {
-            console.info('onBeforeUploadItem', item);
-        };
-        uploader.onProgressItem = function(fileItem, progress) {
-            console.info('onProgressItem', fileItem, progress);
-        };
-        uploader.onProgressAll = function(progress) {
-            console.info('onProgressAll', progress);
-        };
-        uploader.onErrorItem = function(fileItem, response, status, headers) {
-            console.info('onErrorItem', fileItem, response, status, headers);
-        };
-        uploader.onCancelItem = function(fileItem, response, status, headers) {
-            console.info('onCancelItem', fileItem, response, status, headers);
-        };
-        uploader.onCompleteItem = function(fileItem, response, status, headers) {
-            console.info('onCompleteItem', fileItem, response, status, headers);
-        };
-        uploader.onCompleteAll = function() {
-            console.info('onCompleteAll');
-        };
-        */
-        uploader.onSuccessItem = function( fileItem, response, status, headers ) {
-            console.info( 'onSuccessItem', fileItem, response, status, headers );
-            if ( alertPopup === null ) {
-                alertPopup = $ionicPopup.alert( {
-                    title: "Upload Successfully!",
-                    okType: 'button-calm'
-                } );
-                alertPopup.then( function( res ) {
-                    $scope.returnDoc();
-                } );
-            } else {
+        var showPopup = function( title, type, callback ) {
+            if ( alertPopup != null ) {
                 alertPopup.close();
                 alertPopup = null;
             }
+            alertPopup = $ionicPopup.alert( {
+                title: title,
+                okType: 'button-' + type
+            } );
+            alertPopup.then( function( res ) {
+                if(typeof(callback)=='function') callback(res);
+            } );
         };
-        /*
-        $scope.selectFiles = [];
-		var start = function (index) {
-			$scope.selectFiles[index].progress = {
-				p: 0
-			};
-            var key = '/FreightApp/Doc/' + JobNo + '/' + $scope.selectFiles[index].file.name;
-            $qupload.upload({
-				key: key,
-				file: $scope.selectFiles[index].file,
-				token: uptoken
-			}).then(function (response) {
-                //
-				console.log('response');
-                //
-			}, function (response) {
-				console.log(response);
-			}, function (evt) {
-				$scope.selectFiles[index].progress.p = Math.floor(100 * evt.loaded / evt.totalSize);
-			});
-		};
-		$scope.abort = function (index) {
-			$scope.selectFiles.splice(index, 1);
-		};
-		$scope.onFileSelect = function ($files) {
-			var offsetx = $scope.selectFiles.length;
-			for (var i = 0; i < $files.length; i++) {
-				$scope.selectFiles[i + offsetx] = {
-					file: $files[i]
-				};
-				start(i + offsetx);
-			}
-		};
-        var GetToken = function() {
-            var strUri = '/api/qiniu/uptoken';
-            ApiService.Get(strUri, true).then(function success(result) {
-                uptoken = result.uptoken;
-            });
+        function getBase64Image() {
+            var img = document.getElementById('image1');
+            canvas = document.getElementById('canvas1');
+            ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+            var data = canvas.toDataURL('image/jpeg');
+            var jsonData = {
+                'Base64': data,
+                'FileName': moment().format( 'YYYY-MM-DD-HH-mm-ss' ).toString() + '.jpg'
+            };
+            var strUri = '/api/freight/upload/img?JobNo=' + $scope.Detail.JobNo;
+            ApiService.Post( strUri, jsonData, true ).then( function success( result ) {
+                showPopup('Upload Successfully','calm', function(res){
+                    $scope.returnDoc();
+                });
+            } );
+            // return dataURL.replace("data:image/png;base64,", "");
+        }
+        var showGallery = function () {
+            var options = {
+                maximumImagesCount: 1,
+                width: 800,
+                height: 800,
+                quality: 80
+            };
+            $cordovaImagePicker.getPictures(options)
+                .then(function (results) {
+                     $scope.Detail.imageUri = results[0];
+                }, function (error) {
+                     console.log(error);
+                });
+        }
+        $scope.reCapture = function(){
+            $scope.Detail.imageUri = '';
+            ctx.clearRect( 0, 0, 320, 480 );
+            showGallery();
+        }
+        $scope.uploadPhoto = function(){
+            getBase64Image();
+        }
+        $scope.returnDoc = function() {
+            $state.go( 'documentScan', {}, {} );
         };
-        GetToken();
-        */
+        if(ENV.fromWeb){
+            $scope.Detail.blnGallery = false;
+            var uploader = $scope.uploader = new FileUploader( {
+                url: ENV.api + '/api/freight/upload/img?JobNo=' + $scope.Detail.JobNo
+            } );
+            /*
+            uploader.onWhenAddingFileFailed = function(item, filter, options) {
+                console.info('onWhenAddingFileFailed', item, filter, options);
+            };
+            uploader.onAfterAddingFile = function(fileItem) {
+                console.info('onAfterAddingFile', fileItem);
+            };
+            uploader.onAfterAddingAll = function(addedFileItems) {
+                console.info('onAfterAddingAll', addedFileItems);
+            };
+            uploader.onBeforeUploadItem = function(item) {
+                console.info('onBeforeUploadItem', item);
+            };
+            uploader.onProgressItem = function(fileItem, progress) {
+                console.info('onProgressItem', fileItem, progress);
+            };
+            uploader.onProgressAll = function(progress) {
+                console.info('onProgressAll', progress);
+            };
+            uploader.onErrorItem = function(fileItem, response, status, headers) {
+                console.info('onErrorItem', fileItem, response, status, headers);
+            };
+            uploader.onCancelItem = function(fileItem, response, status, headers) {
+                console.info('onCancelItem', fileItem, response, status, headers);
+            };
+            uploader.onCompleteItem = function(fileItem, response, status, headers) {
+                console.info('onCompleteItem', fileItem, response, status, headers);
+            };
+            uploader.onCompleteAll = function() {
+                console.info('onCompleteAll');
+            };
+            */
+            uploader.onSuccessItem = function( fileItem, response, status, headers ) {
+                console.info( 'onSuccessItem', fileItem, response, status, headers );
+                showPopup('Upload Successfully','calm',function(res){
+                    $scope.returnDoc();
+                });
+            };
+        }else{
+            $scope.Detail.blnGallery = true;
+            showGallery();
+        }
     } ] );

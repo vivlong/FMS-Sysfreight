@@ -37,7 +37,9 @@
     "cordova-plugin-actionsheet",
     "cordova-plugin-inappbrowser",
     "cordova-sqlite-storage",
-    "cordova-plugin-whitelist"
+    "cordova-plugin-whitelist",
+    "https://github.com/litehelpers/Cordova-sqlite-storage",
+    "https://github.com/wymsee/cordova-imagePicker.git"
   ],
   "cordovaPlatforms": [
     {

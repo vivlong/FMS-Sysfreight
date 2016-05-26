@@ -7,72 +7,53 @@
     </ion-header-bar>
     <ion-pane>
         <div style="height: 43px;"></div>
-        <div>
-            <!--div ng-file-select="onFileSelect($files)" data-multiple="false" title="select file" onclick="this.value = null">
-                Click here to select file
+        <div ng-if="!Detail.blnGallery">
+            <div>
+                <input type="file" nv-file-select="" uploader="uploader" />
             </div>
-            <hr />
-            <ol>
-               <li ng-repeat="(k,v) in selectFiles">
-                   {{v.file.name}} - {{v.progress.p}}% <button ng-click="abort(k)">x</button>
-               </li>
-           </ol-->
-            <input type="file" nv-file-select="" uploader="uploader" />
-        </div>
-        <div>
-            <div class="col-md-12">
-               <!--h3>Upload queue</h3>
-               <p>Queue length: {{ uploader.queue.length }}</p-->
-               <table class="table" ng-show="uploader.queue.length > 0">
-                   <thead>
-                       <tr>
-                           <th width="33%">Name</th>
-                           <th width="33%" ng-show="uploader.isHTML5">Size</th>
-                           <th width="33%">Actions</th>
-                       </tr>
-                   </thead>
-                   <tbody>
-                       <tr ng-repeat="item in uploader.queue">
-                           <td><strong>{{ item.file.name }}</strong></td>
-                           <td ng-show="uploader.isHTML5" nowrap> {{ item.file.size/1024/1024|number:2 }} MB </td>
-                           <td nowrap>
-                               <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
-                                   <span class="glyphicon glyphicon-upload"></span> Upload
-                               </button>
-                               <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
-                                   <span class="glyphicon glyphicon-ban-circle"></span> Cancel
-                               </button>
-                               <!--button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
-                                   <span class="glyphicon glyphicon-trash"></span> Remove
-                               </button-->
-                           </td>
-                       </tr>
-                   </tbody>
-               </table>
-               <!--div>
-                   <div>
-                       Queue progress:
-                       <div class="progress" style="">
-                           <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
-                       </div>
-                   </div>
-                   <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
-                       <span class="glyphicon glyphicon-upload"></span> Upload all
-                   </button>
-                   <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
-                       <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
-                   </button>
-                   <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
-                       <span class="glyphicon glyphicon-trash"></span> Remove all
-                   </button>
-               </div-->
+            <div>
+                <div class="col-md-12">
+                   <table class="table" ng-show="uploader.queue.length > 0">
+                       <thead>
+                           <tr>
+                               <th width="33%">Name</th>
+                               <th width="33%" ng-show="uploader.isHTML5">Size</th>
+                               <th width="33%">Actions</th>
+                           </tr>
+                       </thead>
+                       <tbody>
+                           <tr ng-repeat="item in uploader.queue">
+                               <td><strong>{{ item.file.name }}</strong></td>
+                               <td ng-show="uploader.isHTML5" nowrap> {{ item.file.size/1024/1024|number:2 }} MB </td>
+                               <td nowrap>
+                                   <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                       <span class="glyphicon glyphicon-upload"></span> Upload
+                                   </button>
+                                   <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                       <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                                   </button>
+                               </td>
+                           </tr>
+                       </tbody>
+                   </table>
+               </div>
            </div>
-       </div>
+        </div>
+        <div ng-if="Detail.blnGallery">
+            <img id="image1" ng-src="{{ Detail.imageUri }}"  width="100%" height="100%" />
+            <canvas id="canvas1" visble="false"></canvas>
+        </div>
     </ion-pane>
     <ion-footer-bar class="bar-positive hide-on-keyboard-open">
         <div class="button-bar">
-            <button class="button icon ion-arrow-return-right" ng-click="returnDoc()">
+            <button class="button icon ion-android-refresh" ng-click="reCapture()" ng-if="Detail.imageUri!=null">
+                &nbsp;Restore
+            </button>
+            <button class="button icon ion-arrow-return-right" ng-click="returnDoc()" ng-if="Detail.imageUri==null">
                 &nbsp;Return
+            </button>
+            <button class="button icon ion-android-done" ng-click="uploadPhoto()" ng-if="Detail.imageUri!=null">
+                &nbsp;Done
             </button>
         </div>
     </ion-footer-bar>
