@@ -7,7 +7,7 @@
     </ion-header-bar>
     <ion-pane>
         <div style="height: 43px;"></div>
-        <div ng-if="!Detail.blnGallery">
+        <div>
             <div>
                 <input type="file" nv-file-select="" uploader="uploader" />
             </div>
@@ -39,21 +39,11 @@
                </div>
            </div>
         </div>
-        <div ng-if="Detail.blnGallery">
-            <img id="image1" ng-src="{{ Detail.imageUri }}"  width="100%" height="100%" />
-            <canvas id="canvas1" visble="false"></canvas>
-        </div>
     </ion-pane>
     <ion-footer-bar class="bar-positive hide-on-keyboard-open">
         <div class="button-bar">
-            <button class="button icon ion-android-refresh" ng-click="reCapture()" ng-if="Detail.imageUri!=null">
-                &nbsp;Restore
-            </button>
-            <button class="button icon ion-arrow-return-right" ng-click="returnDoc()" ng-if="Detail.imageUri==null">
+            <button class="button icon ion-arrow-return-right" ng-click="returnDoc()">
                 &nbsp;Return
-            </button>
-            <button class="button icon ion-android-done" ng-click="uploadPhoto()" ng-if="Detail.imageUri!=null">
-                &nbsp;Done
             </button>
         </div>
     </ion-footer-bar>

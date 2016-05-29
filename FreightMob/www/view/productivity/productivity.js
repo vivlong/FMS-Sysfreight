@@ -232,14 +232,13 @@ appControllers.controller( 'ReminderCtrl', [ '$scope', '$state', '$stateParams',
     }
 ] );
 
-appControllers.controller( 'DocumentScanCtrl', [ 'ENV', '$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicActionSheet', '$cordovaCamera', '$cordovaBarcodeScanner', 'ApiService',
-    function( ENV, $scope, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicActionSheet, $cordovaCamera, $cordovaBarcodeScanner, ApiService ) {
+appControllers.controller( 'DocumentScanCtrl', [ 'ENV', '$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicActionSheet', '$cordovaCamera', '$cordovaBarcodeScanner', '$cordovaImagePicker', '$cordovaFile', '$cordovaFileTransfer', 'ApiService',
+    function( ENV, $scope, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicActionSheet, $cordovaCamera, $cordovaBarcodeScanner, $cordovaImagePicker, $cordovaFile, $cordovaFileTransfer, ApiService ) {
         var alertPopup = null, canvas = null, context = null;
         $scope.Doc = {
-            JobNo: '',
+            JobNo: 'SE07731-03',
             Jmjm1s: {}
         };
-        $scope.Doc.JobNo = 'SE07731-03';
         $scope.capture = null;
         var showPopup = function( title, type, callback ) {
             if ( alertPopup != null ) {
@@ -257,30 +256,41 @@ appControllers.controller( 'DocumentScanCtrl', [ 'ENV', '$scope', '$state', '$st
         var showCamera = function() {
             var options = {
                 quality: 100,
-                destinationType: Camera.DestinationType.DATA_URL,
+                destinationType: Camera.DestinationType.FILE_URI,
                 sourceType: Camera.PictureSourceType.CAMERA,
                 allowEdit: false,
                 encodingType: Camera.EncodingType.JPEG,
                 targetWidth: 768,
                 targetHeight: 1024,
-                mediaType: 0,
-                cameraDirection: 0,
-                popoverOptions: CameraPopoverOptions,
+                mediaType: Camera.MediaType.PICTURE,
+                cameraDirection: Camera.Direction.BACK,
+                //popoverOptions: new CameraPopoverOptions(300, 300, 100, 100, Camera.PopoverArrowDirection.ARROW_ANY),
                 saveToPhotoAlbum: true,
                 correctOrientation:true
             };
-            $cordovaCamera.getPicture( options ).then( function( imageData ) {
-                var jsonData = {
-                    'Base64': 'data:image/jpeg;base64,' + imageData,
-                    'FileName': moment().format( 'YYYY-MM-DD-HH-mm-ss' ).toString() + '.jpg'
-                };
-                var strUri = '/api/freight/upload/img?JobNo=' + $scope.Doc.JobNo;
-                ApiService.Post( strUri, jsonData, true ).then( function success( result ) {
-                    showPopup( 'Upload Successfully', 'calm' );
-                }, function error( ex ) {
-                    console.error( ex );
-                } );
+            $cordovaCamera.getPicture( options ).then( function( imageUri ) {
+                var url = ENV.api + '/api/freight/upload/img?JobNo=' + $scope.Doc.JobNo;
+                var filePath = imageUri,
+                    trustHosts = true,
+                    options = {};
+                    //newFile = ENV.rootPath + '/' + moment().format( 'YYYY-MM-DD-HH-mm-ss' ).toString() + '.jpg';
+                //$cordovaFile.moveFile(cordova.file.externalRootDirectory, filePath, cordova.file.externalRootDirectory, newFile)
+                //    .then(function (success){
+                $cordovaFileTransfer.upload(url, filePath, options, trustHosts)
+                    .then(function(result) {
+                        showPopup( 'Upload Successfully', 'calm' );
+                    }, function(err) {
+                        console.error( err );
+                        showPopup( err.message, 'assertive' );
+                    }, function (progress) {
+                    // constant progress updates
+                    });
+                    //}, function (error){
+                    //    console.error( error );
+                    //    showPopup( error.message, 'assertive' );
+                    //});
             }, function( err ) {
+                console.error( err );
                 //showPopup( err.message, 'assertive' );
             } );
         };
@@ -346,18 +356,46 @@ appControllers.controller( 'DocumentScanCtrl', [ 'ENV', '$scope', '$state', '$st
                             },
                             buttonClicked: function( index ) {
                                 if ( index === 0 ) {
-                                    if ( ENV.fromWeb ) {
+                                    if ( !ENV.fromWeb ) {
+                                        showCamera();
+                                    }else{
                                         $scope.modal_camera.show();
                                         canvas = document.getElementById( 'canvas1' );
                                         context = canvas.getContext( '2d' );
                                         $scope.reCapture();
-                                    } else {
-                                        showCamera();
                                     }
                                 } else if ( index === 1 ) {
-                                    $state.go( 'upload', {
-                                        'JobNo': $scope.Doc.JobNo
-                                    }, {} );
+                                    if( !ENV.fromWeb ){
+                                        var options = {
+                                            maximumImagesCount: 1,
+                                            width: 800,
+                                            height: 800,
+                                            quality: 80
+                                        };
+                                        $cordovaImagePicker.getPictures(options)
+                                            .then(function (results) {
+                                                 $scope.Detail.imageUri = results[0];
+                                                 var url = ENV.api + '/api/freight/upload/img?JobNo=' + $scope.Doc.JobNo;
+                                                 var filePath = results[0];
+                                                 var trustHosts = true;
+                                                 var options = {};
+                                                 $cordovaFileTransfer.upload(url, filePath, options, trustHosts)
+                                                     .then(function(result) {
+                                                         showPopup( 'Upload Successfully', 'calm' );
+                                                     }, function(err) {
+                                                         console.error( err );
+                                                         showPopup( err.message, 'assertive' );
+                                                     }, function (progress) {
+                                                     // constant progress updates
+                                                     });
+                                            }, function (error) {
+                                                 console.log(error);
+                                            });
+                                    } else {
+                                        $state.go( 'upload', {
+                                            'JobNo': $scope.Doc.JobNo
+                                        }, {} );
+                                    }
                                 }
                                 return true;
                             }
@@ -517,15 +555,11 @@ appControllers.controller( 'RetrieveDocListCtrl', [ 'ENV', '$scope', '$state', '
         GetJmjm1s( $stateParams.JobNo );
     } ] );
 
-appControllers.controller( 'UploadCtrl', [ 'ENV', '$scope', '$state', '$stateParams', '$ionicPopup', '$cordovaImagePicker', 'FileUploader', 'ApiService',
-    function( ENV, $scope, $state, $stateParams, $ionicPopup, $cordovaImagePicker, FileUploader, ApiService ) {
-        var alertPopup = null,
-            canvas = null,
-            ctx = null;
+appControllers.controller( 'UploadCtrl', [ 'ENV', '$scope', '$state', '$stateParams', '$ionicPopup', 'FileUploader', 'ApiService',
+    function( ENV, $scope, $state, $stateParams, $ionicPopup, FileUploader, ApiService ) {
+        var alertPopup = null;
         $scope.Detail = {
-            JobNo : $stateParams.JobNo,
-            blnGallery : true,
-            imageUri : ''
+            JobNo : $stateParams.JobNo
         };
         var showPopup = function( title, type, callback ) {
             if ( alertPopup != null ) {
@@ -540,94 +574,49 @@ appControllers.controller( 'UploadCtrl', [ 'ENV', '$scope', '$state', '$statePar
                 if(typeof(callback)=='function') callback(res);
             } );
         };
-        function getBase64Image() {
-            var img = document.getElementById('image1');
-            canvas = document.getElementById('canvas1');
-            ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, img.width, img.height);
-            var data = canvas.toDataURL('image/jpeg');
-            var jsonData = {
-                'Base64': data,
-                'FileName': moment().format( 'YYYY-MM-DD-HH-mm-ss' ).toString() + '.jpg'
-            };
-            var strUri = '/api/freight/upload/img?JobNo=' + $scope.Detail.JobNo;
-            ApiService.Post( strUri, jsonData, true ).then( function success( result ) {
-                showPopup('Upload Successfully','calm', function(res){
-                    $scope.returnDoc();
-                });
-            } );
-            // return dataURL.replace("data:image/png;base64,", "");
-        }
-        var showGallery = function () {
-            var options = {
-                maximumImagesCount: 1,
-                width: 800,
-                height: 800,
-                quality: 80
-            };
-            $cordovaImagePicker.getPictures(options)
-                .then(function (results) {
-                     $scope.Detail.imageUri = results[0];
-                }, function (error) {
-                     console.log(error);
-                });
-        }
-        $scope.reCapture = function(){
-            $scope.Detail.imageUri = '';
-            ctx.clearRect( 0, 0, 320, 480 );
-            showGallery();
-        }
-        $scope.uploadPhoto = function(){
-            getBase64Image();
-        }
         $scope.returnDoc = function() {
             $state.go( 'documentScan', {}, {} );
         };
-        if(ENV.fromWeb){
-            $scope.Detail.blnGallery = false;
-            var uploader = $scope.uploader = new FileUploader( {
-                url: ENV.api + '/api/freight/upload/img?JobNo=' + $scope.Detail.JobNo
-            } );
-            /*
-            uploader.onWhenAddingFileFailed = function(item, filter, options) {
-                console.info('onWhenAddingFileFailed', item, filter, options);
-            };
-            uploader.onAfterAddingFile = function(fileItem) {
-                console.info('onAfterAddingFile', fileItem);
-            };
-            uploader.onAfterAddingAll = function(addedFileItems) {
-                console.info('onAfterAddingAll', addedFileItems);
-            };
-            uploader.onBeforeUploadItem = function(item) {
-                console.info('onBeforeUploadItem', item);
-            };
-            uploader.onProgressItem = function(fileItem, progress) {
-                console.info('onProgressItem', fileItem, progress);
-            };
-            uploader.onProgressAll = function(progress) {
-                console.info('onProgressAll', progress);
-            };
-            uploader.onErrorItem = function(fileItem, response, status, headers) {
-                console.info('onErrorItem', fileItem, response, status, headers);
-            };
-            uploader.onCancelItem = function(fileItem, response, status, headers) {
-                console.info('onCancelItem', fileItem, response, status, headers);
-            };
-            uploader.onCompleteItem = function(fileItem, response, status, headers) {
-                console.info('onCompleteItem', fileItem, response, status, headers);
-            };
-            uploader.onCompleteAll = function() {
-                console.info('onCompleteAll');
-            };
-            */
-            uploader.onSuccessItem = function( fileItem, response, status, headers ) {
-                console.info( 'onSuccessItem', fileItem, response, status, headers );
-                showPopup('Upload Successfully','calm',function(res){
-                    $scope.returnDoc();
-                });
-            };
-        }else{
-            $scope.Detail.blnGallery = true;
-            showGallery();
-        }
-    } ] );
+        var uploader = $scope.uploader = new FileUploader( {
+            url: ENV.api + '/api/freight/upload/img?JobNo=' + $scope.Detail.JobNo
+        } );
+        /*
+        uploader.onWhenAddingFileFailed = function(item, filter, options) {
+            console.info('onWhenAddingFileFailed', item, filter, options);
+        };
+        uploader.onAfterAddingFile = function(fileItem) {
+            console.info('onAfterAddingFile', fileItem);
+        };
+        uploader.onAfterAddingAll = function(addedFileItems) {
+            console.info('onAfterAddingAll', addedFileItems);
+        };
+        uploader.onBeforeUploadItem = function(item) {
+            console.info('onBeforeUploadItem', item);
+        };
+        uploader.onProgressItem = function(fileItem, progress) {
+            console.info('onProgressItem', fileItem, progress);
+        };
+        uploader.onProgressAll = function(progress) {
+            console.info('onProgressAll', progress);
+        };
+        uploader.onErrorItem = function(fileItem, response, status, headers) {
+            console.info('onErrorItem', fileItem, response, status, headers);
+        };
+        uploader.onCancelItem = function(fileItem, response, status, headers) {
+            console.info('onCancelItem', fileItem, response, status, headers);
+        };
+        uploader.onCompleteItem = function(fileItem, response, status, headers) {
+            console.info('onCompleteItem', fileItem, response, status, headers);
+        };
+        uploader.onCompleteAll = function() {
+            console.info('onCompleteAll');
+        };
+        */
+        uploader.onSuccessItem = function( fileItem, response, status, headers ) {
+            console.info( 'onSuccessItem', fileItem, response, status, headers );
+            showPopup('Upload Successfully','calm',function(res){
+                $scope.returnDoc();
+            });
+        };
+    }
+] );

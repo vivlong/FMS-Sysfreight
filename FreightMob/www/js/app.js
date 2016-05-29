@@ -101,15 +101,11 @@ app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeo
 
 app.config( [ '$httpProvider', '$stateProvider', '$urlRouterProvider', '$ionicConfigProvider', '$ionicFilterBarConfigProvider',
     function( $httpProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider, $ionicFilterBarConfigProvider ) {
-        /*
-        $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
-        */
-        $ionicConfigProvider.backButton.previousTitleText( false );
-        /*
         $ionicConfigProvider.platform.ios.tabs.style('standard');
         $ionicConfigProvider.platform.ios.tabs.position('bottom');
         $ionicConfigProvider.platform.android.tabs.style('standard');
-        $ionicConfigProvider.platform.android.tabs.position('bottom');
+        $ionicConfigProvider.platform.android.tabs.position('bottom')
+        /*
         $ionicConfigProvider.platform.ios.navBar.alignTitle('center');
         $ionicConfigProvider.platform.android.navBar.alignTitle('center');
         $ionicConfigProvider.platform.ios.backButton.previousTitleText('').icon('ion-ios-arrow-thin-left');
@@ -117,6 +113,55 @@ app.config( [ '$httpProvider', '$stateProvider', '$urlRouterProvider', '$ionicCo
         $ionicConfigProvider.platform.ios.views.transition('ios');
         $ionicConfigProvider.platform.android.views.transition('android');
         */
+    	$ionicConfigProvider.views.forwardCache(true);//开启全局缓存
+    	//$ionicConfigProvider.views.maxCache(0);//关闭缓存
+        $httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+        $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+        // Override $http service's default transformRequest
+        $httpProvider.defaults.transformRequest = [function(data) {
+            /**
+             * The workhorse; converts an object to x-www-form-urlencoded serialization.
+             * @param {Object} obj
+             * @return {String}
+             */
+            var param = function(obj) {
+                var query = '';
+                var name, value, fullSubName, subName, subValue, innerObj, i;
+
+                for (name in obj) {
+                    value = obj[name];
+
+                    if (value instanceof Array) {
+                        for (i = 0; i < value.length; ++i) {
+                            subValue = value[i];
+                            fullSubName = name + '[' + i + ']';
+                            innerObj = {};
+                            innerObj[fullSubName] = subValue;
+                            query += param(innerObj) + '&';
+                        }
+                    } else if (value instanceof Object) {
+                        for (subName in value) {
+                            subValue = value[subName];
+                            fullSubName = name + '[' + subName + ']';
+                            innerObj = {};
+                            innerObj[fullSubName] = subValue;
+                            query += param(innerObj) + '&';
+                        }
+                    } else if (value !== undefined && value !== null) {
+                        query += encodeURIComponent(name) + '='
+                                + encodeURIComponent(value) + '&';
+                    }
+                }
+
+                return query.length ? query.substr(0, query.length - 1) : query;
+            };
+
+            return angular.isObject(data) && String(data) !== '[object File]'
+                    ? param(data)
+                    : data;
+        }];
+        $ionicConfigProvider.backButton.previousTitleText( false );
+        //
         $stateProvider
             .state( 'index', {
                 url: '',

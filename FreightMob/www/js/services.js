@@ -22,7 +22,7 @@ appService.service( 'ApiService', [ '$q', 'ENV', '$http', '$ionicLoading', '$ion
             var url = ENV.api + requestUrl;
             console.log( url );
             var config = {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/x-www-form-urlencoded'
             };
             $http.post( url, requestData, config ).success( function( data, status, headers, config, statusText ) {
                 if ( blnShowLoad ) {
@@ -43,8 +43,8 @@ appService.service( 'ApiService', [ '$q', 'ENV', '$http', '$ionicLoading', '$ion
                 $ionicLoading.show();
             }
             var deferred = $q.defer();
-            var strSignature = hex_md5( requestUrl + "?format=json" + ENV.appId.replace( /-/ig, "" ) );
-            var url = ENV.api + requestUrl + "?format=json";
+            var strSignature = hex_md5( requestUrl + '?format=json' + ENV.appId.replace( /-/ig, '') );
+            var url = ENV.api + requestUrl + '?format=json';
             console.log( url );
             $http.get( url ).success( function( data, status, headers, config, statusText ) {
                 if ( blnShowLoad ) {
@@ -65,8 +65,8 @@ appService.service( 'ApiService', [ '$q', 'ENV', '$http', '$ionicLoading', '$ion
                 $ionicLoading.show();
             }
             var deferred = $q.defer();
-            var strSignature = hex_md5( requestUrl + "&format=json" + ENV.appId.replace( /-/ig, "" ) );
-            var url = ENV.api + requestUrl + "&format=json";
+            var strSignature = hex_md5( requestUrl + '&format=json' + ENV.appId.replace( /-/ig, '' ) );
+            var url = ENV.api + requestUrl + '&format=json';
             console.log( url );
             $http.get( url ).success( function( data, status, headers, config, statusText ) {
                 if ( blnShowLoad ) {
@@ -89,7 +89,7 @@ appService.service( 'DownloadFileService', [ 'ENV', '$timeout', '$ionicLoading',
     function( ENV, $timeout, $ionicLoading, $cordovaToast, $cordovaFile, $cordovaFileTransfer, $cordovaFileOpener2 ) {
         this.Download = function( url, fileName, fileType, onPlatformError, onCheckError, onDownloadError ) {
             $ionicLoading.show( {
-                template: "Download  0%"
+                template: 'Download  0%'
             } );
             if ( !ENV.fromWeb ) {
                 var targetPath = cordova.file.externalRootDirectory + '/' + ENV.rootPath + '/' + fileName;
@@ -242,17 +242,52 @@ appService.service( 'GeoService', [ '$q', '$cordovaGeolocation',
     }
 ] );
 
-appService.service( 'SqlService', [ '$q', '$cordovaSQLite', '$ionicPlatform', '$cordovaDevice',
-    function( $q, $cordovaSQLite, $ionicPlatform, $cordovaDevice ){
-        var dbName = 'freightapp.db', dbLocation = 'default';
-        $ionicPlatform.ready(function () {
-            var db = $cordovaSQLite.openDB({name: dbName, location: 'default', androidLockWorkaround: 1}, function(db) {
-                db.transaction(function(tx) {
-                    $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS User(id INTEGER PRIMARY KEY AUTOINCREMENT, password TEXT, details TEXT)');
-                }, function(err) {
-                    console.error('SqliteErr',err);
-                });
+appService.service( 'SqlService', [ 'ENV', '$q', '$cordovaSQLite', '$ionicPlatform', '$cordovaDevice',
+    function( ENV, $q, $cordovaSQLite, $ionicPlatform, $cordovaDevice ){
+        var dbName = 'freightapp.db', dbLocation = 'default', db = null, dbSql = '';
+        var dbInfo = {
+            dbName: 'freightapp.db',
+            dbVersion: '1.0',
+            dbDisplayName: 'FreightApp Database',
+            dbEstimatedSize: 1024 * 1024 * 100
+        };
+        this.init = function(){
+            $ionicPlatform.ready(function () {
+                if(ENV.fromWeb){
+                    db = window.openDatabase(dbInfo.dbName, dbInfo.dbVersion, dbInfo.dbDisplayName, dbInfo.dbEstimatedSize);
+                }else{
+                    db = $cordovaSQLite.openDB({name: dbName, location: 'default', androidLockWorkaround: 1})
+                }
+                if(db){
+                    db.transaction(function(tx) {
+                        $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS User(id INTEGER PRIMARY KEY AUTOINCREMENT, password TEXT)');
+                    }, function(err) {
+                        console.error('SqliteErr',err);
+                    });
+                }
             });
-        });
+        };
+        this.select = function(){
+            if(db){
+                var query2 = 'SELECT id, password FROM User';
+    		    $cordovaSQLite.execute(db, query2, []).then(function(res) {
+    		        if(res.rows.length > 0) {
+    		            for(var i = 0; i < res.rows.length; i++) {
+    		            	console.log(res.rows.item(i).id + ' # ' + res.rows.item(i).password);
+    		            }
+    		        }
+    		    }, function (err) {
+    		        console.error(err);
+    		    });
+            }
+        };
+        this.insert = function(){
+            var query = 'INSERT INTO User (id, password) VALUES (?,?)';
+	        $cordovaSQLite.execute(db, query, ['1', '2', '3']).then(function(res) {
+	            console.log('INSERT ID test-> ' + res.insertId);
+	        }, function (err) {
+	            console.log(err);
+	        });
+        };
     }
 ] );

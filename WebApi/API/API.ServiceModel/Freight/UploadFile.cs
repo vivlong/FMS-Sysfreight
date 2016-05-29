@@ -49,6 +49,10 @@ namespace WebApi.ServiceModel.Freight
 																				{
 																								Directory.CreateDirectory(filePath);
 																				}
+																				if (string.IsNullOrEmpty(request.FileName))
+																				{
+																								//request.FileName = DateTime.Now.ToString("YYYY-MM-DD-HH-mm-ss") + ".jpg";
+																				}
 																				string resultFile = Path.Combine(filePath, request.FileName);
 																				if (File.Exists(resultFile))
 																				{
