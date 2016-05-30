@@ -151,9 +151,9 @@ appControllers.controller('IndexCtrl', [
 ]);
 
 appControllers.controller('LoginCtrl', ['ENV', '$scope', '$rootScope', '$http', '$state', '$stateParams', '$ionicPopup', '$cordovaToast',
-    '$cordovaAppVersion', 'ApiService', 'SALES_ORM',
+    '$cordovaAppVersion', 'ApiService', 'SqlService', 'SALES_ORM',
     function(ENV, $scope, $rootScope, $http, $state, $stateParams, $ionicPopup, $cordovaToast,
-        $cordovaAppVersion, ApiService, SALES_ORM) {
+        $cordovaAppVersion, ApiService, SqlService, SALES_ORM) {
         var alertPopup = null, alertTitle = '';
         $scope.logininfo = {
             strUserName: '',
@@ -180,10 +180,11 @@ appControllers.controller('LoginCtrl', ['ENV', '$scope', '$rootScope', '$http', 
                         sessionStorage.clear();
                         sessionStorage.setItem('UserId', $scope.logininfo.strUserName);
                         //Add JPush RegistradionID
-                        if (!ENV.fromWeb) {
-                            window.plugins.jPushPlugin.getRegistrationID(onGetRegistradionID);
-                        }
+                        //if (!ENV.fromWeb) {
+                        //    window.plugins.jPushPlugin.getRegistrationID(onGetRegistradionID);
+                        //}
                         SALES_ORM.init();
+                        SqlService.insert();
                         $state.go('index.main', {}, {
                             reload: true
                         });
@@ -200,21 +201,6 @@ appControllers.controller('LoginCtrl', ['ENV', '$scope', '$rootScope', '$http', 
                 });
             }
         };
-        // if (!ENV.fromWeb) {
-        //     var url = ENV.website + '/update.json';
-        //     $http.get(url)
-        //         .success(function(res) {
-        //             var serverAppVersion = res.version;
-        //             $cordovaAppVersion.getVersionNumber().then(function(version) {
-        //                 if (version != serverAppVersion) {
-        //                     $state.go('update', {
-        //                         'Version': serverAppVersion
-        //                     });
-        //                 }
-        //             });
-        //         })
-        //         .error(function(res) {});
-        // }
         function loadJScript() {
             var script = '';
             if (is.equal(ENV.mapProvider.toLowerCase(), 'baidu')) {
@@ -247,8 +233,15 @@ appControllers.controller('LoginCtrl', ['ENV', '$scope', '$rootScope', '$http', 
             });
             */
         }
+        SqlService.init();
         $scope.$watch('$viewContentLoaded', function() {
             loadJScript();
+            var objUser = SqlService.select();
+            if(is.not.undefined(objUser) && is.equal(objUser.id,'s')){
+                $state.go('index.main', {}, {
+                    reload: true
+                });
+            }
         });
         $('#iUserName').on('keydown', function(e) {
             if (e.which === 9 || e.which === 13) {

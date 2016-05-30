@@ -262,32 +262,41 @@ appService.service( 'SqlService', [ 'ENV', '$q', '$cordovaSQLite', '$ionicPlatfo
                     db.transaction(function(tx) {
                         $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS User(id INTEGER PRIMARY KEY AUTOINCREMENT, password TEXT)');
                     }, function(err) {
-                        console.error('SqliteErr',err);
+                        console.error(err);
                     });
                 }
             });
         };
         this.select = function(){
             if(db){
-                var query2 = 'SELECT id, password FROM User';
+                var query2 = 'SELECT top 1 id, password FROM User';
     		    $cordovaSQLite.execute(db, query2, []).then(function(res) {
     		        if(res.rows.length > 0) {
-    		            for(var i = 0; i < res.rows.length; i++) {
-    		            	console.log(res.rows.item(i).id + ' # ' + res.rows.item(i).password);
-    		            }
+    		            //for(var i = 0; i < res.rows.length; i++) {
+    		            	console.error(res.rows.item(0).id + ' # ' + res.rows.item(0).password);
+    		            //}
+                        var objUser = {
+                            id: res.rows.item(0).id,
+                            password: res.rows.item(0).password
+                        };
+                        return objUser;
     		        }
     		    }, function (err) {
     		        console.error(err);
     		    });
+            }else{
+                return null;
             }
         };
         this.insert = function(){
-            var query = 'INSERT INTO User (id, password) VALUES (?,?)';
-	        $cordovaSQLite.execute(db, query, ['1', '2', '3']).then(function(res) {
-	            console.log('INSERT ID test-> ' + res.insertId);
-	        }, function (err) {
-	            console.log(err);
-	        });
+            if(db){
+                var query = 'INSERT INTO User (id, password) VALUES (?,?)';
+    	        $cordovaSQLite.execute(db, query, ['s', 'sysh20']).then(function(res) {
+    	            console.error(res.insertId);
+    	        }, function (err) {
+    	            console.error(err);
+    	        });
+            }
         };
     }
 ] );

@@ -36,10 +36,12 @@
     "cordova-sms-plugin",
     "cordova-plugin-actionsheet",
     "cordova-plugin-inappbrowser",
-    "cordova-sqlite-storage",
     "cordova-plugin-whitelist",
-    "https://github.com/litehelpers/Cordova-sqlite-storage",
-    "https://github.com/wymsee/cordova-imagePicker.git"
+    "https://github.com/wymsee/cordova-imagePicker.git",
+    {
+      "locator": "https://github.com/litehelpers/Cordova-sqlite-storage",
+      "id": "cordova-sqlite-storage"
+    }
   ],
   "cordovaPlatforms": [
     {
