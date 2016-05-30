@@ -43,11 +43,15 @@ var appendProtocol = function(url, blnSSL, portNo) {
     }
     return url;
 };
-var rmProtocol = function(url) {
-    if (url.length > 0) {
+var rmProtocol = function(url, portNo) {
+    if (is.not.empty(url)) {
         var regex = /(https?:\/\/)?/gi;
         url = url.replace(regex, '');
         regex = /(http?:\/\/)?/gi;
+        url = url.replace(regex, '');
+    }
+    if (is.not.empty(portNo)) {
+        var regex = /\:(\d)+/;
         url = url.replace(regex, '');
     }
     return url;

@@ -1,8 +1,6 @@
 var app = angular.module( 'MobileAPP', [
     'ionic',
-    'ngCordova.plugins.toast',
-    'ngCordova.plugins.dialogs',
-    'ngCordova.plugins.keyboard',
+    'ngCordova',
     'jett.ionic.filter.bar',
     'ionic-datepicker',
     'ionicLazyLoad',
@@ -13,16 +11,13 @@ var app = angular.module( 'MobileAPP', [
 ] );
 
 app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeout', '$ionicPopup',
-    '$ionicHistory', '$ionicLoading', '$cordovaToast', '$cordovaKeyboard',
+    '$ionicHistory', '$ionicLoading', '$cordovaToast', '$cordovaKeyboard', '$cordovaSQLite',
     function( ENV, $ionicPlatform, $rootScope, $state, $location, $timeout, $ionicPopup,
-        $ionicHistory, $ionicLoading, $cordovaToast, $cordovaKeyboard) {
+        $ionicHistory, $ionicLoading, $cordovaToast, $cordovaKeyboard, $cordovaSQLite) {
         if ( window.cordova ) {
             ENV.fromWeb = false;
         } else {
-            var blnSSL = 'https:' === document.location.protocol ? true : false;
-            ENV.ssl = blnSSL ? '1' : '0';
-            ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
-            ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
+            ENV.fromWeb = true;
         }
         $ionicPlatform.ready( function() {
             if ( !ENV.fromWeb ) {
@@ -38,6 +33,12 @@ app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeo
                     //window.plugins.jPushPlugin.receiveMessageInAndroidCallback = function(data);
                 }
                 */
+                try {
+                    db = $cordovaSQLite.openDB({name:'freightapp.db',location:'default'});
+                } catch (error) {
+                    console.error(error);
+                }
+                $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS Users (id INTEGER PRIMARY KEY AUTOINCREMENT, uid TEXT)');
             }
             if ( window.StatusBar ) {
                 // org.apache.cordova.statusbar required
@@ -113,7 +114,7 @@ app.config( [ '$httpProvider', '$stateProvider', '$urlRouterProvider', '$ionicCo
         $ionicConfigProvider.platform.ios.views.transition('ios');
         $ionicConfigProvider.platform.android.views.transition('android');
         */
-    	$ionicConfigProvider.views.forwardCache(true);//开启全局缓存
+    	//$ionicConfigProvider.views.forwardCache(true);//开启全局缓存
     	//$ionicConfigProvider.views.maxCache(0);//关闭缓存
         $httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
         $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
@@ -204,6 +205,12 @@ app.config( [ '$httpProvider', '$stateProvider', '$urlRouterProvider', '$ionicCo
                         controller: 'MainCtrl'
                     }
                 }
+            } )
+            .state( 'loading', {
+                url: '/loading',
+                //cache: 'false',
+                //templateUrl: 'view/crm/SalesCost.html',
+                controller: 'LoadingCtrl'
             } )
             .state( 'salesCost', {
                 url: '/salesCost',
@@ -392,7 +399,7 @@ app.config( [ '$httpProvider', '$stateProvider', '$urlRouterProvider', '$ionicCo
                 templateUrl: 'view/productivity/RetrieveDoc-list.html',
                 controller: 'RetrieveDocListCtrl'
             } );
-        $urlRouterProvider.otherwise( '/login' );
+        $urlRouterProvider.otherwise( '/loading' );
         /*
         $ionicFilterBarConfigProvider.theme('calm');
         $ionicFilterBarConfigProvider.clear('ion-close');

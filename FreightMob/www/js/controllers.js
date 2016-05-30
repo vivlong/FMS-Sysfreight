@@ -1,60 +1,50 @@
-var appControllers = angular.module('MobileAPP.controllers', [
+var appControllers = angular.module( 'MobileAPP.controllers', [
     'ionic',
     'ionic.ion.headerShrink',
     'jett.ionic.filter.bar',
     'ionMdInput',
     'angularFileUpload',
-    'ngCordova.plugins.imagePicker',
-    'ngCordova.plugins.toast',
-    'ngCordova.plugins.dialogs',
-    'ngCordova.plugins.appVersion',
-    'ngCordova.plugins.file',
-    'ngCordova.plugins.fileTransfer',
-    'ngCordova.plugins.fileOpener2',
-    'ngCordova.plugins.sms',
-    'ngCordova.plugins.camera',
-    'ngCordova.plugins.actionSheet',
-    'ngCordova.plugins.barcodeScanner',
+    'ngCordova',
     'MobileAPP.config',
     'MobileAPP.directives',
     'MobileAPP.services',
     'MobileAPP.factories'
-]);
+] );
 
-appControllers.controller('IndexCtrl', [
+appControllers.controller( 'IndexCtrl', [
     'ENV', '$scope', '$state', '$rootScope', '$ionicPlatform',
     '$http', '$ionicLoading', '$ionicPopup',
     '$ionicSideMenuDelegate', '$cordovaAppVersion',
     '$cordovaFile',
-    function(ENV, $scope, $state, $rootScope, $ionicPlatform, $http, $ionicLoading,
+    function( ENV, $scope, $state, $rootScope, $ionicPlatform, $http, $ionicLoading,
         $ionicPopup, $ionicSideMenuDelegate, $cordovaAppVersion,
-        $cordovaFile) {
+        $cordovaFile ) {
         var alertPopup = null,
             alertPopupTitle = '';
         $scope.Status = {
             Login: false
         };
         $scope.logout = function() {
-            $rootScope.$broadcast('logout');
-            $state.go('index.login', {}, {});
+            $rootScope.$broadcast( 'logout' );
+            $state.go( 'index.login', {}, {} );
         };
         $scope.gotoSetting = function() {
-            $state.go('index.setting', {}, {
+            $state.go( 'index.setting', {}, {
                 reload: true
-            });
+            } );
         };
         $scope.gotoUpdate = function() {
-            if (!ENV.fromWeb) {
+            if ( !ENV.fromWeb ) {
                 var url = ENV.website + '/' + ENV.updateFile;
-                $http.get(url)
-                    .success(function(res) {
+                $http.get( url )
+                    .success( function( res ) {
                         var serverAppVersion = res.version;
-                        $cordovaAppVersion.getVersionNumber().then(function(version) {
-                            if (version != serverAppVersion) {
+                        $cordovaAppVersion.getVersionNumber().then( function( version ) {
+                            if ( version != serverAppVersion ) {
                                 $ionicSideMenuDelegate.toggleLeft();
-                                $state.go('index.update', {
+                                $state.go( 'index.update', {
                                     'Version': serverAppVersion
-                                });
+                                } );
                             } else {
                                 alertPopupTitle = 'Already the Latest Version!';
                                 alertPopup = $ionicPopup.alert( {
@@ -62,15 +52,15 @@ appControllers.controller('IndexCtrl', [
                                     okType: 'button-assertive'
                                 } );
                             }
-                        });
-                    })
-                    .error(function(res) {
+                        } );
+                    } )
+                    .error( function( res ) {
                         alertPopupTitle = 'Connect Update Server Error!';
                         alertPopup = $ionicPopup.alert( {
                             title: alertPopupTitle,
                             okType: 'button-assertive'
                         } );
-                    });
+                    } );
             } else {
                 alertPopupTitle = 'No Updates!';
                 alertPopup = $ionicPopup.alert( {
@@ -79,33 +69,37 @@ appControllers.controller('IndexCtrl', [
                 } );
             }
         }
-        $rootScope.$on('logout', function() {
+        $rootScope.$on( 'logout', function() {
             $scope.Status.Login = false;
             $ionicSideMenuDelegate.toggleLeft();
-        });
-        $rootScope.$on('login', function() {
+        } );
+        $rootScope.$on( 'login', function() {
             $scope.Status.Login = true;
-        });
+        } );
         //
+        var writeFile = function( path, file, data ) {
+            $cordovaFile.writeFile( path, file, data, true )
+                .then( function( success ) {
+                    var blnSSL = ENV.ssl === 0 ? false : true;
+                    ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
+                    ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
+                }, function( error ) {
+                    $cordovaToast.showShortBottom( error );
+                    console.error( error );
+                } );
+        };
         $ionicPlatform.ready( function() {
             if ( !ENV.fromWeb ) {
                 var data = 'website=' + ENV.website + '##' +
                     'api=' + ENV.api + '##' +
+                    'port=' + ENV.port + '##' +
                     'map=' + ENV.mapProvider;
                 var path = cordova.file.externalRootDirectory,
                     directory = ENV.rootPath,
                     file = ENV.rootPath + '/' + ENV.configFile;
                 $cordovaFile.createDir( path, directory, false )
                     .then( function( success ) {
-                        $cordovaFile.writeFile( path, file, data, true )
-                            .then( function( success ) {
-                                var blnSSL = ENV.ssl === 0 ? false : true;
-                                ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
-                                ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
-                            }, function( error ) {
-                                $cordovaToast.showShortBottom( error );
-                                console.error( error );
-                            } );
+                        writeFile( path, file, data );
                     }, function( error ) {
                         // If an existing directory exists
                         $cordovaFile.checkFile( path, file )
@@ -113,336 +107,401 @@ appControllers.controller('IndexCtrl', [
                                 $cordovaFile.readAsText( path, file )
                                     .then( function( success ) {
                                         var arConf = success.split( '##' );
-                                        var arWebServiceURL = arConf[ 0 ].split( '=' );
-                                        if ( is.not.empty( arWebServiceURL[ 1 ] ) ) {
-                                            ENV.website = arWebServiceURL[ 1 ];
+                                        if ( arConf.length == 4 ) {
+                                            var arWebServiceURL = arConf[ 0 ].split( '=' );
+                                            if ( is.not.empty( arWebServiceURL[ 1 ] ) ) {
+                                                ENV.website = arWebServiceURL[ 1 ];
+                                            }
+                                            var arWebSiteURL = arConf[ 1 ].split( '=' );
+                                            if ( is.not.empty( arWebSiteURL[ 1 ] ) ) {
+                                                ENV.api = arWebSiteURL[ 1 ];
+                                            }
+                                            var arWebPort = arConf[ 2 ].split( '=' );
+                                            if ( is.not.empty( arWebPort[ 1 ] ) ) {
+                                                ENV.port = arWebPort[ 1 ];
+                                            }
+                                            var arMapProvider = arConf[ 3 ].split( '=' );
+                                            if ( is.not.empty( arMapProvider[ 1 ] ) ) {
+                                                ENV.mapProvider = arMapProvider[ 1 ];
+                                            }
+                                            var blnSSL = ENV.ssl === 0 ? false : true;
+                                            ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
+                                            ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
+                                        } else {
+                                            $cordovaFile.removeFile( path, file )
+                                                .then( function( success ) {
+                                                    writeFile( path, file, data );
+                                                }, function( error ) {
+                                                    $cordovaToast.showShortBottom( error );
+                                                } );
                                         }
-                                        var arWebSiteURL = arConf[ 1 ].split( '=' );
-                                        if ( is.not.empty( arWebSiteURL[ 1 ] ) ) {
-                                            ENV.api = arWebSiteURL[ 1 ];
-                                        }
-                                        var arMapProvider = arConf[ 2 ].split( '=' );
-                                        if ( is.not.empty( arMapProvider[ 1 ] ) ) {
-                                            ENV.mapProvider = arMapProvider[ 1 ];
-                                        }
-                                        var blnSSL = ENV.ssl === 0 ? false : true;
-                                        ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
-                                        ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
                                     }, function( error ) {
                                         $cordovaToast.showShortBottom( error );
                                         console.error( error );
                                     } );
                             }, function( error ) {
                                 // If file not exists
-                                $cordovaFile.writeFile( path, file, data, true )
-                                    .then( function( success ) {
-                                        var blnSSL = ENV.ssl === 0 ? false : true;
-                                        ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
-                                        ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
-                                    }, function( error ) {
-                                        $cordovaToast.showShortBottom( error );
-                                        console.error( error );
-                                    } );
+                                writeFile( path, file, data );
                             } );
                     } );
+            } else {
+                var blnSSL = 'https:' === document.location.protocol ? true : false;
+                ENV.ssl = blnSSL ? '1' : '0';
+                ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
+                ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
+            }
+            loadJScript();
+        } );
+        function loadJScript() {
+            var script = '';
+            if ( is.equal( ENV.mapProvider.toLowerCase(), 'baidu' ) ) {
+                script = document.createElement( 'script' );
+                script.type = 'text/javascript';
+                script.src = 'http://api.map.baidu.com/getscript?v=2.0&ak=94415618dfaa9ff5987dd07983f25159&callback=initMap';
+                //script.src = 'js/maps/bmap.js';
+                document.body.appendChild( script );
+            } else if ( is.equal( ENV.mapProvider.toLowerCase(), 'google' ) ) {
+                script = document.createElement( 'script' );
+                script.type = 'text/javascript';
+                script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
+                //script.src = 'js/maps/gmap.js';
+                document.body.appendChild( script );
+            }
+        }
+        /*
+        $scope.$watch( '$viewContentLoaded', function() {
+            loadJScript();
+        } );
+        */
+    }
+] );
+
+appControllers.controller( 'LoadingCtrl', [ 'ENV', '$scope', '$rootScope', '$state', '$ionicPlatform', '$cordovaSQLite', 'SALES_ORM',
+    function( ENV, $scope, $rootScope, $state, $ionicPlatform, $cordovaSQLite, SALES_ORM) {
+        var gotoLogin = function(blnLogin){
+            if(blnLogin){
+                $state.go( 'index.main', {}, {
+                    reload: true
+                } );
+            }else{
+                $state.go( 'index.login', {}, {
+                    reload: true
+                } );
+            }
+        };
+        $ionicPlatform.ready( function() {
+            if ( !ENV.fromWeb ) {
+                $cordovaSQLite.execute( db, 'SELECT * FROM Users ORDER BY id DESC' )
+                    .then(
+                        function( res ) {
+                            if ( res.rows.length > 0 && is.not.undefined( res.rows.item( 0 ).uid ) ) {
+                                var value = res.rows.item( 0 ).uid;
+                                $rootScope.$broadcast( 'login' );
+                                sessionStorage.clear();
+                                sessionStorage.setItem( 'UserId', value );
+                                //Add JPush RegistradionID
+                                //if (!ENV.fromWeb) {
+                                //    window.plugins.jPushPlugin.getRegistrationID(onGetRegistradionID);
+                                //}
+                                SALES_ORM.init();
+                                gotoLogin(true);
+                            }else{
+                                gotoLogin(false);
+                            }
+                        },
+                        function( error ) {
+                            gotoLogin(false);
+                        }
+                    );
+            }else{
+                gotoLogin(false);
             }
         });
     }
-]);
+] );
 
-appControllers.controller('LoginCtrl', ['ENV', '$scope', '$rootScope', '$http', '$state', '$stateParams', '$ionicPopup', '$cordovaToast',
-    '$cordovaAppVersion', 'ApiService', 'SqlService', 'SALES_ORM',
-    function(ENV, $scope, $rootScope, $http, $state, $stateParams, $ionicPopup, $cordovaToast,
-        $cordovaAppVersion, ApiService, SqlService, SALES_ORM) {
-        var alertPopup = null, alertTitle = '';
+appControllers.controller( 'LoginCtrl', [ 'ENV', '$scope', '$rootScope', '$http', '$state', '$stateParams', '$ionicPopup', '$cordovaToast',
+    '$cordovaAppVersion', '$cordovaSQLite', 'ApiService', 'SALES_ORM',
+    function( ENV, $scope, $rootScope, $http, $state, $stateParams, $ionicPopup, $cordovaToast,
+        $cordovaAppVersion, $cordovaSQLite, ApiService, SALES_ORM ) {
+        var alertPopup = null,
+            alertTitle = '';
         $scope.logininfo = {
             strUserName: '',
             strPassword: ''
         };
         $scope.login = function() {
-            if (window.cordova && window.cordova.plugins.Keyboard) {
+            if ( window.cordova && window.cordova.plugins.Keyboard ) {
                 cordova.plugins.Keyboard.close();
             }
-            if (is.empty($scope.logininfo.strUserName)) {
+            if ( is.empty( $scope.logininfo.strUserName ) ) {
                 alertTitle = 'Please Enter User Name.';
-                alertPopup = $ionicPopup.alert({
+                alertPopup = $ionicPopup.alert( {
                     title: alertTitle,
                     okType: 'button-assertive'
-                });
-                alertPopup.then(function(res) {
-                    console.log(alertTitle);
-                });
+                } );
+                alertPopup.then( function( res ) {
+                    console.log( alertTitle );
+                } );
             } else {
-                var strUri = '/api/freight/login/check?UserId=' + $scope.logininfo.strUserName + '&Md5Stamp=' + hex_md5($scope.logininfo.strPassword);
-                ApiService.GetParam(strUri, true).then(function success(result) {
-                    if (result.data.results > 0) {
-                        $rootScope.$broadcast('login');
+                var strUri = '/api/freight/login/check?UserId=' + $scope.logininfo.strUserName + '&Md5Stamp=' + hex_md5( $scope.logininfo.strPassword );
+                ApiService.GetParam( strUri, true ).then( function success( result ) {
+                    if ( result.data.results > 0 ) {
+                        var value = $scope.logininfo.strUserName;
+                        $rootScope.$broadcast( 'login' );
                         sessionStorage.clear();
-                        sessionStorage.setItem('UserId', $scope.logininfo.strUserName);
+                        sessionStorage.setItem( 'UserId', value );
                         //Add JPush RegistradionID
                         //if (!ENV.fromWeb) {
                         //    window.plugins.jPushPlugin.getRegistrationID(onGetRegistradionID);
                         //}
                         SALES_ORM.init();
-                        SqlService.insert();
-                        $state.go('index.main', {}, {
+                        if ( !ENV.fromWeb ) {
+                            $cordovaSQLite.execute( db, 'INSERT INTO Users (uid) VALUES (?)', [ value ] )
+                                .then( function( result ) {
+                                }, function( error ) {
+                                } )
+                        }
+                        $state.go( 'index.main', {}, {
                             reload: true
-                        });
+                        } );
                     } else {
                         alertTitle = 'Invaild User';
-                        alertPopup = $ionicPopup.alert({
+                        alertPopup = $ionicPopup.alert( {
                             title: alertTitle,
                             okType: 'button-assertive'
-                        });
-                        alertPopup.then(function(res) {
-                            console.log(alertTitle);
-                        });
+                        } );
+                        alertPopup.then( function( res ) {
+                            console.log( alertTitle );
+                        } );
                     }
-                });
+                } );
             }
         };
-        function loadJScript() {
-            var script = '';
-            if (is.equal(ENV.mapProvider.toLowerCase(), 'baidu')) {
-                script = document.createElement('script');
-                script.type = 'text/javascript';
-                //script.src = 'http://api.map.baidu.com/getscript?v=2.0&ak=94415618dfaa9ff5987dd07983f25159&callback=initMap';
-                script.src = 'js/maps/bmap.js';
-                document.body.appendChild(script);
-            } else if (is.equal(ENV.mapProvider.toLowerCase(), 'google')) {
-                script = document.createElement('script');
-                script.type = 'text/javascript';
-                //script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
-                script.src = 'js/maps/gmap.js';
-                document.body.appendChild(script);
+        $( '#iUserName' ).on( 'keydown', function( e ) {
+            if ( e.which === 9 || e.which === 13 ) {
+                $( '#iPassword' ).focus();
             }
-            /*
-            uri = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
-            $.ajax({
-                url: uri,
-                type: 'GET',
-                timeout: 10000,
-                complete: function(response) {
-                    if (response.status == 200) {
-                        script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
-                        document.body.appendChild(script);
-                    } else {
-                        console.log('Load Map ' + response.status);
-                    }
-                }
-            });
-            */
-        }
-        SqlService.init();
-        $scope.$watch('$viewContentLoaded', function() {
-            loadJScript();
-            var objUser = SqlService.select();
-            if(is.not.undefined(objUser) && is.equal(objUser.id,'s')){
-                $state.go('index.main', {}, {
-                    reload: true
-                });
-            }
-        });
-        $('#iUserName').on('keydown', function(e) {
-            if (e.which === 9 || e.which === 13) {
-                $('#iPassword').focus();
-            }
-        });
-        $('#iPassword').on('keydown', function(e) {
-            if (e.which === 9 || e.which === 13) {
-                if (alertPopup === null) {
+        } );
+        $( '#iPassword' ).on( 'keydown', function( e ) {
+            if ( e.which === 9 || e.which === 13 ) {
+                if ( alertPopup === null ) {
                     $scope.login();
                 } else {
                     alertPopup.close();
                     alertPopup = null;
                 }
             }
-        });
-        $('#iUserName').focus();
+        } );
+        $( '#iUserName' ).focus();
     }
-]);
+] );
 
-appControllers.controller('SettingCtrl', ['ENV', '$scope', '$state', '$ionicHistory', '$ionicPopup', '$cordovaToast', '$cordovaFile',
-    function(ENV, $scope, $state, $ionicHistory, $ionicPopup, $cordovaToast, $cordovaFile) {
+appControllers.controller( 'SettingCtrl', [ 'ENV', '$scope', '$state', '$ionicHistory', '$ionicPopup', '$cordovaToast', '$cordovaFile',
+    function( ENV, $scope, $state, $ionicHistory, $ionicPopup, $cordovaToast, $cordovaFile ) {
         $scope.Setting = {
-            Version:    ENV.version,
-            WebApiURL:  rmProtocol(ENV.api),
-            WebSiteUrl: rmProtocol(ENV.website),
-            SSL:        { checked: ENV.ssl === '0' ? false : true },
-            MapProvider:ENV.mapProvider,
-            blnWeb:     ENV.fromWeb
+            Version: ENV.version,
+            WebApiURL: rmProtocol( ENV.api, ENV.port ),
+            WebSiteUrl: rmProtocol( ENV.website, ENV.port ),
+            WebPort: ENV.port,
+            SSL: {
+                checked: ENV.ssl === '0' ? false : true
+            },
+            MapProvider: ENV.mapProvider,
+            blnWeb: ENV.fromWeb
+        };
+        var writeFile = function( path, file, data ) {
+            $cordovaFile.writeFile( path, file, data, true )
+                .then( function( success ) {
+                    var blnSSL = ENV.ssl === 0 ? false : true;
+                    ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
+                    ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
+                    $scope.return();
+                }, function( error ) {
+                    $cordovaToast.showShortBottom( error );
+                    console.error( error );
+                } );
         };
         $scope.return = function() {
-            if ($ionicHistory.backView()) {
+            if ( $ionicHistory.backView() ) {
                 $ionicHistory.goBack();
             } else {
-                $state.go('index.login', {}, {
+                $state.go( 'index.login', {}, {
                     reload: true
-                });
+                } );
             }
         };
         $scope.save = function() {
+            ENV.ssl = $scope.Setting.SSL.checked ? '1' : '0';
+            var blnSSL = $scope.Setting.SSL.checked ? true : false;
+            if ( is.not.empty( $scope.Setting.WebPort ) ) {
+                ENV.port = $scope.Setting.WebPort;
+            } else {
+                $scope.Setting.WebPort = ENV.port;
+            }
             if ( is.not.empty( $scope.Setting.WebApiURL ) ) {
                 ENV.api = $scope.Setting.WebApiURL;
             } else {
-                $scope.Setting.WebApiURL = rmProtocol(ENV.api);
+                $scope.Setting.WebApiURL = rmProtocol( ENV.api, ENV.port );
             }
             if ( is.not.empty( $scope.Setting.WebSiteUrl ) ) {
                 ENV.website = $scope.Setting.WebSiteUrl;
             } else {
-                $scope.Setting.WebSiteUrl = rmProtocol(ENV.website);
+                $scope.Setting.WebSiteUrl = rmProtocol( ENV.website, ENV.port );
             }
-            if (is.not.empty($scope.Setting.MapProvider)) {
+            if ( is.not.empty( $scope.Setting.MapProvider ) ) {
                 ENV.mapProvider = $scope.Setting.MapProvider;
             } else {
                 $scope.Setting.MapProvider = ENV.mapProvider;
             }
-            ENV.ssl = $scope.Setting.SSL.checked ? '1' : '0';
-            var blnSSL = $scope.Setting.SSL.checked ? true : false;
-            ENV.website = appendProtocol(ENV.website, blnSSL, ENV.port);
-            ENV.api     = appendProtocol(ENV.api, blnSSL, ENV.port);
-            if (!ENV.fromWeb) {
-                var data = 'website=' + ENV.website + '##api=' + ENV.api + '##map=' + ENV.mapProvider;
+            if ( !ENV.fromWeb ) {
+                var data =  'website=' + ENV.website +
+                            '##api=' + ENV.api +
+                            '##port=' + ENV.port +
+                            '##map=' + ENV.mapProvider;
                 var path = cordova.file.externalRootDirectory;
                 var file = ENV.rootPath + '/' + ENV.configFile;
-                $cordovaFile.writeFile(path, file, data, true)
-                    .then(function(success) {
-                        $state.go('index.login', {}, {
-                            reload: true
-                        });
-                    }, function(error) {
-                        $cordovaToast.showShortBottom(error);
-                    });
+                writeFile(path, file, data);
             } else {
-                $state.go('index.login', {}, {
-                    reload: true
-                });
+                ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
+                ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
+                $scope.return();
             }
         };
         $scope.reset = function() {
-            $scope.Setting.WebApiURL = 'www.sysfreight.net:8081/WebApi';
-            $scope.Setting.WebSiteUrl = 'www.sysfreight.net:8081/mobileapp';
+            $scope.Setting.WebApiURL = 'www.sysfreight.net/WebApi';
+            $scope.Setting.WebSiteUrl = 'www.sysfreight.net/mobileapp';
+            $scope.Setting.WebPort = '8081';
             $scope.Setting.MapProvider = 'google';
-            if (!ENV.fromWeb) {
+            if ( !ENV.fromWeb ) {
                 var path = cordova.file.externalRootDirectory;
                 var file = ENV.rootPath + '/' + ENV.configFile;
-                $cordovaFile.removeFile(path, file)
-                    .then(function(success) {
-
-                    }, function(error) {
-                        $cordovaToast.showShortBottom(error);
-                    });
+                $cordovaFile.removeFile( path, file )
+                    .then( function( success ) {
+                        $scope.save();
+                    }, function( error ) {
+                        $cordovaToast.showShortBottom( error );
+                    } );
             }
         };
     }
-]);
+] );
 
-appControllers.controller('UpdateCtrl', ['ENV', '$scope', '$state', '$stateParams', 'DownloadFileService',
-    function(ENV, $scope, $state, $stateParams, DownloadFileService) {
+appControllers.controller( 'UpdateCtrl', [ 'ENV', '$scope', '$state', '$stateParams', '$ionicPopup', 'DownloadFileService',
+    function( ENV, $scope, $state, $stateParams, $ionicPopup, DownloadFileService ) {
+        var alertPopup = null,
+            alertPopupTitle = '';
         $scope.strVersion = $stateParams.Version;
         $scope.return = function() {
-            onError();
-        };
-        var onError = function() {
-            $state.go('index.login', {}, {
+            $state.go( 'index.login', {}, {
                 reload: true
-            });
+            } );
+        };
+        var onDownloadError = function() {
+            alertPopupTitle = 'Dowload Failed';
+            alertPopup = $ionicPopup.alert( {
+                title: alertPopupTitle,
+                okType: 'button-assertive'
+            } );
+            alertPopup.then( function( res ) {
+                $scope.return();
+            } );
         };
         $scope.upgrade = function() {
-            DownloadFileService.Download(ENV.website + '/' + ENV.apkName + '.apk', ENV.apkName + '.apk', 'application/vnd.android.package-archive', null, onError, onError);
+            DownloadFileService.Download( ENV.website + '/' + ENV.apkName + '.apk', ENV.apkName + '.apk', 'application/vnd.android.package-archive', null, null, onDownloadError );
         };
     }
-]);
+] );
 
-appControllers.controller('MainCtrl', ['ENV', '$scope', '$state', 'SALES_ORM', 'GeoService', 'GEO_CONSTANT',
-    function(ENV, $scope, $state, SALES_ORM, GeoService, GEO_CONSTANT) {
-        $scope.GoToSalesCost = function(Type) {
-            SALES_ORM.SEARCH.setType(Type);
-            $state.go('salesCost', {}, {
+appControllers.controller( 'MainCtrl', [ 'ENV', '$scope', '$state', 'SALES_ORM', 'GeoService', 'GEO_CONSTANT',
+    function( ENV, $scope, $state, SALES_ORM, GeoService, GEO_CONSTANT ) {
+        $scope.GoToSalesCost = function( Type ) {
+            SALES_ORM.SEARCH.setType( Type );
+            $state.go( 'salesCost', {}, {
                 reload: true
-            });
+            } );
         };
         $scope.GoToSA = function() {
-            $state.go('salesmanActivity', {}, {
+            $state.go( 'salesmanActivity', {}, {
                 reload: true
-            });
+            } );
         };
         $scope.GoToRcbp = function() {
-            $state.go('contacts', {}, {
+            $state.go( 'contacts', {}, {
                 reload: true
-            });
+            } );
         };
         $scope.GoToPa = function() {
-            $state.go('paymentApproval', {}, {
+            $state.go( 'paymentApproval', {}, {
                 reload: true
-            });
+            } );
         };
         $scope.GoToVS = function() {
-            $state.go('vesselSchedule', {}, {
+            $state.go( 'vesselSchedule', {}, {
                 reload: true
-            });
+            } );
         };
         $scope.GoToSS = function() {
-            $state.go('shipmentStatus', {}, {
+            $state.go( 'shipmentStatus', {}, {
                 reload: true
-            });
+            } );
         };
         $scope.GoToInv = function() {
-            $state.go('invoice', {}, {
+            $state.go( 'invoice', {}, {
                 reload: true
-            });
+            } );
         };
         $scope.GoToBL = function() {
-            $state.go('bl', {}, {
+            $state.go( 'bl', {}, {
                 reload: true
-            });
+            } );
         };
         $scope.GoToAWB = function() {
-            $state.go('awb', {}, {
+            $state.go( 'awb', {}, {
                 reload: true
-            });
+            } );
         };
         $scope.GoToSOA = function() {
-            $state.go('soa', {}, {
+            $state.go( 'soa', {}, {
                 reload: true
-            });
+            } );
         };
         $scope.GoToMemo = function() {
-            $state.go('memo', {}, {
+            $state.go( 'memo', {}, {
                 reload: true
-            });
+            } );
         };
         $scope.GoToReminder = function() {
-            $state.go('reminder', {}, {
+            $state.go( 'reminder', {}, {
                 reload: true
-            });
+            } );
         };
         $scope.GoToDocScan = function() {
-            $state.go('documentScan', {}, {
+            $state.go( 'documentScan', {}, {
                 reload: true
-            });
+            } );
         };
         $scope.GoToRetrieveDoc = function() {
-            $state.go('retrieveDoc', {}, {
+            $state.go( 'retrieveDoc', {}, {
                 reload: true
-            });
+            } );
         };
-        if (is.equal(ENV.mapProvider.toLowerCase(), 'baidu')) {
-            GeoService.BaiduGetCurrentPosition().then(function onSuccess(point) {
+        if ( is.equal( ENV.mapProvider.toLowerCase(), 'baidu' ) ) {
+            GeoService.BaiduGetCurrentPosition().then( function onSuccess( point ) {
                 var pos = {
                     lat: point.lat,
                     lng: point.lng
                 };
-                GEO_CONSTANT.Baidu.set(pos);
-            }, function onError(msg) {});
-        } else if (is.equal(ENV.mapProvider.toLowerCase(), 'google')) {
-            GeoService.GoogleGetCurrentPosition().then(function onSuccess(point) {
+                GEO_CONSTANT.Baidu.set( pos );
+            }, function onError( msg ) {} );
+        } else if ( is.equal( ENV.mapProvider.toLowerCase(), 'google' ) ) {
+            GeoService.GoogleGetCurrentPosition().then( function onSuccess( point ) {
                 var pos = {
                     lat: point.coords.latitude,
                     lng: point.coords.longitude
                 };
-                GEO_CONSTANT.Google.set(pos);
-            }, function onError(msg) {});
+                GEO_CONSTANT.Google.set( pos );
+            }, function onError( msg ) {} );
         }
     }
-]);
+] );

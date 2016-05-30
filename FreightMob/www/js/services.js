@@ -107,8 +107,8 @@ appService.service( 'DownloadFileService', [ 'ENV', '$timeout', '$ionicLoading',
                         console.error( ex );
                     } );
                 }, function( err ) {
-                    console.error( err );
                     $ionicLoading.hide();
+                    console.error( err );
                     $cordovaToast.showShortCenter( 'Download faild' );
                     if ( typeof( onDownloadError ) == 'function' ) onDownloadError();
                 }, function( progress ) {
@@ -122,6 +122,7 @@ appService.service( 'DownloadFileService', [ 'ENV', '$timeout', '$ionicLoading',
                         }
                     } )
                 } ).catch( function( ex ) {
+                    $ionicLoading.hide();
                     console.error( ex );
                 } );
                 //    }, function(error) {
@@ -254,7 +255,7 @@ appService.service( 'SqlService', [ 'ENV', '$q', '$cordovaSQLite', '$ionicPlatfo
         this.init = function(){
             $ionicPlatform.ready(function () {
                 if(ENV.fromWeb){
-                    db = window.openDatabase(dbInfo.dbName, dbInfo.dbVersion, dbInfo.dbDisplayName, dbInfo.dbEstimatedSize);
+                    //db = window.openDatabase(dbInfo.dbName, dbInfo.dbVersion, dbInfo.dbDisplayName, dbInfo.dbEstimatedSize);
                 }else{
                     db = $cordovaSQLite.openDB({name: dbName, location: 'default', androidLockWorkaround: 1})
                 }
@@ -272,9 +273,7 @@ appService.service( 'SqlService', [ 'ENV', '$q', '$cordovaSQLite', '$ionicPlatfo
                 var query2 = 'SELECT top 1 id, password FROM User';
     		    $cordovaSQLite.execute(db, query2, []).then(function(res) {
     		        if(res.rows.length > 0) {
-    		            //for(var i = 0; i < res.rows.length; i++) {
-    		            	console.error(res.rows.item(0).id + ' # ' + res.rows.item(0).password);
-    		            //}
+		            	console.error(res.rows.item(0).id + ' # ' + res.rows.item(0).password);
                         var objUser = {
                             id: res.rows.item(0).id,
                             password: res.rows.item(0).password
