@@ -103,9 +103,9 @@ app.run( [ 'ENV', '$ionicPlatform', '$rootScope', '$state', '$location', '$timeo
 app.config( [ '$httpProvider', '$stateProvider', '$urlRouterProvider', '$ionicConfigProvider', '$ionicFilterBarConfigProvider',
     function( $httpProvider, $stateProvider, $urlRouterProvider, $ionicConfigProvider, $ionicFilterBarConfigProvider ) {
         $ionicConfigProvider.platform.ios.tabs.style('standard');
-        $ionicConfigProvider.platform.ios.tabs.position('bottom');
+        $ionicConfigProvider.platform.ios.tabs.position('top');
         $ionicConfigProvider.platform.android.tabs.style('standard');
-        $ionicConfigProvider.platform.android.tabs.position('bottom')
+        $ionicConfigProvider.platform.android.tabs.position('top')
         /*
         $ionicConfigProvider.platform.ios.navBar.alignTitle('center');
         $ionicConfigProvider.platform.android.navBar.alignTitle('center');
@@ -115,7 +115,7 @@ app.config( [ '$httpProvider', '$stateProvider', '$urlRouterProvider', '$ionicCo
         $ionicConfigProvider.platform.android.views.transition('android');
         */
     	//$ionicConfigProvider.views.forwardCache(true);//开启全局缓存
-    	//$ionicConfigProvider.views.maxCache(0);//关闭缓存
+    	$ionicConfigProvider.views.maxCache(3);//关闭缓存
         $httpProvider.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
         $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
         // Override $http service's default transformRequest
@@ -206,11 +206,14 @@ app.config( [ '$httpProvider', '$stateProvider', '$urlRouterProvider', '$ionicCo
                     }
                 }
             } )
-            .state( 'loading', {
+            .state( 'index.loading', {
                 url: '/loading',
-                //cache: 'false',
-                //templateUrl: 'view/crm/SalesCost.html',
-                controller: 'LoadingCtrl'
+                views: {
+                    'menuContent': {
+                        templateUrl: 'view/loading.html',
+                        controller: 'LoadingCtrl'
+                    }
+                }
             } )
             .state( 'salesCost', {
                 url: '/salesCost',

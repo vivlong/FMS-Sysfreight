@@ -34,7 +34,7 @@ appService.service( 'ApiService', [ '$q', 'ENV', '$http', '$ionicLoading', '$ion
                     $ionicLoading.hide();
                 }
                 deferred.reject( data );
-                console.log( data );
+                console.error( data );
             } );
             return deferred.promise;
         };
@@ -56,7 +56,7 @@ appService.service( 'ApiService', [ '$q', 'ENV', '$http', '$ionicLoading', '$ion
                     $ionicLoading.hide();
                 }
                 deferred.reject( data );
-                console.log( data );
+                console.error( data );
             } );
             return deferred.promise;
         };
@@ -78,7 +78,7 @@ appService.service( 'ApiService', [ '$q', 'ENV', '$http', '$ionicLoading', '$ion
                     $ionicLoading.hide();
                 }
                 deferred.reject( data );
-                console.log( data );
+                console.error( data );
             } );
             return deferred.promise;
         };
@@ -179,10 +179,10 @@ appService.service( 'GeoService', [ '$q', '$cordovaGeolocation',
                             lat: r.point.lat,
                             lng: r.point.lng
                         };
-                        console.log( pos );
+                        console.log( pos.type + '-lat:' + pos.lat + '-ing:' + pos.lng );
                     } else {
                         deferred.reject( this.getStatus() );
-                        console.log( this.getStatus() );
+                        console.error( this.getStatus() );
                     }
                 }, {
                     maximumAge: 60000,
@@ -209,10 +209,10 @@ appService.service( 'GeoService', [ '$q', '$cordovaGeolocation',
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 };
-                console.log( pos );
+                console.log(  pos.type + '-lat:' + pos.lat + '-ing:' + pos.lng );
             }, function( error ) {
                 deferred.reject( error );
-                console.log( error );
+                console.error( error );
             } );
             /*
             // Try HTML5 geolocation.

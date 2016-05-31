@@ -15,18 +15,42 @@ appControllers.controller( 'IndexCtrl', [
     'ENV', '$scope', '$state', '$rootScope', '$ionicPlatform',
     '$http', '$ionicLoading', '$ionicPopup',
     '$ionicSideMenuDelegate', '$cordovaAppVersion',
-    '$cordovaFile',
+    '$cordovaFile', '$cordovaSQLite',
     function( ENV, $scope, $state, $rootScope, $ionicPlatform, $http, $ionicLoading,
         $ionicPopup, $ionicSideMenuDelegate, $cordovaAppVersion,
-        $cordovaFile ) {
+        $cordovaFile, $cordovaSQLite ) {
         var alertPopup = null,
             alertPopupTitle = '';
         $scope.Status = {
             Login: false
         };
+        var deleteLogin = function(){
+            if ( !ENV.fromWeb ) {
+                $cordovaSQLite.execute( db, 'DELETE FROM Users' )
+                    .then(
+                        function( res ) {
+                            console.log('Delete LoginInfo');
+                            $rootScope.$broadcast( 'logout' );
+                            $state.go( 'index.login', {}, {} );
+                        },
+                        function( error ) {
+                        }
+                    );
+            }else{
+                $state.go( 'index.login', {}, {} );
+                $rootScope.$broadcast( 'logout' );
+            }
+        };
         $scope.logout = function() {
-            $rootScope.$broadcast( 'logout' );
-            $state.go( 'index.login', {}, {} );
+            var confirmPopup = $ionicPopup.confirm({
+                title: 'Log Out',
+                template: 'Are you sure to log out?'
+            });
+            confirmPopup.then(function(res) {
+                if(res) {
+                    deleteLogin();
+                }
+            });
         };
         $scope.gotoSetting = function() {
             $state.go( 'index.setting', {}, {
@@ -150,43 +174,25 @@ appControllers.controller( 'IndexCtrl', [
                 ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
                 ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
             }
-            loadJScript();
         } );
-        function loadJScript() {
-            var script = '';
-            if ( is.equal( ENV.mapProvider.toLowerCase(), 'baidu' ) ) {
-                script = document.createElement( 'script' );
-                script.type = 'text/javascript';
-                script.src = 'http://api.map.baidu.com/getscript?v=2.0&ak=94415618dfaa9ff5987dd07983f25159&callback=initMap';
-                //script.src = 'js/maps/bmap.js';
-                document.body.appendChild( script );
-            } else if ( is.equal( ENV.mapProvider.toLowerCase(), 'google' ) ) {
-                script = document.createElement( 'script' );
-                script.type = 'text/javascript';
-                script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
-                //script.src = 'js/maps/gmap.js';
-                document.body.appendChild( script );
-            }
-        }
-        /*
-        $scope.$watch( '$viewContentLoaded', function() {
-            loadJScript();
-        } );
-        */
     }
 ] );
 
-appControllers.controller( 'LoadingCtrl', [ 'ENV', '$scope', '$rootScope', '$state', '$ionicPlatform', '$cordovaSQLite', 'SALES_ORM',
-    function( ENV, $scope, $rootScope, $state, $ionicPlatform, $cordovaSQLite, SALES_ORM) {
+appControllers.controller( 'LoadingCtrl', [ 'ENV', '$scope', '$rootScope', '$state', '$ionicPlatform', '$timeout', '$cordovaSQLite', 'SALES_ORM',
+    function( ENV, $scope, $rootScope, $state, $ionicPlatform, $timeout, $cordovaSQLite, SALES_ORM) {
         var gotoLogin = function(blnLogin){
             if(blnLogin){
-                $state.go( 'index.main', {}, {
-                    reload: true
-                } );
+                $timeout(function () {
+                    $state.go( 'index.main', {}, {
+                        reload: true
+                    } );
+                }, 2500);
             }else{
-                $state.go( 'index.login', {}, {
-                    reload: true
-                } );
+                $timeout(function () {
+                    $state.go( 'index.login', {}, {
+                        reload: true
+                    } );
+                }, 2500);
             }
         };
         $ionicPlatform.ready( function() {
@@ -195,6 +201,7 @@ appControllers.controller( 'LoadingCtrl', [ 'ENV', '$scope', '$rootScope', '$sta
                     .then(
                         function( res ) {
                             if ( res.rows.length > 0 && is.not.undefined( res.rows.item( 0 ).uid ) ) {
+                                console.log('Found LoginInfo');
                                 var value = res.rows.item( 0 ).uid;
                                 $rootScope.$broadcast( 'login' );
                                 sessionStorage.clear();
@@ -248,7 +255,6 @@ appControllers.controller( 'LoginCtrl', [ 'ENV', '$scope', '$rootScope', '$http'
                 ApiService.GetParam( strUri, true ).then( function success( result ) {
                     if ( result.data.results > 0 ) {
                         var value = $scope.logininfo.strUserName;
-                        $rootScope.$broadcast( 'login' );
                         sessionStorage.clear();
                         sessionStorage.setItem( 'UserId', value );
                         //Add JPush RegistradionID
@@ -265,6 +271,7 @@ appControllers.controller( 'LoginCtrl', [ 'ENV', '$scope', '$rootScope', '$http'
                         $state.go( 'index.main', {}, {
                             reload: true
                         } );
+                        $rootScope.$broadcast( 'login' );
                     } else {
                         alertTitle = 'Invaild User';
                         alertPopup = $ionicPopup.alert( {
@@ -293,7 +300,6 @@ appControllers.controller( 'LoginCtrl', [ 'ENV', '$scope', '$rootScope', '$http'
                 }
             }
         } );
-        $( '#iUserName' ).focus();
     }
 ] );
 
@@ -413,8 +419,8 @@ appControllers.controller( 'UpdateCtrl', [ 'ENV', '$scope', '$state', '$statePar
     }
 ] );
 
-appControllers.controller( 'MainCtrl', [ 'ENV', '$scope', '$state', 'SALES_ORM', 'GeoService', 'GEO_CONSTANT',
-    function( ENV, $scope, $state, SALES_ORM, GeoService, GEO_CONSTANT ) {
+appControllers.controller( 'MainCtrl', [ 'ENV', '$scope', '$state', '$timeout', 'SALES_ORM', 'GeoService', 'GEO_CONSTANT',
+    function( ENV, $scope, $state, $timeout, SALES_ORM, GeoService, GEO_CONSTANT ) {
         $scope.GoToSalesCost = function( Type ) {
             SALES_ORM.SEARCH.setType( Type );
             $state.go( 'salesCost', {}, {
@@ -486,22 +492,51 @@ appControllers.controller( 'MainCtrl', [ 'ENV', '$scope', '$state', 'SALES_ORM',
                 reload: true
             } );
         };
-        if ( is.equal( ENV.mapProvider.toLowerCase(), 'baidu' ) ) {
-            GeoService.BaiduGetCurrentPosition().then( function onSuccess( point ) {
-                var pos = {
-                    lat: point.lat,
-                    lng: point.lng
-                };
-                GEO_CONSTANT.Baidu.set( pos );
-            }, function onError( msg ) {} );
-        } else if ( is.equal( ENV.mapProvider.toLowerCase(), 'google' ) ) {
-            GeoService.GoogleGetCurrentPosition().then( function onSuccess( point ) {
-                var pos = {
-                    lat: point.coords.latitude,
-                    lng: point.coords.longitude
-                };
-                GEO_CONSTANT.Google.set( pos );
-            }, function onError( msg ) {} );
+        function loadJScript() {
+            var script = null;
+            if ( is.equal( ENV.mapProvider.toLowerCase(), 'baidu' ) ) {
+                script = document.getElementById('bmap');
+                if(is.null(script)){
+                    script = document.createElement( 'script' );
+                    script.type = 'text/javascript';
+                    script.id = 'bmap';
+                    script.src = 'http://api.map.baidu.com/getscript?v=2.0&ak=94415618dfaa9ff5987dd07983f25159&callback=initMap';
+                    //script.src = 'js/maps/bmap.js';
+                    document.body.appendChild( script );
+                }
+            } else if ( is.equal( ENV.mapProvider.toLowerCase(), 'google' ) ) {
+                script = document.getElementById('gmap');
+                if(is.null(script)){
+                    script = document.createElement( 'script' );
+                    script.type = 'text/javascript';
+                    script.id = 'gmap';
+                    script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAxtVdmOCYy4UWz8eW4z4Eo-DF3cjRoMUM';
+                    //script.src = 'js/maps/gmap.js';
+                    document.body.appendChild( script );
+                }
+            }
         }
+        $scope.$watch( '$viewContentLoaded', function() {
+            loadJScript();
+            $timeout(function(){
+                if ( is.equal( ENV.mapProvider.toLowerCase(), 'baidu' ) ) {
+                    GeoService.BaiduGetCurrentPosition().then( function onSuccess( point ) {
+                        var pos = {
+                            lat: point.lat,
+                            lng: point.lng
+                        };
+                        GEO_CONSTANT.Baidu.set( pos );
+                    }, function onError( msg ) {} );
+                } else if ( is.equal( ENV.mapProvider.toLowerCase(), 'google' ) ) {
+                    GeoService.GoogleGetCurrentPosition().then( function onSuccess( point ) {
+                        var pos = {
+                            lat: point.coords.latitude,
+                            lng: point.coords.longitude
+                        };
+                        GEO_CONSTANT.Google.set( pos );
+                    }, function onError( msg ) {} );
+                }
+            }, 2000);
+        } );
     }
 ] );
