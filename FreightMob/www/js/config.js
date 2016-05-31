@@ -1,17 +1,17 @@
 'use strict';
 var appConfig = angular.module('MobileAPP.config', []);
 appConfig.value('ENV', {
-    'website':      'www.sysfreight.net/mobileapp',
-    'api':          'www.sysfreight.net/WebApi',
+    'website':      'www.sysfreight.net/app/fms/basic',
+    'api':          'www.sysfreight.net/api/fms/basic',
     'ssl':          '0', // 0 : false, 1 : true
     'port':         '8081', // http port no
     'debug':        true,
     'mock':         false,
     'fromWeb':      true,
     'appId':        '9CBA0A78-7D1D-49D3-BA71-C72E93F9E48F',
-    'apkName':      'FreightApp',
+    'apkName':      'AppFms',
     'updateFile':   'update.json',
-    'rootPath':     'FreightApp',
+    'rootPath':     'AppFms',
     'configFile':   'config.txt',
     'mapProvider':  'google',
     'version':      '1.0.28'

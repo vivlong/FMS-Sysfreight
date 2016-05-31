@@ -24,6 +24,16 @@ appControllers.controller( 'IndexCtrl', [
         $scope.Status = {
             Login: false
         };
+        var showQRcode = function(){
+            var qrcode = new QRCode(document.getElementById('qrcode'), {
+                text: ENV.website + '/' + ENV.apkName + '.apk',
+                width: 174,
+                height: 174,
+                colorDark : '#000000',
+                colorLight : '#ffffff',
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        };
         var deleteLogin = function(){
             if ( !ENV.fromWeb ) {
                 $cordovaSQLite.execute( db, 'DELETE FROM Users' )
@@ -107,12 +117,14 @@ appControllers.controller( 'IndexCtrl', [
                     var blnSSL = ENV.ssl === 0 ? false : true;
                     ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
                     ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
+                    showQRcode();
                 }, function( error ) {
                     $cordovaToast.showShortBottom( error );
                     console.error( error );
                 } );
         };
         $ionicPlatform.ready( function() {
+            console.log('ionicPlatform.ready');
             if ( !ENV.fromWeb ) {
                 var data = 'website=' + ENV.website + '##' +
                     'api=' + ENV.api + '##' +
@@ -151,6 +163,7 @@ appControllers.controller( 'IndexCtrl', [
                                             var blnSSL = ENV.ssl === 0 ? false : true;
                                             ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
                                             ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
+                                            showQRcode();
                                         } else {
                                             $cordovaFile.removeFile( path, file )
                                                 .then( function( success ) {
@@ -173,6 +186,7 @@ appControllers.controller( 'IndexCtrl', [
                 ENV.ssl = blnSSL ? '1' : '0';
                 ENV.website = appendProtocol( ENV.website, blnSSL, ENV.port );
                 ENV.api = appendProtocol( ENV.api, blnSSL, ENV.port );
+                showQRcode();
             }
         } );
     }

@@ -12,8 +12,7 @@
     "numeral": "numeraljs#^1.5.3",
     "is_js": "^0.7.6",
     "ionic-image-lazy-load": "ion-image-lazy-load#*",
-    "angular-file-upload": "^2.2.0",
-    "jquery-qrcode": "https://github.com/jeromeetienne/jquery-qrcode.git"
+    "angular-file-upload": "^2.2.0"
   },
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#master"
