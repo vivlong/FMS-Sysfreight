@@ -2,7 +2,7 @@
 var appConfig = angular.module('MobileAPP.config', []);
 appConfig.value('ENV', {
     'website':      'www.sysfreight.net/app/fms/basic',
-    'api':          'www.sysfreight.net/api/fms/basic',
+    'api':          'www.sysfreight.net/apis/fms/basic',
     'ssl':          '0', // 0 : false, 1 : true
     'port':         '8081', // http port no
     'debug':        true,
