@@ -4,7 +4,7 @@
   <description>
 		SysFreight APP
     </description>
-  <author email="vivlong@163.com" href="http://www.28story.com">James Liao</author>
+  <author email=" " href=" "/>
   <content src="index.html"/>
   <access origin="*"/>
   <allow-navigation href="http://*/*"/>
@@ -17,7 +17,7 @@
   <allow-intent href="geo:*"/>
   <preference name="Fullscreen" value="false"/>
   <preference name="SplashScreen" value="none"/>
-  <preference name="SplashScreenDelay" value="3000"/>
+  <preference name="SplashScreenDelay" value="1000"/>
   <preference name="AutoHideSplashScreen" value="true"/>
   <preference name="KeepRunning" value="True"/>
   <preference name="ShowTitle" value="True"/>

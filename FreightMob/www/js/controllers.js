@@ -389,8 +389,8 @@ appControllers.controller( 'SettingCtrl', [ 'ENV', '$scope', '$state', '$ionicHi
             }
         };
         $scope.reset = function() {
-            $scope.Setting.WebApiURL = 'www.sysfreight.net/WebApi';
-            $scope.Setting.WebSiteUrl = 'www.sysfreight.net/mobileapp';
+            $scope.Setting.WebApiURL = 'www.sysfreight.net/apis/fms/basic';
+            $scope.Setting.WebSiteUrl = 'www.sysfreight.net/app/fms/basic';
             $scope.Setting.WebPort = '8081';
             $scope.Setting.MapProvider = 'google';
             if ( !ENV.fromWeb ) {
@@ -514,7 +514,7 @@ appControllers.controller( 'MainCtrl', [ 'ENV', '$scope', '$state', '$timeout', 
                     script = document.createElement( 'script' );
                     script.type = 'text/javascript';
                     script.id = 'bmap';
-                    script.src = 'http://api.map.baidu.com/getscript?v=2.0&ak=94415618dfaa9ff5987dd07983f25159&callback=initMap';
+                    script.src = 'http://api.map.baidu.com/getscript?v=2.0&ak=94415618dfaa9ff5987dd07983f25159';
                     //script.src = 'js/maps/bmap.js';
                     document.body.appendChild( script );
                 }

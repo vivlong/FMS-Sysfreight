@@ -232,8 +232,8 @@ appControllers.controller( 'ReminderCtrl', [ '$scope', '$state', '$stateParams',
     }
 ] );
 
-appControllers.controller( 'DocumentScanCtrl', [ 'ENV', '$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicActionSheet', '$cordovaCamera', '$cordovaBarcodeScanner', '$cordovaImagePicker', '$cordovaFile', '$cordovaFileTransfer', 'ApiService',
-    function( ENV, $scope, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicActionSheet, $cordovaCamera, $cordovaBarcodeScanner, $cordovaImagePicker, $cordovaFile, $cordovaFileTransfer, ApiService ) {
+appControllers.controller( 'DocumentScanCtrl', [ 'ENV', '$scope', '$state', '$stateParams', '$timeout', '$ionicPopup', '$ionicModal', '$ionicLoading', '$ionicActionSheet', '$cordovaCamera', '$cordovaBarcodeScanner', '$cordovaImagePicker', '$cordovaFile', '$cordovaFileTransfer', 'ApiService',
+    function( ENV, $scope, $state, $stateParams, $timeout, $ionicPopup, $ionicModal, $ionicLoading, $ionicActionSheet, $cordovaCamera, $cordovaBarcodeScanner, $cordovaImagePicker, $cordovaFile, $cordovaFileTransfer, ApiService ) {
         var alertPopup = null, canvas = null, context = null;
         $scope.Doc = {
             JobNo: 'SE07731-03',
@@ -253,46 +253,62 @@ appControllers.controller( 'DocumentScanCtrl', [ 'ENV', '$scope', '$state', '$st
                 if(typeof(callback)=='function') callback(res);
             } );
         };
-        var showCamera = function() {
+        var showCamera = function(type) {
+            $ionicLoading.show();
+            var sourceType = Camera.PictureSourceType.CAMERA;
+            if(is.equal(type,1)){
+                sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
+            }
             var options = {
                 quality: 100,
                 destinationType: Camera.DestinationType.FILE_URI,
-                sourceType: Camera.PictureSourceType.CAMERA,
+                sourceType: sourceType,
                 allowEdit: false,
                 encodingType: Camera.EncodingType.JPEG,
-                targetWidth: 768,
-                targetHeight: 1024,
+                //targetWidth: 768,
+                //targetHeight: 1024,
                 mediaType: Camera.MediaType.PICTURE,
                 cameraDirection: Camera.Direction.BACK,
                 //popoverOptions: new CameraPopoverOptions(300, 300, 100, 100, Camera.PopoverArrowDirection.ARROW_ANY),
-                saveToPhotoAlbum: true,
-                correctOrientation:true
+                saveToPhotoAlbum: true
+                //correctOrientation:true
             };
-            $cordovaCamera.getPicture( options ).then( function( imageUri ) {
-                var url = ENV.api + '/api/freight/upload/img?JobNo=' + $scope.Doc.JobNo;
-                var filePath = imageUri,
-                    trustHosts = true,
-                    options = {};
-                    //newFile = ENV.rootPath + '/' + moment().format( 'YYYY-MM-DD-HH-mm-ss' ).toString() + '.jpg';
-                //$cordovaFile.moveFile(cordova.file.externalRootDirectory, filePath, cordova.file.externalRootDirectory, newFile)
-                //    .then(function (success){
-                $cordovaFileTransfer.upload(url, filePath, options, trustHosts)
-                    .then(function(result) {
-                        showPopup( 'Upload Successfully', 'calm' );
-                    }, function(err) {
-                        console.error( err );
-                        showPopup( err.message, 'assertive' );
-                    }, function (progress) {
-                    // constant progress updates
-                    });
-                    //}, function (error){
-                    //    console.error( error );
-                    //    showPopup( error.message, 'assertive' );
-                    //});
-            }, function( err ) {
-                console.error( err );
-                //showPopup( err.message, 'assertive' );
-            } );
+            try{
+                //$cordovaCamera.cleanup().then( function(){
+                    $cordovaCamera.getPicture( options ).then( function( imageUri ) {
+                        var url = ENV.api + '/api/freight/upload/img?JobNo=' + $scope.Doc.JobNo;
+                        var filePath = imageUri,
+                            trustHosts = true,
+                            options = {};
+                            //newFile = ENV.rootPath + '/' + moment().format( 'YYYY-MM-DD-HH-mm-ss' ).toString() + '.jpg';
+                        //$cordovaFile.moveFile(cordova.file.externalRootDirectory, filePath, cordova.file.externalRootDirectory, newFile)
+                        //    .then(function (success){
+                        $cordovaFileTransfer.upload(url, filePath, options, trustHosts)
+                            .then(function(result) {
+                                $ionicLoading.hide();
+                                showPopup( 'Upload Successfully', 'calm' );
+                            }, function(err) {
+                                $ionicLoading.hide();
+                                console.error( err );
+                                showPopup( err.message, 'assertive' );
+                            }, function (progress) {
+                            // constant progress updates
+                            });
+                            //}, function (error){
+                            //    console.error( error );
+                            //    showPopup( error.message, 'assertive' );
+                            //});
+                    }, function( err ) {
+                        $ionicLoading.hide();
+                        //console.error( err );
+                        //showPopup( err.message, 'assertive' );
+                    } );
+                //} );
+            }catch (e)
+            {
+                $ionicLoading.hide();
+                console.error( e );
+            }
         };
         $scope.myChannel = {
             // the fields below are all optional
@@ -357,7 +373,7 @@ appControllers.controller( 'DocumentScanCtrl', [ 'ENV', '$scope', '$state', '$st
                             buttonClicked: function( index ) {
                                 if ( index === 0 ) {
                                     if ( !ENV.fromWeb ) {
-                                        showCamera();
+                                        showCamera(0);
                                     }else{
                                         $scope.modal_camera.show();
                                         canvas = document.getElementById( 'canvas1' );
@@ -366,6 +382,8 @@ appControllers.controller( 'DocumentScanCtrl', [ 'ENV', '$scope', '$state', '$st
                                     }
                                 } else if ( index === 1 ) {
                                     if( !ENV.fromWeb ){
+                                        showCamera(1);
+                                        /*
                                         var options = {
                                             maximumImagesCount: 1,
                                             width: 800,
@@ -391,6 +409,7 @@ appControllers.controller( 'DocumentScanCtrl', [ 'ENV', '$scope', '$state', '$st
                                             }, function (error) {
                                                  console.log(error);
                                             });
+                                        */
                                     } else {
                                         $state.go( 'upload', {
                                             'JobNo': $scope.Doc.JobNo

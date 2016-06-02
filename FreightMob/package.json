@@ -38,6 +38,7 @@
     "cordova-plugin-inappbrowser",
     "cordova-plugin-whitelist",
     "https://github.com/wymsee/cordova-imagePicker.git",
+    "https://github.com/litehelpers/Cordova-sqlite-storage",
     {
       "locator": "https://github.com/litehelpers/Cordova-sqlite-storage",
       "id": "cordova-sqlite-storage"

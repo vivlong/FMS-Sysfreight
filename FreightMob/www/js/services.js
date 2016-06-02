@@ -1,13 +1,6 @@
 var appService = angular.module( 'MobileAPP.services', [
     'ionic',
-    'ngCordova.plugins.toast',
-    'ngCordova.plugins.device',
-    'ngCordova.plugins.sqlite',
-    'ngCordova.plugins.file',
-    'ngCordova.plugins.fileTransfer',
-    'ngCordova.plugins.fileOpener2',
-    'ngCordova.plugins.inAppBrowser',
-    'ngCordova.plugins.geolocation',
+    'ngCordova',
     'MobileAPP.config'
 ] );
 
