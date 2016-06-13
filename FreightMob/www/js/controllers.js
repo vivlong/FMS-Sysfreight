@@ -389,10 +389,10 @@ appControllers.controller( 'SettingCtrl', [ 'ENV', '$scope', '$state', '$ionicHi
             }
         };
         $scope.reset = function() {
-            $scope.Setting.WebApiURL = 'www.sysfreight.net/apis/fms/basic';
-            $scope.Setting.WebSiteUrl = 'www.sysfreight.net/app/fms/basic';
-            $scope.Setting.WebPort = '8081';
-            $scope.Setting.MapProvider = 'google';
+            $scope.Setting.WebApiURL = ENV.reset.api;
+            $scope.Setting.WebSiteUrl = ENV.reset.website;
+            $scope.Setting.WebPort = ENV.reset.port;
+            $scope.Setting.MapProvider = ENV.reset.mapProvider;
             if ( !ENV.fromWeb ) {
                 var path = cordova.file.externalRootDirectory;
                 var file = ENV.rootPath + '/' + ENV.configFile;

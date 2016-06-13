@@ -1,8 +1,14 @@
 'use strict';
 var appConfig = angular.module('MobileAPP.config', []);
 appConfig.value('ENV', {
-    'website':      'www.sysfreight.net/app/fms/basic',
-    'api':          'www.sysfreight.net/apis/fms/basic',
+    'website':      'www.sysfreight.net/app/fms/sysfreight',
+    'api':          'www.sysfreight.net/apis/fms/sysfreight',
+    'reset':  {
+        'website':      'www.sysfreight.net/app/fms/sysfreight',
+        'api':          'www.sysfreight.net/apis/fms/sysfreight',
+        'port':         '8081',
+        'mapProvider':  'google'
+    },
     'ssl':          '0', // 0 : false, 1 : true
     'port':         '8081', // http port no
     'debug':        true,
