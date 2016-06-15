@@ -279,7 +279,7 @@ appControllers.controller( 'DocumentScanCtrl', [ 'ENV', '$scope', '$state', '$st
                         var url = ENV.api + '/api/freight/upload/img?JobNo=' + $scope.Doc.JobNo;
                         var filePath = imageUri,
                             trustHosts = true,
-                            options = {};
+                            options = { fileName: moment().format( 'YYYY-MM-DD-HH-mm-ss' ).toString() + '.jpg' };
                             //newFile = ENV.rootPath + '/' + moment().format( 'YYYY-MM-DD-HH-mm-ss' ).toString() + '.jpg';
                         //$cordovaFile.moveFile(cordova.file.externalRootDirectory, filePath, cordova.file.externalRootDirectory, newFile)
                         //    .then(function (success){
