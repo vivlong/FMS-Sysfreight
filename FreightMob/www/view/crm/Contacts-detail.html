@@ -16,19 +16,29 @@
             <div style="height: 38px;"></div>
             <ion-scroll>
                 <div class="card customerDetail">
-                    <div class="item" style="min-height: 68px;">
+                    <div class="item">
                         <h2><span ng-bind="rcbp1.BusinessPartyName"></span></h2>
                     </div>
                     <div class="item item-body">
                         <div class="list">
-                            <div style="overflow:auto;_height:1%">
+                            <!--div style="overflow:auto;_height:1%">
                                 <div style="float:left;">
-                                    <div class="item" style="border-width: 0px;">
+                                    <div class="item" style="border-width: 0px; word-break:break-all; word-wrap:break-word ;">
                                         <textarea  rows="6" cols="33" ng-bind="rcbp1.Address1 + '\r\n' + rcbp1.Address2 + '\r\n' + rcbp1.Address3 + '\r\n' + rcbp1.Address4" readonly="true">
                                         </textarea>
                                     </div>
                                 </div>
                                 <div style="float:right;margin-top: 3em;margin-right: 1em;">
+                                    <a style="text-decoration: none;" ng-click="showMap()"><i class="iconfont ion-ios-navigate" style="font-size: 2em;"></i></a>
+                                </div>
+                            </div-->
+                            <div class="item row">
+                                <div class="col col-90">
+                                    <p style="margin-top: 0px;">
+                                        <span  ng-bind="rcbp1.Address1 + '\r\n' + rcbp1.Address2 + '\r\n' + rcbp1.Address3 + '\r\n' + rcbp1.Address4"></span>
+                                    </p>
+                                </div>
+                                <div class="col col-10">
                                     <a style="text-decoration: none;" ng-click="showMap()"><i class="iconfont ion-ios-navigate" style="font-size: 2em;"></i></a>
                                 </div>
                             </div>
