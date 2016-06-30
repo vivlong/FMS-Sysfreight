@@ -239,7 +239,7 @@ appControllers.controller( 'DocumentScanCtrl', [ 'ENV', '$scope', '$state', '$st
             JobNo: 'SE07731-03',
             Jmjm1s: {}
         };
-        $scope.capture = null;
+        $scope.capture = null, $scope.modal_camera = null;
         var showPopup = function( title, type, callback ) {
             if ( alertPopup != null ) {
                 alertPopup.close();
@@ -257,7 +257,7 @@ appControllers.controller( 'DocumentScanCtrl', [ 'ENV', '$scope', '$state', '$st
             $ionicLoading.show();
             var sourceType = Camera.PictureSourceType.CAMERA;
             if(is.equal(type,1)){
-                sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
+                sourceType = Camera.PictureSourceType.SAVEDPHOTOALBUM;
             }
             var options = {
                 quality: 100,
@@ -323,7 +323,9 @@ appControllers.controller( 'DocumentScanCtrl', [ 'ENV', '$scope', '$state', '$st
             $scope.modal_camera = modal;
         } );
         $scope.$on( '$destroy', function() {
-            $scope.modal_camera.remove();
+            if(is.not.null($scope.modal_camera)){
+                $scope.modal_camera.remove();
+            }
         } );
         $scope.returnMain = function() {
             $state.go( 'index.main', {}, {} );
